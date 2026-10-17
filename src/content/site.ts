@@ -8,19 +8,23 @@ export const SITE = {
   copyrightYear: 2026,
 } as const;
 
-export type SocialLink = { id: string; label: string; text: string; url: string };
+export type SocialLink = {
+  id: 'facebook' | 'x' | 'instagram' | 'website' | 'linkedin' | 'github';
+  label: string;
+  url: string;
+};
 
 // url '#' = placeholder sampai akun sosial resmi tersedia.
 export const TOP_BAR_SOCIALS: readonly SocialLink[] = [
-  { id: 'facebook', label: 'Facebook', text: 'f', url: '#' },
-  { id: 'x', label: 'X', text: '𝕏', url: '#' },
-  { id: 'instagram', label: 'Instagram', text: 'ig', url: '#' },
-  { id: 'website', label: 'Website', text: '🌐', url: '#' },
+  { id: 'facebook', label: 'Facebook', url: '#' },
+  { id: 'x', label: 'X', url: '#' },
+  { id: 'instagram', label: 'Instagram', url: '#' },
+  { id: 'website', label: 'Website', url: '#' },
 ];
 
 export const FOOTER_SOCIALS: readonly SocialLink[] = [
-  { id: 'linkedin', label: 'LinkedIn', text: 'in', url: '#' },
-  { id: 'x', label: 'X', text: '𝕏', url: '#' },
-  { id: 'instagram', label: 'Instagram', text: 'ig', url: '#' },
-  { id: 'github', label: 'GitHub', text: 'git', url: '#' },
+  { id: 'linkedin', label: 'LinkedIn', url: '#' },
+  { id: 'x', label: 'X', url: '#' },
+  { id: 'instagram', label: 'Instagram', url: '#' },
+  { id: 'github', label: 'GitHub', url: '#' },
 ];

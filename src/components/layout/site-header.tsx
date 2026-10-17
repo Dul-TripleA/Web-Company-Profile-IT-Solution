@@ -1,16 +1,35 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { ButtonLink } from '@/components/ui/button-link';
-import { ChevronDownIcon, CloseIcon, LayersIcon, MenuIcon } from '@/components/ui/icons';
+import { ChevronDownIcon, CloseIcon, MenuIcon } from '@/components/ui/icons';
 import type { Locale } from '@/i18n/config';
 import { cn } from '@/lib/utils';
 import { LanguageSwitcher } from './language-switcher';
+import {
+  collectSectionIds,
+  navItemCurrent,
+  navLinkCurrent,
+  pickActiveSection,
+  type NavContext,
+} from './nav-active';
 
 export type NavLink = { label: string; href: string };
-export type NavItem = { id: string; label: string; href?: string; children?: NavLink[] };
+export type NavItem = {
+  id: string;
+  label: string;
+  href?: string;
+  children?: NavLink[];
+  /** false untuk tautan ke halaman yang belum ada, agar tidak memicu prefetch 404 di setiap halaman. */
+  prefetch?: boolean;
+  /** Item aktif untuk semua path berawalan ini (default: `href`), mis. `/id/services` mencakup detailnya. */
+  activePrefix?: string;
+  /** Id section di beranda yang membuat item ini aktif saat digulir ke sana. */
+  sections?: string[];
+};
 
 type SiteHeaderProps = {
   locale: Locale;
@@ -23,6 +42,8 @@ type SiteHeaderProps = {
 
 // Tinggi top bar sebelum diukur di browser (satu baris, desktop).
 const FALLBACK_TOP_BAR_HEIGHT = 32;
+// Tinggi baris logo + tombol menu (py-5 + tombol 44px) di header.
+const MOBILE_NAV_BAR_HEIGHT = 88;
 
 const NAV_LINK =
   'relative py-1 transition-colors duration-200 hover:text-brand after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:scale-x-0 after:bg-brand after:transition-transform after:duration-300 hover:after:scale-x-100';
@@ -70,6 +91,40 @@ export function SiteHeader({ locale, brand, homeHref, items, cta, labels }: Site
 
   const isHome = pathname === homeHref;
 
+  // Section beranda yang sedang dibaca; hanya dihitung di beranda.
+  const sectionKey = collectSectionIds(items).join(',');
+  const [scrollSection, setScrollSection] = useState<string | null>(null);
+  useEffect(() => {
+    if (!isHome || !sectionKey) return;
+    const ids = sectionKey.split(',');
+    let frame = 0;
+    function update() {
+      const sections = ids.flatMap((id) => {
+        const element = document.getElementById(id);
+        return element ? [{ id, top: element.getBoundingClientRect().top }] : [];
+      });
+      setScrollSection(pickActiveSection(sections, window.innerHeight * 0.4));
+    }
+    function onScroll() {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(update);
+    }
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [isHome, sectionKey]);
+
+  const navContext: NavContext = {
+    pathname,
+    homeHref,
+    activeSection: isHome ? scrollSection : null,
+  };
+
   function closeAll() {
     setOpenDropdown(null);
     setMobileOpen(false);
@@ -88,23 +143,29 @@ export function SiteHeader({ locale, brand, homeHref, items, cta, labels }: Site
         aria-label={labels.mainNavigation}
         className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 transition-all duration-500"
       >
-        <Link href={homeHref} className="flex items-center gap-3" onClick={closeAll}>
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand text-forest">
-            <LayersIcon className="h-5 w-5" />
-          </span>
-          <span className="text-2xl font-bold tracking-tight">{brand}</span>
+        <Link href={homeHref} className="flex items-center" onClick={closeAll}>
+          <Image
+            src="/images/logo/logo-full.png"
+            alt={brand}
+            width={886}
+            height={293}
+            loading="eager"
+            className="h-11 w-auto"
+          />
         </Link>
 
         <ul className="hidden items-center gap-8 text-sm font-medium text-slate-200 lg:flex">
           {items.map((item) => {
-            const active = item.href === homeHref ? isHome : false;
+            const current = navItemCurrent(item, navContext);
             if (!item.children) {
               return (
                 <li key={item.id}>
                   <Link
                     href={item.href ?? homeHref}
-                    aria-current={active ? 'page' : undefined}
-                    className={active ? 'text-brand transition-colors duration-200' : NAV_LINK}
+                    prefetch={item.prefetch}
+                    aria-current={current ?? undefined}
+                    data-active={current ? 'true' : undefined}
+                    className={current ? 'text-brand transition-colors duration-200' : NAV_LINK}
                   >
                     {item.label}
                   </Link>
@@ -127,7 +188,11 @@ export function SiteHeader({ locale, brand, homeHref, items, cta, labels }: Site
                   aria-expanded={open}
                   aria-haspopup="true"
                   onClick={() => setOpenDropdown(open ? null : item.id)}
-                  className="group flex cursor-pointer items-center gap-1.5 py-1 transition-colors duration-200 hover:text-brand"
+                  data-active={current ? 'true' : undefined}
+                  className={cn(
+                    'group flex cursor-pointer items-center gap-1.5 py-1 transition-colors duration-200 hover:text-brand',
+                    current && 'text-brand',
+                  )}
                 >
                   <span>{item.label}</span>
                   <ChevronDownIcon
@@ -146,17 +211,24 @@ export function SiteHeader({ locale, brand, homeHref, items, cta, labels }: Site
                   )}
                 >
                   <ul className="min-w-56 rounded-2xl border border-emerald-900/60 bg-forest-deep p-2 shadow-2xl">
-                    {item.children.map((child) => (
-                      <li key={child.href}>
-                        <Link
-                          href={child.href}
-                          onClick={closeAll}
-                          className="block rounded-xl px-3 py-2 text-sm text-slate-200 transition-colors hover:bg-brand/10 hover:text-brand"
-                        >
-                          {child.label}
-                        </Link>
-                      </li>
-                    ))}
+                    {item.children.map((child) => {
+                      const childCurrent = navLinkCurrent(child, navContext);
+                      return (
+                        <li key={child.href}>
+                          <Link
+                            href={child.href}
+                            onClick={closeAll}
+                            aria-current={childCurrent ?? undefined}
+                            className={cn(
+                              'block rounded-xl px-3 py-2 text-sm transition-colors hover:bg-brand/10 hover:text-brand',
+                              childCurrent ? 'bg-brand/10 text-brand' : 'text-slate-200',
+                            )}
+                          >
+                            {child.label}
+                          </Link>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               </li>
@@ -185,41 +257,63 @@ export function SiteHeader({ locale, brand, homeHref, items, cta, labels }: Site
       {mobileOpen ? (
         <div
           id="mobile-menu"
-          className="max-h-[calc(100vh-5rem)] overflow-y-auto border-t border-emerald-900/60 px-6 pb-6 lg:hidden"
+          // Header menempel di bawah top bar (offset `top`), jadi tinggi panel dikurangi offset itu
+          // ditambah tinggi baris logo (±88px) agar seluruh menu muat di layar dan bisa digulir.
+          style={{ maxHeight: `calc(100dvh - ${top + MOBILE_NAV_BAR_HEIGHT}px)` }}
+          className="overflow-y-auto border-t border-emerald-900/60 px-6 pb-6 lg:hidden"
         >
           <ul className="flex flex-col py-2 text-base font-medium text-slate-200">
-            {items.map((item) => (
-              <li key={item.id} className="border-b border-emerald-900/40 py-3 last:border-b-0">
-                {item.children ? (
-                  <>
-                    <span className="text-xs font-bold tracking-wider text-slate-400 uppercase">
+            {items.map((item) => {
+              const current = navItemCurrent(item, navContext);
+              return (
+                <li key={item.id} className="border-b border-emerald-900/40 py-3 last:border-b-0">
+                  {item.children ? (
+                    <>
+                      <span
+                        data-active={current ? 'true' : undefined}
+                        className={cn(
+                          'text-xs font-bold tracking-wider uppercase',
+                          current ? 'text-brand' : 'text-slate-400',
+                        )}
+                      >
+                        {item.label}
+                      </span>
+                      <ul className="mt-2 flex flex-col gap-1">
+                        {item.children.map((child) => {
+                          const childCurrent = navLinkCurrent(child, navContext);
+                          return (
+                            <li key={child.href}>
+                              <Link
+                                href={child.href}
+                                onClick={closeAll}
+                                aria-current={childCurrent ?? undefined}
+                                className={cn(
+                                  'block py-1.5 text-sm hover:text-brand',
+                                  childCurrent && 'text-brand',
+                                )}
+                              >
+                                {child.label}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </>
+                  ) : (
+                    <Link
+                      href={item.href ?? homeHref}
+                      prefetch={item.prefetch}
+                      onClick={closeAll}
+                      aria-current={current ?? undefined}
+                      data-active={current ? 'true' : undefined}
+                      className={cn('block hover:text-brand', current && 'text-brand')}
+                    >
                       {item.label}
-                    </span>
-                    <ul className="mt-2 flex flex-col gap-1">
-                      {item.children.map((child) => (
-                        <li key={child.href}>
-                          <Link
-                            href={child.href}
-                            onClick={closeAll}
-                            className="block py-1.5 text-sm hover:text-brand"
-                          >
-                            {child.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                ) : (
-                  <Link
-                    href={item.href ?? homeHref}
-                    onClick={closeAll}
-                    className="block hover:text-brand"
-                  >
-                    {item.label}
-                  </Link>
-                )}
-              </li>
-            ))}
+                    </Link>
+                  )}
+                </li>
+              );
+            })}
           </ul>
           <div className="flex flex-wrap items-center gap-3 pt-4">
             <LanguageSwitcher locale={locale} label={labels.language} />

@@ -1,16 +1,16 @@
-import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans } from 'next/font/google';
-import { notFound } from 'next/navigation';
-import { JsonLd } from '@/components/shared/json-ld';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { SiteHeader, type NavItem } from '@/components/layout/site-header';
 import { TopBar } from '@/components/layout/top-bar';
+import { JsonLd } from '@/components/shared/json-ld';
 import { SERVICES, getServiceCopy } from '@/content/services';
 import { SITE } from '@/content/site';
 import { LOCALES, hasLocale, localizedPath } from '@/i18n/config';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { organizationJsonLd, websiteJsonLd } from '@/lib/seo/json-ld';
 import { SITE_URL } from '@/lib/site';
+import type { Metadata } from 'next';
+import { Plus_Jakarta_Sans } from 'next/font/google';
+import { notFound } from 'next/navigation';
 import '../globals.css';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -50,12 +50,15 @@ export default async function RootLayout({ children, params }: LayoutProps<'/[lo
       children: [
         { label: dict.nav.technology, href: `${homeHref}#technology` },
         { label: dict.nav.workflow, href: `${homeHref}#workflow` },
-        { label: dict.nav.reviews, href: `${homeHref}#reviews` },
+        // DISEMBUNYIKAN (section Reviews disembunyikan, 2026-10): { label: dict.nav.reviews, href: `${homeHref}#reviews` },
       ],
     },
     {
       id: 'services',
       label: dict.nav.services,
+      // Aktif di /services dan detailnya, serta saat section #services di beranda sedang dibaca.
+      activePrefix: localizedPath(locale, '/services'),
+      sections: ['services'],
       children: [
         ...SERVICES.map((service) => ({
           label: getServiceCopy(service, locale).title,
@@ -64,13 +67,14 @@ export default async function RootLayout({ children, params }: LayoutProps<'/[lo
         { label: dict.nav.allServices, href: localizedPath(locale, '/services') },
       ],
     },
-    { id: 'blog', label: dict.nav.blog, href: localizedPath(locale, '/blog') },
+    // /blog baru ada di Fase 2; tanpa prefetch agar tidak ada 404 di latar belakang.
+    { id: 'blog', label: dict.nav.blog, href: localizedPath(locale, '/blog'), prefetch: false },
     { id: 'contact', label: dict.nav.contact, href: localizedPath(locale, '/contact') },
   ];
 
   return (
-    <html lang={locale} className={plusJakartaSans.variable} suppressHydrationWarning>
-      <body>
+    <html lang={locale} className={plusJakartaSans.variable}>
+      <body suppressHydrationWarning={true}>
         <a
           href="#main-content"
           className="sr-only z-[60] rounded-full bg-brand px-4 py-2 text-sm font-bold text-forest focus:not-sr-only focus:fixed focus:top-3 focus:left-3"

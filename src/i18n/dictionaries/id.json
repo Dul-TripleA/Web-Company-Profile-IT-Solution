@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Do It - Solusi Digital Modern",
-    "description": "Do It adalah software house yang membangun solusi digital modern: aplikasi web, sistem ERP, aplikasi mobile, dan desain UI/UX untuk bisnis Anda."
+    "description": "Do It membantu bisnis mewujudkan ide melalui website, aplikasi web, software khusus, dan desain UI/UX."
   },
   "site": {
     "name": "Do It",
@@ -15,7 +15,7 @@
     "learnMore": "Selengkapnya"
   },
   "topBar": {
-    "tagline": "Kami adalah salah satu software house terbaik di Indonesia.",
+    "tagline": "Mitra Teknologi untuk Pertumbuhan Bisnis Anda",
     "followUs": "Ikuti Kami —"
   },
   "nav": {
@@ -38,14 +38,164 @@
   "home": {
     "hero": {
       "rating": "5K+ Ulasan",
-      "titleLine1": "Solusi Digital Modern",
+      "titleLine1": "Kami Membangun Solusi Digital",
       "titleLine2": "Untuk",
-      "titleHighlight": "Pertumbuhan Bisnis Anda",
+      "titleHighlight": "Bisnis Anda",
       "brand": "Do It Solutions",
-      "description": "adalah software house yang menyediakan solusi teknologi modern untuk menjawab tantangan bisnis Anda. Lewat layanan pengembangan website, kami membantu bisnis di seluruh Indonesia bertransformasi digital agar tumbuh lebih optimal.",
+      "description": "Kami membantu bisnis mewujudkan ide melalui website, aplikasi web, dan software khusus yang disesuaikan dengan kebutuhan mereka.",
       "imageAlt": "Developer berkolaborasi menulis kode"
     },
     "approach": {
+      "eyebrow": "Pendekatan Kami",
+      "title": "Proses yang Jelas, dari Ide hingga Penyerahan Hasil",
+      "intro": "Kami percaya setiap proyek yang berhasil dimulai dari memahami kebutuhan Anda. Proses kami berfokus pada komunikasi yang jelas, ekspektasi yang disepakati, dan pengembangan yang cermat di setiap tahap.",
+      "steps": [
+        {
+          "title": "Pahami Kebutuhan Anda",
+          "description": "Kami berdiskusi tentang tujuan, kebutuhan, dan tantangan Anda untuk memahami apa yang dibutuhkan bisnis Anda."
+        },
+        {
+          "title": "Tentukan Lingkup",
+          "description": "Kami menyepakati fitur, hasil kerja, dan ekspektasi proyek sebelum pengembangan dimulai."
+        },
+        {
+          "title": "Rancang & Kembangkan",
+          "description": "Kami merancang dan membangun solusi sesuai kebutuhan yang telah disepakati."
+        },
+        {
+          "title": "Uji & Serahkan",
+          "description": "Kami menguji fungsionalitas yang disepakati, meninjau hasilnya, dan menyiapkan solusi untuk diserahterimakan."
+        }
+      ]
+    },
+    "why": {
+      "eyebrow": "Mengapa Memilih Kami",
+      "titleBefore": "Pendekatan Lugas untuk",
+      "titleHighlight": "Software yang Lebih Baik",
+      "description": "Kami berfokus memahami kebutuhan Anda, menetapkan ekspektasi yang jelas, dan menyerahkan pekerjaan yang memenuhi kebutuhan yang disepakati.",
+      "completed": {
+        "value": "10K+",
+        "label": "Total Pekerjaan yang Kami Selesaikan"
+      },
+      "stats": [
+        {
+          "value": "100+",
+          "label": "Klien"
+        },
+        {
+          "value": "12+",
+          "label": "Wilayah"
+        },
+        {
+          "value": "200+",
+          "label": "Proyek"
+        },
+        {
+          "value": "98%",
+          "label": "Kepuasan"
+        }
+      ],
+      "values": [
+        "Berpengalaman di Pemerintah & Swasta",
+        "Dukungan & Pemeliharaan Khusus",
+        "Solusi Digital End-to-End",
+        "Proses Pengembangan Agile",
+        "Arsitektur Aman & Skalabel",
+        "Berbasis Inovasi & Teknologi"
+      ],
+      "primaryCta": "Jadwalkan Konsultasi",
+      "secondaryCta": "Lihat Portofolio Kami",
+      "imageAlts": {
+        "meeting": "Rapat tim",
+        "collaboration": "Kolaborasi tim"
+      },
+      "commitments": [
+        {
+          "title": "Komunikasi yang Jelas",
+          "description": "Kami menjaga diskusi proyek tetap jelas dan memberi pembaruan tentang kemajuan, kendala, dan keputusan penting."
+        },
+        {
+          "title": "Lingkup Proyek yang Terdefinisi",
+          "description": "Kami memperjelas kebutuhan, hasil kerja, dan ekspektasi sebelum pengembangan dimulai untuk membantu menghindari kesalahpahaman."
+        },
+        {
+          "title": "Pengujian Sebelum Penyerahan",
+          "description": "Kami menguji fungsionalitas yang disepakati sebelum serah terima untuk menemukan masalah dan membantu memastikan solusi bekerja sesuai harapan."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "Layanan Kami",
+      "titleBefore": "Yang Bisa Kami",
+      "titleHighlight": "Bangun",
+      "titleAfter": "untuk Anda",
+      "intro": "Website, software khusus, dan desain antarmuka yang disesuaikan dengan cara kerja bisnis Anda.",
+      "scopeLabel": "Cakupan"
+    },
+    "tech": {
+      "title": "Teknologi Modern yang Kami Gunakan",
+      "description": "Standar industri global yang teruji untuk membangun aplikasi digital yang berkinerja tinggi, aman, dan mudah dirawat."
+    },
+    "workflow": {
+      "eyebrow": "Cara Kami Bekerja",
+      "titleBefore": "Siklus Pengembangan Kami yang",
+      "titleHighlight": "Terstruktur",
+      "description": "Setiap tahap melanjutkan tahap sebelumnya: dari memahami kebutuhan Anda hingga menguji dan menyerahkan solusi yang disepakati, dengan komunikasi yang jelas sepanjang jalan.",
+      "steps": [
+        {
+          "title": "Penemuan & Konsultasi",
+          "description": "Kami berdiskusi tentang tujuan, kebutuhan, dan tantangan Anda untuk memahami apa yang dibutuhkan bisnis Anda.",
+          "items": [
+            "Diskusi tujuan dan kebutuhan Anda",
+            "Memperjelas masalah yang ingin diselesaikan",
+            "Menentukan apa yang harus dilakukan solusi"
+          ],
+          "phase": "Fase 1: Pahami Kebutuhan Anda"
+        },
+        {
+          "title": "Penetapan Lingkup",
+          "description": "Kami menyepakati fitur, hasil kerja, dan ekspektasi proyek sebelum pengembangan dimulai.",
+          "items": [
+            "Daftar fitur yang disepakati",
+            "Hasil kerja yang terdefinisi",
+            "Ekspektasi bersama tentang proyek"
+          ],
+          "phase": "Fase 2: Tentukan Lingkup"
+        },
+        {
+          "title": "Desain & Pengembangan",
+          "description": "Kami merancang dan membangun solusi sesuai kebutuhan yang telah disepakati.",
+          "items": [
+            "Perancangan antarmuka dan alur, bila diperlukan",
+            "Pengembangan berdasarkan lingkup yang disepakati",
+            "Pembaruan tentang kemajuan dan keputusan penting"
+          ],
+          "phase": "Fase 3: Rancang & Kembangkan"
+        },
+        {
+          "title": "Pengujian & Serah Terima",
+          "description": "Kami menguji fungsionalitas yang disepakati, meninjau hasilnya bersama Anda, dan menyiapkan solusi untuk diserahterimakan.",
+          "items": [
+            "Pengujian fungsionalitas yang disepakati",
+            "Meninjau hasil bersama",
+            "Persiapan serah terima"
+          ],
+          "phase": "Fase 4: Uji & Serahkan"
+        }
+      ],
+      "cta": {
+        "title": "Siap membahas proyek Anda?",
+        "description": "Ceritakan ide dan kebutuhan Anda. Kami akan menghubungi Anda untuk membahas langkah berikutnya."
+      }
+    },
+    "reviews": {
+      "eyebrow": "Testimoni Klien",
+      "titleBefore": "Dipercaya Para Pemimpin,",
+      "titleHighlight": "Dibuktikan oleh Hasil",
+      "ratingBasis": "Berdasarkan 120+ ulasan klien",
+      "ratingScale": "/5.0"
+    },
+    "approachBento": {
       "eyebrow": "Pendekatan Kami",
       "title": "Sistem Digital yang Selaras dengan Proses Bisnis Anda yang Sebenarnya",
       "intro": "Kami menghadirkan solusi digital modern lewat rekayasa perangkat lunak, otomasi proses, dan antarmuka yang intuitif untuk meningkatkan efisiensi dan mempercepat operasional bisnis Anda.",
@@ -54,9 +204,18 @@
         "title": "Aplikasi Web & Sistem Custom",
         "description": "Membangun portal operasional, sistem manajemen dokumen, dan integrasi API berkecepatan tinggi yang melindungi dari kebocoran data dan mampu menangani ribuan transaksi harian dengan lancar.",
         "features": [
-          { "title": "API-First", "description": "Konektivitas antar sistem yang mulus" },
-          { "title": "Sangat Cepat", "description": "Akses data tanpa jeda" },
-          { "title": "Multi-Platform", "description": "Responsif di desktop & mobile" }
+          {
+            "title": "API-First",
+            "description": "Konektivitas antar sistem yang mulus"
+          },
+          {
+            "title": "Sangat Cepat",
+            "description": "Akses data tanpa jeda"
+          },
+          {
+            "title": "Multi-Platform",
+            "description": "Responsif di desktop & mobile"
+          }
         ],
         "link": "Jelajahi Aplikasi Web"
       },
@@ -72,103 +231,6 @@
         "footnote": "Solusi POS, Inventaris & ERP Custom",
         "link": "Lihat Fitur"
       }
-    },
-    "why": {
-      "eyebrow": "Mengapa Memilih Kami",
-      "titleBefore": "Membangun Solusi Digital yang Memberi",
-      "titleHighlight": "Dampak Nyata",
-      "description": "Dipercaya instansi pemerintah, perusahaan swasta, dan institusi terkemuka di berbagai wilayah untuk menghadirkan solusi digital yang inovatif, aman, dan sangat skalabel.",
-      "completed": { "value": "10K+", "label": "Total Pekerjaan yang Kami Selesaikan" },
-      "stats": [
-        { "value": "100+", "label": "Klien" },
-        { "value": "12+", "label": "Wilayah" },
-        { "value": "200+", "label": "Proyek" },
-        { "value": "98%", "label": "Kepuasan" }
-      ],
-      "values": [
-        "Berpengalaman di Pemerintah & Swasta",
-        "Dukungan & Pemeliharaan Khusus",
-        "Solusi Digital End-to-End",
-        "Proses Pengembangan Agile",
-        "Arsitektur Aman & Skalabel",
-        "Berbasis Inovasi & Teknologi"
-      ],
-      "primaryCta": "Jadwalkan Konsultasi",
-      "secondaryCta": "Lihat Portofolio Kami",
-      "imageAlts": {
-        "meeting": "Rapat tim",
-        "collaboration": "Kolaborasi tim"
-      }
-    },
-    "services": {
-      "eyebrow": "Layanan Utama Kami",
-      "titleBefore": "",
-      "titleHighlight": "Solusi Digital",
-      "titleAfter": "Inovatif untuk Perusahaan yang Berkembang",
-      "intro": "Memberdayakan bisnis Anda dengan platform web custom yang skalabel, arsitektur ERP yang tangguh, aplikasi mobile berkualitas native, dan antarmuka yang berpusat pada pengguna."
-    },
-    "tech": {
-      "title": "Teknologi Modern yang Kami Gunakan",
-      "description": "Standar industri global yang teruji untuk membangun aplikasi digital yang berkinerja tinggi, aman, dan mudah dirawat."
-    },
-    "workflow": {
-      "eyebrow": "Cara Kami Menghasilkan Karya",
-      "titleBefore": "Siklus Pengembangan Kami yang",
-      "titleHighlight": "Terstruktur",
-      "description": "Dari penemuan awal hingga peluncuran cloud skala penuh, kami menerapkan kerangka kerja agile yang transparan, berbasis sprint, dan berfokus pada dampak bisnis yang terukur.",
-      "steps": [
-        {
-          "title": "Penemuan & Konsultasi",
-          "description": "Memahami hambatan operasional, memperjelas tujuan bisnis, menilai anggaran, dan menguraikan lingkup teknis proyek.",
-          "items": [
-            "Wawancara kebutuhan bisnis",
-            "Analisis kelayakan teknis",
-            "Peta jalan proyek & estimasi waktu"
-          ],
-          "phase": "Fase 1: Penetapan Lingkup"
-        },
-        {
-          "title": "Desain & Arsitektur",
-          "description": "Merancang prototipe UI/UX interaktif, skema basis data, dan arsitektur API yang tangguh untuk konkurensi tinggi.",
-          "items": [
-            "Wireframe Figma beresolusi tinggi",
-            "Skema basis data & cetak biru API",
-            "Design system & pustaka komponen"
-          ],
-          "phase": "Fase 2: Desain UI/UX & Sistem"
-        },
-        {
-          "title": "Pengembangan & QA",
-          "description": "Pengodean modular iteratif lewat sprint mingguan, pipeline pengujian otomatis, dan tinjauan keamanan kode yang ketat.",
-          "items": [
-            "Kode bersih & arsitektur skalabel",
-            "Pengujian unit & integrasi otomatis",
-            "Uji penetrasi & optimasi kecepatan"
-          ],
-          "phase": "Fase 3: Pengodean & Siklus Sprint"
-        },
-        {
-          "title": "Peluncuran & Penskalaan",
-          "description": "Rilis produksi dengan alur CI/CD tanpa downtime, pelatihan pengguna, pencatatan log real-time, dan dukungan SLA berkelanjutan.",
-          "items": [
-            "Deploy cloud CI/CD otomatis",
-            "Pelatihan pengguna & buku panduan lengkap",
-            "Pemantauan uptime 24/7 & backup harian"
-          ],
-          "phase": "Fase 4: Peluncuran & Pemeliharaan"
-        }
-      ],
-      "cta": {
-        "title": "Siap merencanakan sistem digital Anda berikutnya?",
-        "description": "Jadwalkan konsultasi teknis gratis 30 menit dengan solutions architect utama kami."
-      }
-    },
-    "reviews": {
-      "eyebrow": "Testimoni Klien",
-      "titleBefore": "Dipercaya Para Pemimpin,",
-      "titleHighlight": "Dibuktikan oleh Hasil",
-      "ratingBasis": "Berdasarkan 120+ ulasan klien",
-      "ratingScale": "/5.0"
     }
   },
   "footer": {
@@ -198,10 +260,10 @@
     },
     "services": {
       "metaTitle": "Layanan Kami | Do It",
-      "metaDescription": "Aplikasi web custom, sistem ERP, aplikasi mobile, dan desain UI/UX dari Do It, dibangun untuk kinerja, keamanan, dan pertumbuhan.",
-      "eyebrow": "Layanan Utama Kami",
-      "title": "Solusi Digital untuk Perusahaan yang Berkembang",
-      "description": "Dari platform web custom hingga arsitektur ERP, aplikasi mobile, dan antarmuka yang berpusat pada pengguna."
+      "metaDescription": "Pengembangan website, software khusus, dan desain UI/UX dari Do It, disesuaikan dengan kebutuhan bisnis Anda.",
+      "eyebrow": "Layanan Kami",
+      "title": "Yang Bisa Kami Bangun untuk Anda",
+      "description": "Website, software khusus, dan desain antarmuka yang disesuaikan dengan cara kerja bisnis Anda."
     },
     "serviceDetail": {
       "eyebrow": "Layanan",
@@ -210,7 +272,8 @@
       "ctaTitle": "Ingin membahas layanan ini?",
       "ctaDescription": "Ceritakan proyek Anda dan kami akan membalas dengan konsultasi teknis.",
       "otherServices": "Layanan lainnya",
-      "breadcrumbServices": "Layanan"
+      "breadcrumbServices": "Layanan",
+      "scope": "Cakupan"
     },
     "contact": {
       "metaTitle": "Hubungi Kami | Do It",

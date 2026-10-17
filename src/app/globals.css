@@ -6,6 +6,8 @@
   --color-brand-hover: #a8f553;
   --color-brand-soft: #b4f268;
   --color-brand-strong: #84cb32;
+  /* Teks hijau di atas latar terang; lime asli hanya 1.9:1 di krem. */
+  --color-brand-ink: #5f9224;
   --color-on-brand: #0d2e28;
 
   --color-forest: #0b2923;

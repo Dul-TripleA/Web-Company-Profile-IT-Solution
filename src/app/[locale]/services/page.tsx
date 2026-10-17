@@ -45,7 +45,12 @@ export default async function ServicesPage({ params }: PageProps<'/[locale]/serv
           { label: dict.nav.services },
         ]}
       />
-      <CoreServices locale={locale} dict={dict.home.services} showHeader={false} />
+      <CoreServices
+        locale={locale}
+        dict={dict.home.services}
+        learnMore={dict.common.learnMore}
+        showHeader={false}
+      />
     </>
   );
 }

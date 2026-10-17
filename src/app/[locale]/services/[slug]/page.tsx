@@ -3,9 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { JsonLd } from '@/components/shared/json-ld';
 import { PageHero } from '@/components/sections/page-hero';
-import { Badge } from '@/components/ui/badge';
 import { ButtonLink } from '@/components/ui/button-link';
-import { CheckBadge } from '@/components/ui/check';
 import { ArrowRightIcon } from '@/components/ui/icons';
 import { SERVICES, getService, getServiceCopy } from '@/content/services';
 import { LOCALES, hasLocale, localizedPath } from '@/i18n/config';
@@ -74,37 +72,15 @@ export default async function ServiceDetailPage({
       <section className="mx-auto max-w-7xl px-6 py-20">
         <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-12">
           <div className="rounded-3xl border border-emerald-900/60 bg-forest-deep p-8 shadow-2xl sm:p-10 lg:col-span-8">
-            <Badge>{copy.badge}</Badge>
-            <h2 className="mt-6 text-2xl font-extrabold tracking-tight text-brand sm:text-3xl">
-              {detail.whatYouGet}
+            <h2 className="text-2xl font-extrabold tracking-tight text-brand sm:text-3xl">
+              {detail.scope}
             </h2>
-            <ul className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {copy.highlights.map((highlight) => (
-                <li
-                  key={highlight.title}
-                  className="rounded-2xl border border-emerald-900/50 bg-forest/70 p-4"
-                >
-                  <div className="flex items-center gap-2">
-                    <CheckBadge />
-                    <h3 className="text-sm font-semibold text-white">{highlight.title}</h3>
-                  </div>
-                  {highlight.description ? (
-                    <p className="mt-2 pl-7 text-xs leading-relaxed text-slate-300/80">
-                      {highlight.description}
-                    </p>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
+            <p className="mt-6 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
+              {copy.scope}
+            </p>
           </div>
 
           <aside className="flex flex-col justify-between gap-8 rounded-3xl border border-emerald-900/60 bg-forest-deep p-8 shadow-2xl lg:col-span-4">
-            <div className="space-y-3">
-              <h2 className="text-xs font-bold tracking-wider text-slate-400 uppercase">
-                {detail.technologies}
-              </h2>
-              <p className="font-mono text-sm text-white">{service.techLine}</p>
-            </div>
             <div className="space-y-4">
               <h2 className="text-lg font-bold text-white">{detail.ctaTitle}</h2>
               <p className="text-xs leading-relaxed text-slate-400">{detail.ctaDescription}</p>

@@ -28,7 +28,7 @@ export function LanguageSwitcher({ locale, label, className }: LanguageSwitcherP
           hrefLang={item}
           aria-current={item === locale ? 'true' : undefined}
           className={cn(
-            'rounded-full px-2.5 py-1 uppercase transition-colors',
+            'rounded-full px-2.5 py-1 uppercase transition-colors pointer-coarse:flex pointer-coarse:min-h-11 pointer-coarse:items-center',
             item === locale ? 'bg-brand text-forest' : 'text-slate-300 hover:text-brand',
           )}
         >

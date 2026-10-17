@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Do It - Modern Digital Solutions",
-    "description": "Do It is a software house building modern digital solutions: custom web apps, ERP systems, mobile apps, and UI/UX design to grow your business in Indonesia."
+    "description": "Do It helps businesses bring their ideas to life through websites, web applications, custom software, and UI/UX design."
   },
   "site": {
     "name": "Do It",
@@ -15,7 +15,7 @@
     "learnMore": "Learn more"
   },
   "topBar": {
-    "tagline": "We are one of the best software houses in Indonesia.",
+    "tagline": "Your Technology Partner for Business Growth",
     "followUs": "Follow Us —"
   },
   "nav": {
@@ -38,14 +38,164 @@
   "home": {
     "hero": {
       "rating": "5K+ Reviews",
-      "titleLine1": "Modern Digital Solutions",
+      "titleLine1": "We Build Digital Solutions",
       "titleLine2": "For",
-      "titleHighlight": "Your Growth Business",
+      "titleHighlight": "Your Business",
       "brand": "Do It Solutions",
-      "description": "is a software house that provides modern technology solutions to address your business challenges. Through our website development services, we help businesses across Indonesia undergo digital transformation, enabling them to grow more optimally.",
+      "description": "We help businesses bring their ideas to life through websites, web applications, and custom software tailored to their needs.",
       "imageAlt": "Developers collaborating on code"
     },
     "approach": {
+      "eyebrow": "Our Approach",
+      "title": "A Clear Process, From Idea to Delivery",
+      "intro": "We believe every successful project starts with understanding your needs. Our process focuses on clear communication, agreed expectations, and careful development at every stage.",
+      "steps": [
+        {
+          "title": "Understand Your Needs",
+          "description": "We discuss your goals, requirements, and challenges to understand what your business needs."
+        },
+        {
+          "title": "Define the Scope",
+          "description": "We agree on the features, deliverables, and project expectations before development begins."
+        },
+        {
+          "title": "Design & Develop",
+          "description": "We design and build the solution according to the agreed requirements."
+        },
+        {
+          "title": "Test & Deliver",
+          "description": "We test the agreed functionality, review the results, and prepare the solution for handover."
+        }
+      ]
+    },
+    "why": {
+      "eyebrow": "Why Choose Us",
+      "titleBefore": "A Straightforward Approach to",
+      "titleHighlight": "Better Software",
+      "description": "We focus on understanding your needs, setting clear expectations, and delivering work that meets the agreed requirements.",
+      "completed": {
+        "value": "10K+",
+        "label": "Our Total Completed Works"
+      },
+      "stats": [
+        {
+          "value": "100+",
+          "label": "Clients"
+        },
+        {
+          "value": "12+",
+          "label": "Regions"
+        },
+        {
+          "value": "200+",
+          "label": "Projects"
+        },
+        {
+          "value": "98%",
+          "label": "Satisfaction"
+        }
+      ],
+      "values": [
+        "Government & Private Expertise",
+        "Dedicated Support & Maintenance",
+        "End-to-End Digital Solution",
+        "Agile Development Process",
+        "Secure & Scalable Architecture",
+        "Innovation & Technology Driven"
+      ],
+      "primaryCta": "Schedule Consultation",
+      "secondaryCta": "View Our Portfolio",
+      "imageAlts": {
+        "meeting": "Team meeting",
+        "collaboration": "Team collaboration"
+      },
+      "commitments": [
+        {
+          "title": "Clear Communication",
+          "description": "We keep project discussions clear and provide updates on progress, challenges, and important decisions."
+        },
+        {
+          "title": "Defined Project Scope",
+          "description": "We clarify requirements, deliverables, and expectations before development begins to help avoid misunderstandings."
+        },
+        {
+          "title": "Testing Before Delivery",
+          "description": "We test the agreed functionality before handover to identify issues and help ensure the solution works as expected."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "Our Services",
+      "titleBefore": "What We Can",
+      "titleHighlight": "Build",
+      "titleAfter": "for You",
+      "intro": "Websites, custom software, and interface design, tailored to how your business works.",
+      "scopeLabel": "Scope"
+    },
+    "tech": {
+      "title": "Modern Technologies We Use",
+      "description": "Battle-tested global industry standards engineered to build high-performance, secure, and easily maintainable digital applications."
+    },
+    "workflow": {
+      "eyebrow": "How We Work",
+      "titleBefore": "Our Structured",
+      "titleHighlight": "Development Lifecycle",
+      "description": "Each stage builds on the last: from understanding your needs to testing and handing over the agreed solution, with clear communication along the way.",
+      "steps": [
+        {
+          "title": "Discovery & Consultation",
+          "description": "We discuss your goals, requirements, and challenges to understand what your business needs.",
+          "items": [
+            "Discussion of your goals and requirements",
+            "Clarifying the problems to solve",
+            "Identifying what the solution should do"
+          ],
+          "phase": "Phase 1: Understand Your Needs"
+        },
+        {
+          "title": "Scope Definition",
+          "description": "We agree on the features, deliverables, and project expectations before development begins.",
+          "items": [
+            "List of agreed features",
+            "Defined deliverables",
+            "Shared expectations on the project"
+          ],
+          "phase": "Phase 2: Define the Scope"
+        },
+        {
+          "title": "Design & Development",
+          "description": "We design and build the solution according to the agreed requirements.",
+          "items": [
+            "Design of the interface and flows, where needed",
+            "Development based on the agreed scope",
+            "Updates on progress and important decisions"
+          ],
+          "phase": "Phase 3: Design & Develop"
+        },
+        {
+          "title": "Testing & Handover",
+          "description": "We test the agreed functionality, review the results with you, and prepare the solution for handover.",
+          "items": [
+            "Testing of the agreed functionality",
+            "Review of the results together",
+            "Preparation for handover"
+          ],
+          "phase": "Phase 4: Test & Deliver"
+        }
+      ],
+      "cta": {
+        "title": "Ready to discuss your project?",
+        "description": "Share your idea and requirements. We will get back to you to talk through the next steps."
+      }
+    },
+    "reviews": {
+      "eyebrow": "Client Testimonial",
+      "titleBefore": "Trusted by Leaders,",
+      "titleHighlight": "Validated by Results",
+      "ratingBasis": "Based on 120+ client reviews",
+      "ratingScale": "/5.0"
+    },
+    "approachBento": {
       "eyebrow": "Our Approach",
       "title": "Digital Systems Built to Align with Your Actual Business Processes",
       "intro": "We provide modern digital solutions through software engineering, process automation, and intuitive interfaces to enhance efficiency and accelerate your business operations.",
@@ -54,9 +204,18 @@
         "title": "Web Apps & Custom Systems",
         "description": "Building operational portals, document management systems, and high-speed API integrations that safeguard against data leaks and handle thousands of daily transactions seamlessly.",
         "features": [
-          { "title": "API-First", "description": "Seamless cross-system connectivity" },
-          { "title": "Lightning Fast", "description": "Zero-lag data access" },
-          { "title": "Multi-Platform", "description": "Responsive on desktop & mobile" }
+          {
+            "title": "API-First",
+            "description": "Seamless cross-system connectivity"
+          },
+          {
+            "title": "Lightning Fast",
+            "description": "Zero-lag data access"
+          },
+          {
+            "title": "Multi-Platform",
+            "description": "Responsive on desktop & mobile"
+          }
         ],
         "link": "Explore Web Apps"
       },
@@ -72,103 +231,6 @@
         "footnote": "POS, Inventory & Custom ERP Solutions",
         "link": "View Features"
       }
-    },
-    "why": {
-      "eyebrow": "Why Choose Us",
-      "titleBefore": "Building Digital Solutions That Drive",
-      "titleHighlight": "Real Impact",
-      "description": "Trusted by government agencies, private enterprises, and leading institutions across multiple regions to deliver innovative, secure, and highly scalable digital solutions.",
-      "completed": { "value": "10K+", "label": "Our Total Completed Works" },
-      "stats": [
-        { "value": "100+", "label": "Clients" },
-        { "value": "12+", "label": "Regions" },
-        { "value": "200+", "label": "Projects" },
-        { "value": "98%", "label": "Satisfaction" }
-      ],
-      "values": [
-        "Government & Private Expertise",
-        "Dedicated Support & Maintenance",
-        "End-to-End Digital Solution",
-        "Agile Development Process",
-        "Secure & Scalable Architecture",
-        "Innovation & Technology Driven"
-      ],
-      "primaryCta": "Schedule Consultation",
-      "secondaryCta": "View Our Portfolio",
-      "imageAlts": {
-        "meeting": "Team meeting",
-        "collaboration": "Team collaboration"
-      }
-    },
-    "services": {
-      "eyebrow": "Our Core Service",
-      "titleBefore": "Innovative",
-      "titleHighlight": "Digital Solutions",
-      "titleAfter": "For Growing Enterprises",
-      "intro": "Empowering your business with scalable custom web platforms, robust ERP architectures, native-grade mobile apps, and user-centric interfaces."
-    },
-    "tech": {
-      "title": "Modern Technologies We Use",
-      "description": "Battle-tested global industry standards engineered to build high-performance, secure, and easily maintainable digital applications."
-    },
-    "workflow": {
-      "eyebrow": "How We Deliver Results",
-      "titleBefore": "Our Structured",
-      "titleHighlight": "Development Lifecycle",
-      "description": "From initial discovery to full-scale cloud deployment, we adhere to an agile framework that is transparent, sprint-driven, and centered around measurable business impact.",
-      "steps": [
-        {
-          "title": "Discovery & Consultation",
-          "description": "Understanding operational bottlenecks, clarifying business objectives, assessing budget parameters, and outlining technical project scopes.",
-          "items": [
-            "Business requirements interview",
-            "Technical feasibility analysis",
-            "Project roadmap & timeline estimation"
-          ],
-          "phase": "Phase 1: Scope Definition"
-        },
-        {
-          "title": "Design & Architecture",
-          "description": "Crafting interactive UI/UX prototypes, database schemas, and robust API architectures designed for high concurrency.",
-          "items": [
-            "High-fidelity Figma wireframes",
-            "Database schema & API blueprints",
-            "Design system & component library"
-          ],
-          "phase": "Phase 2: UI/UX & System Design"
-        },
-        {
-          "title": "Development & QA",
-          "description": "Iterative modular coding via weekly sprints, automated test pipelines, and rigorous security code reviews.",
-          "items": [
-            "Clean code & scalable architecture",
-            "Automated unit & integration testing",
-            "Penetration testing & speed optimization"
-          ],
-          "phase": "Phase 3: Coding & Sprint Cycles"
-        },
-        {
-          "title": "Deployment & Scaling",
-          "description": "Production release with zero-downtime CI/CD workflows, user training sessions, real-time logging, and ongoing SLA support.",
-          "items": [
-            "Automated CI/CD cloud deployment",
-            "Comprehensive user training & manuals",
-            "24/7 uptime monitoring & daily backups"
-          ],
-          "phase": "Phase 4: Launch & Maintenance"
-        }
-      ],
-      "cta": {
-        "title": "Ready to plan your next digital system?",
-        "description": "Schedule a 30-minute free technical consultation with our lead solutions architect."
-      }
-    },
-    "reviews": {
-      "eyebrow": "Client Testimonial",
-      "titleBefore": "Trusted by Leaders,",
-      "titleHighlight": "Validated by Results",
-      "ratingBasis": "Based on 120+ client reviews",
-      "ratingScale": "/5.0"
     }
   },
   "footer": {
@@ -198,10 +260,10 @@
     },
     "services": {
       "metaTitle": "Our Services | Do It",
-      "metaDescription": "Custom web applications, ERP systems, mobile apps, and UI/UX design by Do It, built for performance, security, and growth.",
-      "eyebrow": "Our Core Service",
-      "title": "Digital Solutions For Growing Enterprises",
-      "description": "From custom web platforms to ERP architectures, mobile apps, and user-centric interfaces."
+      "metaDescription": "Web development, custom software development, and UI/UX design by Do It, tailored to your business needs.",
+      "eyebrow": "Our Services",
+      "title": "What We Can Build for You",
+      "description": "Websites, custom software, and interface design, tailored to how your business works."
     },
     "serviceDetail": {
       "eyebrow": "Service",
@@ -210,7 +272,8 @@
       "ctaTitle": "Want to discuss this service?",
       "ctaDescription": "Tell us about your project and we will respond with a technical consultation.",
       "otherServices": "Other services",
-      "breadcrumbServices": "Services"
+      "breadcrumbServices": "Services",
+      "scope": "Scope"
     },
     "contact": {
       "metaTitle": "Contact Us | Do It",

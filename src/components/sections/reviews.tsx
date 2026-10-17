@@ -31,12 +31,12 @@ export function Reviews({ locale, dict }: ReviewsProps) {
             <Eyebrow>{copy.eyebrow}</Eyebrow>
             <h2 className="text-3xl leading-tight font-black tracking-tight text-forest sm:text-4xl lg:text-5xl">
               {copy.titleBefore} <br />
-              <span className="text-brand-strong">{copy.titleHighlight}</span>
+              <span className="text-brand-ink">{copy.titleHighlight}</span>
             </h2>
           </div>
           <div className="flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-slate-50 p-4 shadow-sm">
             <div className="text-3xl font-black text-forest">
-              4.9<span className="text-sm font-normal text-slate-400">{copy.ratingScale}</span>
+              4.9<span className="text-sm font-normal text-slate-500">{copy.ratingScale}</span>
             </div>
             <div className="space-y-1 border-l border-slate-200 pl-4">
               <Stars label={dict.common.ratingLabel} />
