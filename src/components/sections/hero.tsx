@@ -1,9 +1,9 @@
-import Image from 'next/image';
 import { ButtonLink } from '@/components/ui/button-link';
 import { PhoneIcon } from '@/components/ui/icons';
 import { SITE } from '@/content/site';
 import { localizedPath, type Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/get-dictionary';
+import Image from 'next/image';
 
 type HeroProps = { locale: Locale; dict: Dictionary };
 
@@ -14,13 +14,13 @@ export function Hero({ locale, dict }: HeroProps) {
     <section className="relative flex min-h-[600px] w-full items-center overflow-hidden bg-forest lg:h-[750px]">
       <div className="absolute inset-0 z-0 h-full w-full">
         <Image
-          src="/images/hero.jpg"
+          src="/images/hero-3.jpg"
           alt={hero.imageAlt}
           fill
           preload
           fetchPriority="high"
           sizes="100vw"
-          className="object-cover object-right"
+          className="object-contain object-right"
         />
       </div>
 
