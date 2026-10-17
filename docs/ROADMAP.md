@@ -38,6 +38,7 @@ Tugas non-fitur:
 - [x] Primitif UI global (`Container`, `Button`, `Badge`, `Card`) dan layout (`TopBar`, `SiteHeader`, `SiteFooter`, skip link), dipakai semua fitur di atas
 - [x] 404/error page bermerek dua bahasa (`[locale]/not-found`, `[locale]/error`, `global-not-found`, `global-error`; ADR-015)
 - [x] Audit Lighthouse, a11y, responsif lintas halaman (hasil di `TESTING.md`; axe dan layout mobile diuji otomatis di E2E)
+- [ ] **Notifikasi email (Resend): ditunda, tetapi penting dan perlu selesai sebelum rilis.** Kode siap; tinggal akun, kunci API, dan 3 variabel di `.env` (langkah di `PROGRESS.md`, bagian "Ditunda tetapi Penting")
 - [ ] Deploy produksi + domain + Search Console
 
 ## Fase 2: Blog

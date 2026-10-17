@@ -7,13 +7,23 @@ Catatan status pekerjaan terkini. Beda dengan `ROADMAP.md` (rencana), file ini m
 - **Fase aktif**: Fase 1 (Landing page + tugas non-fitur): semua tugas non-fitur selesai kecuali deploy
 - **Terakhir diperbarui**: 2026-10-17
 - **Sedang dikerjakan**: tidak ada
-- **Blocker**: keputusan hosting dan akses akun (deploy, domain, Search Console); akun Resend untuk email notifikasi
+- **Blocker**: keputusan hosting dan akses akun (deploy, domain, Search Console). Notifikasi email (Resend) **ditunda tetapi penting**, lihat bagian di bawah
+
+## Ditunda tetapi Penting (wajib dibereskan sebelum rilis)
+
+Item di sini sengaja ditunda pemilik repo, bukan dilupakan. **Agent wajib mengingatkan pemilik repo tentang daftar ini sebelum deploy produksi.**
+
+| Item | Mengapa penting | Keadaan | Cara melanjutkan |
+| --- | --- | --- | --- |
+| **Notifikasi email via Resend** (dinyatakan penting oleh pemilik repo, 2026-10-17) | Tanpa ini pesan dari form kontak tersimpan di database tetapi **pemilik tidak diberi tahu**; calon klien bisa tak terjawab karena tidak ada yang mengecek database. | Kode sudah siap dan diuji dengan `fetch` palsu. Belum diuji ke Resend nyata; akun dan kunci API belum dibuat. Form tetap berfungsi (menyimpan ke Neon) tanpa ini. | 1) Daftar di resend.com dengan `andiazizp123@gmail.com`. 2) Buat API key. 3) Isi `RESEND_API_KEY`, `CONTACT_TO_EMAIL=andiazizp123@gmail.com`, `CONTACT_FROM_EMAIL=Do It <onboarding@resend.dev>` di `.env` (jangan kosongkan salah satu). 4) Minta agent menjalankan uji kirim nyata (satu pesan lewat form, cek inbox dan spam, hapus baris uji). Di produksi: isi env yang sama di hosting; untuk mengirim ke alamat lain verifikasi domain di Resend dan ganti `CONTACT_FROM_EMAIL`. Detail: `docs/features/2_CONTACT.md`, ADR-012. |
+
+Ditunda lainnya yang juga perlu diputuskan sebelum rilis (belum dinyatakan "penting" oleh pemilik repo; keterangan di sini saran agent): halaman legal (Privacy Policy, karena form mengumpulkan data pribadi), nomor telepon asli (saat ini dummy), akun sosial, bagian Tim di About, dan hosting/domain/Search Console.
 
 ## Langkah Berikutnya (untuk agent yang melanjutkan)
 
 1. ~~Neon~~ selesai 2026-10-17 (migrasi diterapkan, form dan rate limit teruji). Pemilik repo: perbaiki `DATABASE_URL_UNPOOLED` di `.env` agar memakai host tanpa `-pooler` (koneksi langsung).
 2. Pemilik repo: putuskan hal terbuka di dokumen fitur 1-3: isi halaman About, isi menu dropdown "Pages", nasib tautan Blog (404 sampai Fase 2), tautan sosial/telepon/email asli, keaslian testimoni.
-3. Pemilik repo: putuskan hosting dan siapkan akun, lalu deploy (tugas non-fitur terakhir Fase 1): lihat daftar langkah di bawah. Setelah deploy, agent mengukur ulang Lighthouse di produksi, mengisi `NEXT_PUBLIC_SITE_URL`, dan menguji kirim form + email nyata.
+3. Pemilik repo: putuskan hosting dan siapkan akun, lalu deploy (**sebelum deploy, ingatkan soal notifikasi email Resend di bagian "Ditunda tetapi Penting"**) (tugas non-fitur terakhir Fase 1): lihat daftar langkah di bawah. Setelah deploy, agent mengukur ulang Lighthouse di produksi, mengisi `NEXT_PUBLIC_SITE_URL`, dan menguji kirim form + email nyata.
 4. Agent: Fase 2 (Blog) setelah dokumen fitur 5 dikonfirmasi; sebelum itu, bahas konten landing page (lihat "Topik yang Ditampung").
 5. Tinjau ADR-010 (Cache Components) dan ADR-011 (jsdom v26).
 6. Tambahkan nama fitur baru ke `FEATURES` di `eslint.config.mjs` saat membuat folder di `src/features/`.
@@ -75,6 +85,12 @@ Entri terbaru di atas. Satu entri per sesi/tugas.
 - Belum selesai / catatan: sisa pekerjaan, asumsi, utang teknis
 - Berikutnya: langkah yang disarankan
 ```
+
+### 2026-10-17: Resend dicatat sebagai ditunda tetapi penting
+
+- Selesai: commit dan push (`f41f2cc`, `f7a17ee`, `baa2c61`; branch `feat/nextjs-layout` sejajar dengan `origin`). Atas permintaan pemilik repo, notifikasi email Resend dicatat sebagai **ditunda tetapi penting, wajib sebelum rilis**: bagian baru "Ditunda tetapi Penting" di atas, tugas di `ROADMAP.md`, status di `docs/features/2_CONTACT.md`, baris di `README.md`, dan pengingat untuk agent di `AGENTS.md`.
+- Verifikasi: hanya perubahan dokumen; `format:check` lolos.
+- Berikutnya: akun Resend saat pemilik repo siap, lalu uji kirim nyata; deploy/domain.
 
 ### 2026-10-17: Konten halaman About
 

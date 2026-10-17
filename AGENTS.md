@@ -33,6 +33,8 @@ Dokumen ini ditulis agar agent mana pun bisa melanjutkan pekerjaan tanpa riwayat
 
 **Masih terbuka**: mekanisme i18n dan strategi URL locale (rincian di ADR-006 dalam `DECISION.md`), library auth (ADR-005, baru dibutuhkan di Fase 3), parser Markdown + sanitizer, penyedia email, rate limiting, hosting final, daftar layanan dan konten About, keaslian testimoni.
 
+**Ditunda tetapi wajib sebelum rilis**: notifikasi email Resend (dinyatakan penting oleh pemilik repo). Detail dan langkahnya di `docs/PROGRESS.md`, bagian "Ditunda tetapi Penting". Ingatkan pemilik repo sebelum deploy produksi.
+
 **Referensi desain**: salinan template sumber ada di `docs/reference/welcome.blade.php` (Laravel Blade + Tailwind; hanya bacaan, jangan diedit atau dijalankan, bukan bagian build). Rangkumannya sudah di `docs/DESIGN_SYSTEM.md`; buka file aslinya hanya untuk detail yang belum tercakup (mis. section "Comprehensive Solution", baris 380-558). Aslinya ada di `C:\WANGDEF\Web-Company-Profile-IT-Solution\resources\views\welcome.blade.php`; file `DESIGN.md` di proyek lama itu **bukan** acuan (palet cyan, tidak cocok dengan template).
 
 **Bahasa**: dokumen ditulis dalam Bahasa Indonesia; kode, nama file, identifier, dan commit dalam Bahasa Inggris. Balas pemilik repo dalam Bahasa Indonesia.
