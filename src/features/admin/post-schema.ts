@@ -1,22 +1,30 @@
 import { z } from 'zod';
 
-export const POST_FIELDS = [
-  'locale',
+export const ADMIN_LOCALES = ['id', 'en'] as const;
+export type AdminLocale = (typeof ADMIN_LOCALES)[number];
+
+/** Field yang berbeda per bahasa. Nama field di form: `<field>_<locale>`, mis. `title_en`. */
+export const POST_TRANSLATED_FIELDS = [
   'title',
-  'slug',
   'excerpt',
   'content',
-  'coverImage',
   'coverAlt',
-  'status',
-  'publishedAt',
-  'authorName',
-  'categoryId',
   'seoTitle',
   'seoDescription',
 ] as const;
+export const POST_SHARED_FIELDS = [
+  'slug',
+  'coverImage',
+  'published',
+  'publishedAt',
+  'authorName',
+  'categoryId',
+] as const;
 
-export type PostField = (typeof POST_FIELDS)[number];
+export const POST_FIELDS = [
+  ...POST_SHARED_FIELDS,
+  ...ADMIN_LOCALES.flatMap((locale) => POST_TRANSLATED_FIELDS.map((field) => `${field}_${locale}`)),
+];
 
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const RESERVED_SLUGS = ['page', 'category'];
@@ -46,79 +54,114 @@ export function toJakartaInputValue(date: Date | null): string {
   return new Date(date.getTime() + 7 * 3_600_000).toISOString().slice(0, 16);
 }
 
-const optionalText = (max: number, label: string) =>
-  z.string().trim().max(max, `${label} maksimal ${max} karakter`);
+/** Path lokal (`/images/...`) atau URL https. Dipakai juga oleh form portofolio. */
+export function coverImageProblem(value: string): string | null {
+  if (value === '') return null;
+  const isLocal = value.startsWith('/') && !value.startsWith('//');
+  if (isLocal) return null;
+  if (!URL.canParse(value)) return 'Gunakan URL https atau path seperti /images/blog/a.jpg';
+  if (new URL(value).protocol !== 'https:') return 'URL cover harus https';
+  return null;
+}
 
-export const postFormSchema = z
-  .object({
-    locale: z.enum(['id', 'en'], 'Pilih bahasa'),
-    title: z
-      .string()
-      .trim()
-      .min(3, 'Judul minimal 3 karakter')
-      .max(160, 'Judul maksimal 160 karakter'),
-    slug: optionalText(120, 'Slug'),
-    excerpt: z
-      .string()
-      .trim()
-      .min(10, 'Ringkasan minimal 10 karakter')
-      .max(300, 'Ringkasan maksimal 300 karakter'),
-    content: z.string().trim().min(1, 'Isi wajib diisi').max(100_000, 'Isi terlalu panjang'),
-    coverImage: optionalText(500, 'URL cover'),
-    coverAlt: optionalText(200, 'Teks alternatif'),
-    status: z.enum(['DRAFT', 'PUBLISHED'], 'Pilih status'),
-    publishedAt: z.string().trim(),
-    authorName: z
-      .string()
-      .trim()
-      .min(1, 'Penulis wajib diisi')
-      .max(80, 'Penulis maksimal 80 karakter'),
-    categoryId: z.string().trim(),
-    seoTitle: optionalText(70, 'Judul SEO'),
-    seoDescription: optionalText(160, 'Deskripsi SEO'),
-  })
-  .superRefine((data, ctx) => {
-    const fail = (path: PostField, message: string) =>
-      ctx.addIssue({ code: 'custom', path: [path], message });
+type Values = Record<string, string>;
+type Issue = { field: string; message: string };
 
-    const slug = data.slug === '' ? slugify(data.title) : data.slug;
-    if (!SLUG_PATTERN.test(slug)) fail('slug', 'Slug hanya huruf kecil, angka, dan tanda hubung');
-    else if (RESERVED_SLUGS.includes(slug)) fail('slug', 'Slug ini dicadangkan untuk rute blog');
+const LIMITS = {
+  title: { min: 3, max: 160, label: 'Judul' },
+  excerpt: { min: 10, max: 300, label: 'Ringkasan' },
+  content: { min: 1, max: 100_000, label: 'Isi' },
+  coverAlt: { min: 0, max: 200, label: 'Teks alternatif' },
+  seoTitle: { min: 0, max: 70, label: 'Judul SEO' },
+  seoDescription: { min: 0, max: 160, label: 'Deskripsi SEO' },
+} as const;
 
-    if (data.coverImage !== '') {
-      const isLocal = data.coverImage.startsWith('/') && !data.coverImage.startsWith('//');
-      if (!isLocal && !URL.canParse(data.coverImage)) {
-        fail('coverImage', 'Gunakan URL https atau path seperti /images/blog/a.jpg');
-      } else if (!isLocal && new URL(data.coverImage).protocol !== 'https:') {
-        fail('coverImage', 'URL cover harus https');
+/** Bahasa Inggris dianggap diisi bila salah satu kolom utamanya berisi. */
+export function hasTranslation(values: Values, locale: AdminLocale): boolean {
+  if (locale === 'id') return true;
+  return ['title', 'excerpt', 'content'].some((field) =>
+    (values[`${field}_${locale}`] ?? '').trim(),
+  );
+}
+
+/**
+ * Validasi form artikel. Bahasa Indonesia wajib; bahasa Inggris opsional, tetapi bila diisi
+ * judul, ringkasan, dan isi harus lengkap.
+ */
+export function validatePost(raw: Values): { issues: Issue[]; values: Values } {
+  const values: Values = Object.fromEntries(
+    Object.entries(raw).map(([key, value]) => [
+      key,
+      key.startsWith('content_') ? value : value.trim(),
+    ]),
+  );
+  const issues: Issue[] = [];
+  const fail = (field: string, message: string) => issues.push({ field, message });
+
+  for (const locale of ADMIN_LOCALES) {
+    if (!hasTranslation(values, locale)) continue;
+    for (const [field, limit] of Object.entries(LIMITS)) {
+      const name = `${field}_${locale}`;
+      const value = (values[name] ?? '').trim();
+      if (limit.min > 0 && value.length < limit.min) {
+        fail(
+          name,
+          limit.min === 1
+            ? `${limit.label} wajib diisi`
+            : `${limit.label} minimal ${limit.min} karakter`,
+        );
+      } else if (value.length > limit.max) {
+        fail(name, `${limit.label} maksimal ${limit.max} karakter`);
       }
-      if (data.coverAlt === '') fail('coverAlt', 'Teks alternatif wajib bila ada cover');
     }
+  }
 
-    if (data.publishedAt !== '' && !parseJakartaDateTime(data.publishedAt)) {
-      fail('publishedAt', 'Tanggal tidak valid');
-    }
-    if (data.categoryId !== '' && !z.uuid().safeParse(data.categoryId).success) {
-      fail('categoryId', 'Kategori tidak valid');
-    }
-  });
+  const slug = values.slug ? values.slug.toLowerCase() : slugify(values.title_id ?? '');
+  if (!SLUG_PATTERN.test(slug)) fail('slug', 'Slug hanya huruf kecil, angka, dan tanda hubung');
+  else if (RESERVED_SLUGS.includes(slug)) fail('slug', 'Slug ini dicadangkan untuk rute blog');
+  else if (slug.length > 120) fail('slug', 'Slug maksimal 120 karakter');
 
-/** Data siap simpan: slug terisi, tanggal terbit dihitung, string kosong menjadi null. */
-export function toPostValues(data: z.infer<typeof postFormSchema>, now = new Date()) {
-  const publishedAt = parseJakartaDateTime(data.publishedAt);
-  return {
-    locale: data.locale,
-    title: data.title,
-    slug: data.slug === '' ? slugify(data.title) : data.slug,
-    excerpt: data.excerpt,
-    content: data.content,
-    coverImage: data.coverImage || null,
-    coverAlt: data.coverImage ? data.coverAlt : null,
-    status: data.status,
-    publishedAt: data.status === 'PUBLISHED' ? (publishedAt ?? now) : publishedAt,
-    authorName: data.authorName,
-    categoryId: data.categoryId || null,
-    seoTitle: data.seoTitle || null,
-    seoDescription: data.seoDescription || null,
+  const cover = coverImageProblem(values.coverImage ?? '');
+  if (cover) fail('coverImage', cover);
+  if (values.coverImage && !values.coverAlt_id) {
+    fail('coverAlt_id', 'Teks alternatif wajib bila ada cover');
+  }
+
+  if (values.publishedAt && !parseJakartaDateTime(values.publishedAt)) {
+    fail('publishedAt', 'Tanggal tidak valid');
+  }
+  const author = values.authorName ?? '';
+  if (!author) fail('authorName', 'Penulis wajib diisi');
+  else if (author.length > 80) fail('authorName', 'Penulis maksimal 80 karakter');
+  if (values.categoryId && !z.uuid().safeParse(values.categoryId).success) {
+    fail('categoryId', 'Kategori tidak valid');
+  }
+
+  return { issues, values: { ...values, slug } };
+}
+
+/** Data siap simpan: baris `posts` dan terjemahan yang diisi. */
+export function toPostRecords(values: Values, now = new Date()) {
+  const published = values.published === 'on';
+  const publishedAt = parseJakartaDateTime(values.publishedAt ?? '');
+  const post = {
+    slug: values.slug ?? '',
+    coverImage: values.coverImage || null,
+    status: published ? ('PUBLISHED' as const) : ('DRAFT' as const),
+    publishedAt: published ? (publishedAt ?? now) : publishedAt,
+    authorName: values.authorName ?? '',
+    categoryId: values.categoryId || null,
   };
+  const translations = ADMIN_LOCALES.filter((locale) => hasTranslation(values, locale)).map(
+    (locale) => ({
+      locale,
+      title: values[`title_${locale}`] ?? '',
+      excerpt: values[`excerpt_${locale}`] ?? '',
+      content: values[`content_${locale}`] ?? '',
+      coverAlt: post.coverImage ? values[`coverAlt_${locale}`] || null : null,
+      seoTitle: values[`seoTitle_${locale}`] || null,
+      seoDescription: values[`seoDescription_${locale}`] || null,
+    }),
+  );
+  return { post, translations };
 }

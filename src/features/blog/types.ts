@@ -1,3 +1,5 @@
+import type { Locale } from '@/i18n/config';
+
 export type PostCategory = { slug: string; name: string };
 
 /** Ringkasan untuk daftar artikel; tidak memuat isi. Tanggal berupa string ISO (aman untuk cache). */
@@ -19,6 +21,8 @@ export type Post = PostSummary & {
   seoTitle: string | null;
   seoDescription: string | null;
   categoryId: string | null;
+  /** Bahasa yang punya terjemahan artikel ini (untuk hreflang). */
+  locales: Locale[];
 };
 
 export type CategoryWithCount = PostCategory & { count: number };

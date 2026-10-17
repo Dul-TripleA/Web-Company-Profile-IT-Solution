@@ -120,6 +120,9 @@ Aturan lengkap ada di `AGENTS.md` ("Aturan Dependency"). Ringkasnya: fitur Next.
 | `tailwindcss`, `@tailwindcss/turbopack` | Sistem styling (ADR-004). Tailwind lewat rule Turbopack di `next.config.ts` (bawaan scaffold) |
 | `drizzle-orm`, `drizzle-kit`, `postgres`                                       | Akses PostgreSQL bertipe aman dan migrasi (ADR-008) |
 | `zod`                                                                          | Validasi input di batas sistem + inferensi tipe     |
+| `react-markdown` | Render Markdown artikel dengan aman (ADR-016) |
+| `@mdxeditor/editor` | Editor WYSIWYG Markdown di `/admin`, dimuat hanya di halaman editor (ADR-018) |
+| `motion` | Animasi masuk saat discroll di situs publik, lewat `components/shared/reveal.tsx` (ADR-020) |
 | `server-only`                                                                  | Mencegah modul server terbawa ke client             |
 | `eslint`, `eslint-config-next`, `prettier`, `prettier-plugin-tailwindcss`      | Kualitas kode                                       |
 | `vitest`, `@vitejs/plugin-react`, `jsdom` (dipin v26 agar jalan di Node 20), `@testing-library/react`, `@testing-library/dom`, `@playwright/test`, `@axe-core/playwright` | Pengujian (`TESTING.md`) |

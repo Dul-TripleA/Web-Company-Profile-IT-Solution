@@ -1,4 +1,5 @@
 import { Eyebrow } from '@/components/ui/eyebrow';
+import { Reveal, RevealItem, RevealList } from '@/components/shared/reveal';
 import { ChatIcon, ClipboardIcon, CodeIcon, ShieldCheckIcon } from '@/components/ui/icons';
 import type { Dictionary } from '@/i18n/get-dictionary';
 
@@ -9,7 +10,7 @@ const STEP_ICONS = [ChatIcon, ClipboardIcon, CodeIcon, ShieldCheckIcon] as const
 export function Approach({ dict }: { dict: Dictionary['home']['approach'] }) {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
-      <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+      <Reveal className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div>
           <Eyebrow>{dict.eyebrow}</Eyebrow>
           <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-forest sm:text-3xl">
@@ -17,7 +18,7 @@ export function Approach({ dict }: { dict: Dictionary['home']['approach'] }) {
           </h2>
         </div>
         <p className="max-w-md text-xs leading-relaxed text-slate-500 sm:text-sm">{dict.intro}</p>
-      </div>
+      </Reveal>
 
       {/* Cahaya lime di belakang kartu agar efek kaca (blur + transparan) terlihat di latar krem. */}
       <div className="relative">
@@ -30,11 +31,14 @@ export function Approach({ dict }: { dict: Dictionary['home']['approach'] }) {
           className="pointer-events-none absolute right-0 -bottom-10 h-56 w-56 rounded-full bg-emerald-400/20 blur-3xl"
         />
 
-        <ol className="relative grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <RevealList
+          as="ol"
+          className="relative grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4"
+        >
           {dict.steps.map((step, index) => {
             const Icon = STEP_ICONS[index];
             return (
-              <li
+              <RevealItem
                 key={step.title}
                 className="group relative overflow-hidden rounded-3xl border border-white/10 bg-linear-to-br from-forest-deep/95 via-forest/90 to-forest-deep/95 p-8 shadow-2xl ring-1 ring-brand/10 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-brand/40 hover:shadow-[0_10px_30px_rgba(153,227,68,0.1)] hover:ring-brand/30 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
               >
@@ -62,10 +66,10 @@ export function Approach({ dict }: { dict: Dictionary['home']['approach'] }) {
                     {step.description}
                   </p>
                 </div>
-              </li>
+              </RevealItem>
             );
           })}
-        </ol>
+        </RevealList>
       </div>
     </section>
   );

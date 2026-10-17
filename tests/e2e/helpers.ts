@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 import { SERVICES } from '../../src/content/services';
 import { LOCALES } from '../../src/i18n/config';
 
-const STATIC_PATHS = ['', '/about', '/services', '/contact'];
+const STATIC_PATHS = ['', '/about', '/services', '/portfolio', '/contact'];
 
 /** Semua halaman publik untuk semua locale, mis. `/id`, `/en/services/web-development`. */
 export const ALL_PAGES = LOCALES.flatMap((locale) => [

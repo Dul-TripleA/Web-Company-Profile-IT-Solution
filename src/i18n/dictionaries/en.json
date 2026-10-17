@@ -24,6 +24,7 @@
     "pages": "Pages",
     "services": "Services",
     "blog": "Blog",
+    "portfolio": "Portfolio",
     "contact": "Contact",
     "allServices": "All services",
     "technology": "Technologies",
@@ -267,6 +268,31 @@
       "eyebrow": "Our Services",
       "title": "What We Can Build for You",
       "description": "Websites, custom software, and interface design, tailored to how your business works."
+    },
+    "portfolio": {
+      "metaTitle": "Portfolio | Do It",
+      "metaDescription": "Selected projects by Do It: websites, internal software, and product design, with the problem, solution, and result of each.",
+      "eyebrow": "Portfolio",
+      "title": "Our Work",
+      "description": "A look at the kind of projects we take on: what the problem was, how we approached it, and what changed.",
+      "sampleBadge": "Sample",
+      "sampleNotice": "These are sample projects to illustrate our work. Real case studies will replace them.",
+      "viewCase": "View project",
+      "empty": "Case studies are coming soon."
+    },
+    "portfolioDetail": {
+      "eyebrow": "Project",
+      "breadcrumbPortfolio": "Portfolio",
+      "client": "Client",
+      "service": "Service",
+      "problem": "The problem",
+      "solution": "Our solution",
+      "result": "The result",
+      "techStack": "Technologies",
+      "ctaTitle": "Have a similar project?",
+      "ctaDescription": "Tell us about your project and we will respond with a technical consultation.",
+      "otherProjects": "Other projects",
+      "sampleNotice": "This is a sample project that illustrates our work, not a real client engagement."
     },
     "serviceDetail": {
       "eyebrow": "Service",

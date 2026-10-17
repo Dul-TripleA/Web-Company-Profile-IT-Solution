@@ -13,6 +13,35 @@
   --color-forest: #0b2923;
   --color-forest-deep: #071d18;
   --color-cream: #fcfbf7;
+
+  /* Admin (docs/DESIGN_SYSTEM.md §11). */
+  --color-admin-canvas: #eef2ec;
+  --color-admin-mint: #dcebd6;
+
+  /* Animasi masuk bagian atas halaman (hero). CSS murni agar tampil sejak cat pertama tanpa
+     menunggu JavaScript; bagian bawah memakai komponen Reveal (motion). */
+  --animate-rise: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-hero-zoom: hero-zoom 1.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes hero-zoom {
+    from {
+      transform: scale(1.06);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
 }
 
 /* inline: nilai --font-plus-jakarta baru ada saat runtime, di elemen <html>. */
@@ -33,5 +62,15 @@
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
+  }
+}
+
+/* Elemen Reveal (motion) dirender tersembunyi lalu dianimasikan oleh JavaScript. Bagi pengguna
+   "kurangi gerakan" konten langsung tampil tanpa menunggu JavaScript. Fallback tanpa JavaScript
+   ada di <noscript> pada layout [locale]. */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

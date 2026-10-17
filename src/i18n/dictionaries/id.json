@@ -24,6 +24,7 @@
     "pages": "Halaman",
     "services": "Layanan",
     "blog": "Blog",
+    "portfolio": "Portofolio",
     "contact": "Kontak",
     "allServices": "Semua layanan",
     "technology": "Teknologi",
@@ -267,6 +268,31 @@
       "eyebrow": "Layanan Kami",
       "title": "Yang Bisa Kami Bangun untuk Anda",
       "description": "Website, software khusus, dan desain antarmuka yang disesuaikan dengan cara kerja bisnis Anda."
+    },
+    "portfolio": {
+      "metaTitle": "Portofolio | Do It",
+      "metaDescription": "Proyek pilihan Do It: website, software internal, dan desain produk, lengkap dengan masalah, solusi, dan hasil tiap proyek.",
+      "eyebrow": "Portofolio",
+      "title": "Karya Kami",
+      "description": "Gambaran proyek yang kami kerjakan: apa masalahnya, bagaimana pendekatan kami, dan apa yang berubah.",
+      "sampleBadge": "Contoh",
+      "sampleNotice": "Ini adalah proyek contoh untuk menggambarkan pekerjaan kami. Studi kasus nyata akan menggantikannya.",
+      "viewCase": "Lihat proyek",
+      "empty": "Studi kasus segera hadir."
+    },
+    "portfolioDetail": {
+      "eyebrow": "Proyek",
+      "breadcrumbPortfolio": "Portofolio",
+      "client": "Klien",
+      "service": "Layanan",
+      "problem": "Masalahnya",
+      "solution": "Solusi kami",
+      "result": "Hasilnya",
+      "techStack": "Teknologi",
+      "ctaTitle": "Punya proyek serupa?",
+      "ctaDescription": "Ceritakan proyek Anda dan kami akan membalas dengan konsultasi teknis.",
+      "otherProjects": "Proyek lainnya",
+      "sampleNotice": "Ini adalah proyek contoh yang menggambarkan pekerjaan kami, bukan proyek klien sungguhan."
     },
     "serviceDetail": {
       "eyebrow": "Layanan",

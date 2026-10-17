@@ -203,3 +203,41 @@ Pembaruan: teks hijau di latar terang kini memakai `brand-ink` (ditemukan axe), 
 Kartu "kaca" (dipakai di Our Approach, `components/sections/approach.tsx`): `bg-linear-to-br from-forest-deep via-forest/90 to-forest-deep/95`, `border-white/10`, `ring-1 ring-brand/10`, `backdrop-blur-md`, kilau `bg-brand/20 blur-3xl` di pojok, garis `via-white/30` di tepi atas, dan cahaya lime/emerald di belakang kartu supaya transparansinya terlihat di latar terang. Kotak ikon: `h-11 w-11 rounded-2xl bg-brand/15 text-brand`, berbalik menjadi `bg-brand text-forest` saat hover.
 
 Logo: file sumber di `public/images/logo` (`doit_logo.png` = logo lengkap di latar gelap, `do_it_logo2.png` = lambang di latar putih). `logo-full.png` (transparan, dipotong) dibuat oleh `docs/reference/make-brand-assets.cjs` dan dipakai di header (`h-11`) dan footer (`h-10`) lewat `next/image`. Lambang saja dipakai untuk favicon dan ikon aplikasi (latar putih agar terlihat di tab gelap). Ikon `LayersIcon` placeholder tidak dipakai lagi.
+
+## 11. Admin UI (`/admin`)
+
+**Acuan visual: `docs/reference/dashboard-ui.jpg`** (dashboard gelap-hijau). Area admin **tidak** memakai gaya situs publik (hero gelap, glow lime); ikuti bagian ini. Hanya bacaan; jangan menyalin data/angka di gambar.
+
+**Kerangka**
+
+- **Sidebar gelap** (`bg-forest-deep`, teks putih/slate-300) lebar ±256px di desktop (`lg`): logo di atas, label kecil huruf kapital "NAVIGASI", item menu ikon + teks, item aktif berlatar sedikit lebih terang (`bg-white/10`) dengan teks putih, badge hijau kecil (mis. jumlah pesan belum ditangani). Di bawah: kartu akun (avatar inisial, nama, username) dan tombol keluar.
+- **Kanvas konten terang** (`bg-admin-canvas`) dengan sudut besar membulat di desktop; kartu putih `rounded-2xl`, bayangan halus, tanpa border tebal.
+- **Header halaman**: judul tebal besar (`text-2xl`/`3xl font-extrabold`) di kiri, aksi di kanan: tombol utama **pil hitam** (`bg-forest-deep text-white rounded-full`) dan tombol ikon bulat.
+- **Kartu statistik**: label kecil abu-abu, angka besar tebal, keterangan kecil di bawah. Satu kartu disorot gelap (`bg-forest-deep`, angka putih, aksen `brand`), satu kartu disorot hijau muda (`bg-admin-mint`).
+- **Tabel**: header kecil abu-abu tanpa garis tebal, baris lega, **pil status** berwarna lembut (hijau = terbit, abu = draft, kuning = terjadwal, oranye = belum ditangani). Filter berupa pil/tab di atas tabel.
+- **Form**: acuan `docs/reference/form-ui.webp` (tata letak saja; warna tetap token situs). Navigasi bagian di kiri (`xl`), tiap bagian berupa kartu dengan judul + deskripsi, baris `label + keterangan | isian` dipisah garis putus-putus, input dengan awalan (mis. `/blog/`), sakelar untuk on/off, tab bahasa berbendera. Bilah simpan lengket di bawah dengan penanda status simpan. Komponen: `form-layout.tsx`, `form-controls.tsx`, `flag.tsx`.
+- **Aksi tabel**: setiap baris punya tombol Ubah, Pratinjau, Lihat, Hapus (ikon + teks di layar lebar dan kartu ponsel; hapus selalu minta konfirmasi). Komponen: `row-actions.tsx`.
+
+**Responsif (wajib, walau area admin)**
+
+- `< lg`: sidebar menjadi **laci** (drawer) yang dibuka dari tombol menu di bilah atas; tertutup otomatis saat pindah halaman dan dengan `Escape`; latar gelap di belakangnya bisa diklik untuk menutup.
+- Tabel berubah menjadi **daftar kartu** di ponsel; tidak ada scroll horizontal halaman.
+- Target sentuh minimal 44px di perangkat sentuh (`pointer-coarse:`), sama seperti situs publik.
+
+**Kemudahan pengguna (prioritas)**
+
+- Menu aktif selalu terlihat; jumlah pesan belum ditangani tampil sebagai badge.
+- Pesan sukses/galat jelas di dekat tombol; galat per kolom di bawah kolomnya.
+- Peringatan saat meninggalkan form yang belum disimpan.
+- Aksi berbahaya (hapus) selalu butuh konfirmasi kedua.
+- Pencarian dan filter status di daftar artikel; filter "belum ditangani" di pesan.
+
+**Token tambahan** (di `globals.css`): `--color-admin-canvas` (latar konten), `--color-admin-mint` (kartu sorot hijau muda). Ikon: SVG inline di `features/admin/components/icons.tsx` (tanpa library ikon).
+
+## 12. Animasi situs publik (ADR-020)
+
+- **Hero / PageHero**: CSS `motion-safe:animate-rise` (fade + naik 16px, 0.7 dtk) bertahap dengan `animationDelay` 0/120/240 ms; gambar hero `motion-safe:animate-hero-zoom` (skala 1.06 ke 1). Token di `globals.css` (`--animate-rise`, `--animate-hero-zoom`).
+- **Bagian di bawah lipatan**: `Reveal` (blok) dan `RevealList` + `RevealItem` (kartu bergantian, jeda 0.09 dtk), fade + naik 24px, 0.55-0.6 dtk, easing `cubic-bezier(0.22, 1, 0.36, 1)`, sekali per elemen.
+- **Hover** tetap dengan Tailwind (naik sedikit, glow lime), tidak lewat Motion.
+- Jangan menganimasikan isi artikel, form, atau navigasi; jangan menahan konten utama di atas lipatan. Hormati `prefers-reduced-motion` (sudah otomatis lewat komponen dan `[data-reveal]`).
+- Admin tidak dianimasikan.

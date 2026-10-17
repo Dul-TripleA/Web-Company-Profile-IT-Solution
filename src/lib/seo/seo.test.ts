@@ -92,6 +92,8 @@ describe('panjang metadata di kamus', () => {
       ['about', dict.pages.about.metaTitle, dict.pages.about.metaDescription],
       ['services', dict.pages.services.metaTitle, dict.pages.services.metaDescription],
       ['contact', dict.pages.contact.metaTitle, dict.pages.contact.metaDescription],
+      ['portfolio', dict.pages.portfolio.metaTitle, dict.pages.portfolio.metaDescription],
+      ['blog', dict.blog.metaTitle, dict.blog.metaDescription],
     ];
 
     for (const [page, title, description] of entries) {

@@ -1,10 +1,13 @@
 import { sql } from 'drizzle-orm';
 import {
+  type AnyPgColumn,
   boolean,
   check,
   index,
+  integer,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uniqueIndex,
@@ -80,21 +83,39 @@ export const adminLoginAttempts = pgTable(
   (t) => [index('admin_login_attempts_idx').on(t.ipHash, t.createdAt.desc())],
 );
 
-// Blog (docs/features/5_BLOG.md). Satu artikel = satu bahasa (kolom `locale`).
+// Blog (docs/features/5_BLOG.md). Satu artikel = satu baris `posts` (data bersama) + satu baris
+// terjemahan per bahasa di `post_translations`. Bahasa Indonesia wajib (dijaga aplikasi), Inggris opsional.
 export const postStatus = pgEnum('post_status', ['DRAFT', 'PUBLISHED']);
+
+const localeCheck = (name: string, column: AnyPgColumn) =>
+  check(name, sql`${column} in ('id', 'en')`);
+const slugCheck = (name: string, column: AnyPgColumn) =>
+  check(name, sql`${column} ~ '^[a-z0-9]+(-[a-z0-9]+)*$'`);
 
 export const categories = pgTable(
   'categories',
   {
     id: uuid().primaryKey().defaultRandom(),
-    locale: text().notNull(),
     slug: text().notNull(),
+  },
+  (t) => [
+    uniqueIndex('categories_slug_idx').on(t.slug),
+    slugCheck('categories_slug_check', t.slug),
+  ],
+);
+
+export const categoryTranslations = pgTable(
+  'category_translations',
+  {
+    categoryId: uuid()
+      .notNull()
+      .references(() => categories.id, { onDelete: 'cascade' }),
+    locale: text().notNull(),
     name: text().notNull(),
   },
   (t) => [
-    uniqueIndex('categories_locale_slug_idx').on(t.locale, t.slug),
-    check('categories_locale_check', sql`${t.locale} in ('id', 'en')`),
-    check('categories_slug_check', sql`${t.slug} ~ '^[a-z0-9]+(-[a-z0-9]+)*$'`),
+    primaryKey({ columns: [t.categoryId, t.locale] }),
+    localeCheck('category_translations_locale_check', t.locale),
   ],
 );
 
@@ -102,38 +123,97 @@ export const posts = pgTable(
   'posts',
   {
     id: uuid().primaryKey().defaultRandom(),
-    locale: text().notNull(),
+    // Sama untuk semua bahasa: /id/blog/<slug> dan /en/blog/<slug>.
     slug: text().notNull(),
-    title: text().notNull(),
-    excerpt: text().notNull(),
-    // Markdown mentah; dirender dan disanitasi di server (components/shared/markdown.tsx).
-    content: text().notNull(),
     coverImage: text(),
-    coverAlt: text(),
     status: postStatus().notNull().default('DRAFT'),
     // Artikel tampil bila status PUBLISHED dan published_at <= now() (tanggal depan = terjadwal).
     publishedAt: timestamp({ withTimezone: true }),
     authorName: text().notNull().default('Do It'),
     categoryId: uuid().references(() => categories.id, { onDelete: 'set null' }),
-    seoTitle: text(),
-    seoDescription: text(),
     createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-    // Tidak otomatis saat diedit lewat Drizzle Studio; perbarui manual bila isi berubah.
     updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
-    uniqueIndex('posts_locale_slug_idx').on(t.locale, t.slug),
+    uniqueIndex('posts_slug_idx').on(t.slug),
     // Partial index untuk daftar artikel terbit, urutannya sama dengan ORDER BY di query.
     index('posts_published_idx')
-      .on(t.locale, t.publishedAt.desc(), t.id.desc())
+      .on(t.publishedAt.desc(), t.id.desc())
       .where(sql`${t.status} = 'PUBLISHED'`),
     index('posts_category_idx').on(t.categoryId, t.publishedAt.desc()),
-    check('posts_locale_check', sql`${t.locale} in ('id', 'en')`),
     // Slug aman untuk URL, dan tidak bentrok dengan rute /blog/page/[n] dan /blog/category/[slug].
     check(
       'posts_slug_check',
       sql`${t.slug} ~ '^[a-z0-9]+(-[a-z0-9]+)*$' and ${t.slug} not in ('page', 'category')`,
     ),
     check('posts_published_has_date', sql`${t.status} = 'DRAFT' or ${t.publishedAt} is not null`),
+  ],
+);
+
+export const postTranslations = pgTable(
+  'post_translations',
+  {
+    postId: uuid()
+      .notNull()
+      .references(() => posts.id, { onDelete: 'cascade' }),
+    locale: text().notNull(),
+    title: text().notNull(),
+    excerpt: text().notNull(),
+    // Markdown mentah; dirender dan disanitasi di server (components/shared/markdown.tsx).
+    content: text().notNull(),
+    coverAlt: text(),
+    seoTitle: text(),
+    seoDescription: text(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.postId, t.locale] }),
+    localeCheck('post_translations_locale_check', t.locale),
+  ],
+);
+
+// Portofolio (docs/features/8_PORTFOLIO.md). Pola dua bahasa sama dengan artikel.
+export const portfolioProjects = pgTable(
+  'portfolio_projects',
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    slug: text().notNull(),
+    // Slug layanan di src/content/services.ts.
+    serviceSlug: text().notNull(),
+    techStack: text()
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    coverImage: text(),
+    // true = proyek contoh (fiktif): berlabel "Contoh", tidak diindeks, tidak masuk sitemap.
+    isSample: boolean().notNull().default(false),
+    status: postStatus().notNull().default('DRAFT'),
+    sortOrder: integer().notNull().default(0),
+    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex('portfolio_projects_slug_idx').on(t.slug),
+    slugCheck('portfolio_projects_slug_check', t.slug),
+  ],
+);
+
+export const portfolioTranslations = pgTable(
+  'portfolio_translations',
+  {
+    projectId: uuid()
+      .notNull()
+      .references(() => portfolioProjects.id, { onDelete: 'cascade' }),
+    locale: text().notNull(),
+    title: text().notNull(),
+    summary: text().notNull(),
+    client: text().notNull(),
+    problem: text().notNull(),
+    solution: text().notNull(),
+    result: text().notNull(),
+    coverAlt: text(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.projectId, t.locale] }),
+    localeCheck('portfolio_translations_locale_check', t.locale),
   ],
 );

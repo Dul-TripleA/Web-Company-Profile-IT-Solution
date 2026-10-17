@@ -4,34 +4,60 @@ import { and, count, desc, eq, lte, ne, sql } from 'drizzle-orm';
 import { cacheLife, cacheTag } from 'next/cache';
 import type { Locale } from '@/i18n/config';
 import { getDb } from '@/lib/db';
-import { categories, posts } from '@/lib/db/schema';
+import { categories, categoryTranslations, postTranslations, posts } from '@/lib/db/schema';
 import { POSTS_CACHE_TAG } from './constants';
 import type { CategoryWithCount, Post, PostListPage, PostSummary } from './types';
 
-// Semua fungsi di berkas ini ter-cache (use cache) dan memakai tag `posts`. Artikel baru yang
-// ditambahkan langsung ke database (mis. lewat Drizzle Studio) muncul paling lambat setelah
-// `revalidate` (5 menit); halaman yang memanggilnya tidak diprerender saat build (connection()).
+// Semua fungsi di berkas ini ter-cache (use cache) dan memakai tag `posts`. Perubahan dari admin
+// memanggil updateTag('posts'); halaman yang memanggilnya tidak diprerender saat build (connection()).
+//
+// Satu artikel = baris `posts` + terjemahan per bahasa. Artikel tampil di /<locale> hanya bila
+// punya terjemahan di bahasa itu. Nama kategori memakai terjemahan bahasa itu, atau bahasa
+// Indonesia bila belum ada.
 
-/** Artikel terbit: status PUBLISHED dan tanggal terbit sudah lewat (tanggal depan = terjadwal). */
-function publishedFilter(locale: Locale) {
-  return and(
-    eq(posts.locale, locale),
-    eq(posts.status, 'PUBLISHED'),
-    lte(posts.publishedAt, sql`now()`),
-  );
+function cache() {
+  cacheTag(POSTS_CACHE_TAG);
+  cacheLife({ stale: 60, revalidate: 300, expire: 3600 });
 }
 
-const summaryColumns = {
-  slug: posts.slug,
-  title: posts.title,
-  excerpt: posts.excerpt,
-  coverImage: posts.coverImage,
-  coverAlt: posts.coverAlt,
-  publishedAt: posts.publishedAt,
-  authorName: posts.authorName,
-  categorySlug: categories.slug,
-  categoryName: categories.name,
-};
+/** Artikel terbit: status PUBLISHED dan tanggal terbit sudah lewat (tanggal depan = terjadwal). */
+const published = and(eq(posts.status, 'PUBLISHED'), lte(posts.publishedAt, sql`now()`));
+
+/** Nama kategori dalam bahasa diminta, atau bahasa Indonesia sebagai cadangan. */
+function categoryName(locale: Locale) {
+  return sql<string | null>`coalesce(
+    (select ${categoryTranslations.name} from ${categoryTranslations}
+      where ${categoryTranslations.categoryId} = ${categories.id} and ${categoryTranslations.locale} = ${locale}),
+    (select ${categoryTranslations.name} from ${categoryTranslations}
+      where ${categoryTranslations.categoryId} = ${categories.id} and ${categoryTranslations.locale} = 'id')
+  )`;
+}
+
+function summaryColumns(locale: Locale) {
+  return {
+    slug: posts.slug,
+    title: postTranslations.title,
+    excerpt: postTranslations.excerpt,
+    coverImage: posts.coverImage,
+    coverAlt: postTranslations.coverAlt,
+    publishedAt: posts.publishedAt,
+    authorName: posts.authorName,
+    categorySlug: categories.slug,
+    categoryName: categoryName(locale),
+  };
+}
+
+/** posts + terjemahan bahasa diminta (inner join: tanpa terjemahan berarti tidak tampil) + kategori. */
+function fromPosts(locale: Locale) {
+  return getDb()
+    .select(summaryColumns(locale))
+    .from(posts)
+    .innerJoin(
+      postTranslations,
+      and(eq(postTranslations.postId, posts.id), eq(postTranslations.locale, locale)),
+    )
+    .leftJoin(categories, eq(posts.categoryId, categories.id));
+}
 
 type SummaryRow = {
   slug: string;
@@ -68,27 +94,22 @@ export async function getPublishedPosts(
   pageSize: number,
   categorySlug: string | null,
 ): Promise<PostListPage> {
-  cacheTag(POSTS_CACHE_TAG);
-  cacheLife({ stale: 60, revalidate: 300, expire: 3600 });
-
-  const db = getDb();
-  const filter = and(
-    publishedFilter(locale),
-    categorySlug ? eq(categories.slug, categorySlug) : undefined,
-  );
+  cache();
+  const filter = and(published, categorySlug ? eq(categories.slug, categorySlug) : undefined);
 
   const [rows, totals] = await Promise.all([
-    db
-      .select(summaryColumns)
-      .from(posts)
-      .leftJoin(categories, eq(posts.categoryId, categories.id))
+    fromPosts(locale)
       .where(filter)
       .orderBy(desc(posts.publishedAt), desc(posts.id))
       .limit(pageSize)
       .offset((page - 1) * pageSize),
-    db
+    getDb()
       .select({ total: count() })
       .from(posts)
+      .innerJoin(
+        postTranslations,
+        and(eq(postTranslations.postId, posts.id), eq(postTranslations.locale, locale)),
+      )
       .leftJoin(categories, eq(posts.categoryId, categories.id))
       .where(filter),
   ]);
@@ -103,24 +124,33 @@ export async function getPublishedPosts(
 }
 
 export async function getPublishedPostBySlug(locale: Locale, slug: string): Promise<Post | null> {
-  cacheTag(POSTS_CACHE_TAG);
-  cacheLife({ stale: 60, revalidate: 300, expire: 3600 });
+  cache();
+  const db = getDb();
 
-  const [row] = await getDb()
+  const [row] = await db
     .select({
-      ...summaryColumns,
+      ...summaryColumns(locale),
       id: posts.id,
-      content: posts.content,
+      content: postTranslations.content,
       updatedAt: posts.updatedAt,
-      seoTitle: posts.seoTitle,
-      seoDescription: posts.seoDescription,
+      seoTitle: postTranslations.seoTitle,
+      seoDescription: postTranslations.seoDescription,
       categoryId: posts.categoryId,
     })
     .from(posts)
+    .innerJoin(
+      postTranslations,
+      and(eq(postTranslations.postId, posts.id), eq(postTranslations.locale, locale)),
+    )
     .leftJoin(categories, eq(posts.categoryId, categories.id))
-    .where(and(publishedFilter(locale), eq(posts.slug, slug)))
+    .where(and(published, eq(posts.slug, slug)))
     .limit(1);
   if (!row) return null;
+
+  const locales = await db
+    .select({ locale: postTranslations.locale })
+    .from(postTranslations)
+    .where(eq(postTranslations.postId, row.id));
 
   return {
     ...toSummary(row),
@@ -130,6 +160,7 @@ export async function getPublishedPostBySlug(locale: Locale, slug: string): Prom
     seoTitle: row.seoTitle,
     seoDescription: row.seoDescription,
     categoryId: row.categoryId,
+    locales: locales.map((item) => item.locale as Locale),
   };
 }
 
@@ -140,101 +171,108 @@ export async function getRelatedPosts(
   categoryId: string | null,
   limit: number,
 ): Promise<PostSummary[]> {
-  cacheTag(POSTS_CACHE_TAG);
-  cacheLife({ stale: 60, revalidate: 300, expire: 3600 });
-
-  const db = getDb();
-  const base = () =>
-    db.select(summaryColumns).from(posts).leftJoin(categories, eq(posts.categoryId, categories.id));
+  cache();
 
   const sameCategory = categoryId
-    ? await base()
-        .where(and(publishedFilter(locale), ne(posts.id, postId), eq(posts.categoryId, categoryId)))
+    ? await fromPosts(locale)
+        .where(and(published, ne(posts.id, postId), eq(posts.categoryId, categoryId)))
         .orderBy(desc(posts.publishedAt), desc(posts.id))
         .limit(limit)
     : [];
   if (sameCategory.length >= limit) return sameCategory.map(toSummary);
 
   const taken = new Set(sameCategory.map((row) => row.slug));
-  const latest = await base()
-    .where(and(publishedFilter(locale), ne(posts.id, postId)))
+  const latest = await fromPosts(locale)
+    .where(and(published, ne(posts.id, postId)))
     .orderBy(desc(posts.publishedAt), desc(posts.id))
     .limit(limit);
   const filler = latest.filter((row) => !taken.has(row.slug)).slice(0, limit - sameCategory.length);
   return [...sameCategory, ...filler].map(toSummary);
 }
 
-/** Kategori yang punya minimal satu artikel terbit, untuk filter di daftar artikel. */
+/** Kategori yang punya minimal satu artikel terbit di bahasa ini, untuk filter di daftar artikel. */
 export async function getCategories(locale: Locale): Promise<CategoryWithCount[]> {
-  cacheTag(POSTS_CACHE_TAG);
-  cacheLife({ stale: 60, revalidate: 300, expire: 3600 });
+  cache();
 
+  const name = categoryName(locale);
   const rows = await getDb()
-    .select({ slug: categories.slug, name: categories.name, total: count(posts.id) })
+    .select({ slug: categories.slug, name, total: count(posts.id) })
     .from(categories)
     .innerJoin(posts, eq(posts.categoryId, categories.id))
-    .where(publishedFilter(locale))
+    .innerJoin(
+      postTranslations,
+      and(eq(postTranslations.postId, posts.id), eq(postTranslations.locale, locale)),
+    )
+    .where(published)
     .groupBy(categories.id)
-    .orderBy(categories.name);
-  return rows.map((row) => ({ slug: row.slug, name: row.name, count: row.total }));
+    .orderBy(name);
+  return rows.flatMap((row) =>
+    row.name ? [{ slug: row.slug, name: row.name, count: row.total }] : [],
+  );
 }
 
 export async function getCategoryBySlug(locale: Locale, slug: string) {
-  cacheTag(POSTS_CACHE_TAG);
-  cacheLife({ stale: 60, revalidate: 300, expire: 3600 });
+  cache();
 
   const [row] = await getDb()
-    .select({ slug: categories.slug, name: categories.name })
+    .select({ slug: categories.slug, name: categoryName(locale) })
     .from(categories)
-    .where(and(eq(categories.locale, locale), eq(categories.slug, slug)))
+    .where(eq(categories.slug, slug))
     .limit(1);
-  return row ?? null;
+  return row?.name ? { slug: row.slug, name: row.name } : null;
 }
 
 /** Artikel terbaru untuk RSS. */
 export async function getRecentPosts(locale: Locale, limit: number): Promise<PostSummary[]> {
-  cacheTag(POSTS_CACHE_TAG);
-  cacheLife({ stale: 60, revalidate: 300, expire: 3600 });
+  cache();
 
-  const rows = await getDb()
-    .select(summaryColumns)
-    .from(posts)
-    .leftJoin(categories, eq(posts.categoryId, categories.id))
-    .where(publishedFilter(locale))
+  const rows = await fromPosts(locale)
+    .where(published)
     .orderBy(desc(posts.publishedAt), desc(posts.id))
     .limit(limit);
   return rows.map(toSummary);
 }
 
-/** Semua artikel dan kategori terbit di semua bahasa, untuk sitemap. */
+/** Semua artikel terbit beserta bahasa yang tersedia, dan kategori yang dipakai, untuk sitemap. */
 export async function getSitemapEntries(): Promise<{
-  posts: { locale: Locale; slug: string; updatedAt: string }[];
-  categories: { locale: Locale; slug: string }[];
+  posts: { slug: string; locales: Locale[]; updatedAt: string }[];
+  categories: { slug: string; locales: Locale[] }[];
 }> {
-  cacheTag(POSTS_CACHE_TAG);
-  cacheLife({ stale: 60, revalidate: 300, expire: 3600 });
+  cache();
 
   const db = getDb();
-  const published = and(eq(posts.status, 'PUBLISHED'), lte(posts.publishedAt, sql`now()`));
   const [postRows, categoryRows] = await Promise.all([
     db
-      .select({ locale: posts.locale, slug: posts.slug, updatedAt: posts.updatedAt })
+      .select({
+        slug: posts.slug,
+        updatedAt: posts.updatedAt,
+        locales: sql<
+          string[]
+        >`array_agg(${postTranslations.locale} order by ${postTranslations.locale} desc)`,
+      })
       .from(posts)
+      .innerJoin(postTranslations, eq(postTranslations.postId, posts.id))
       .where(published)
+      .groupBy(posts.id)
       .orderBy(desc(posts.publishedAt)),
     db
-      .selectDistinct({ locale: categories.locale, slug: categories.slug })
+      .select({
+        slug: categories.slug,
+        locales: sql<string[]>`array_agg(distinct ${postTranslations.locale})`,
+      })
       .from(categories)
       .innerJoin(posts, eq(posts.categoryId, categories.id))
-      .where(published),
+      .innerJoin(postTranslations, eq(postTranslations.postId, posts.id))
+      .where(published)
+      .groupBy(categories.id),
   ]);
 
   return {
     posts: postRows.map((row) => ({
-      locale: row.locale as Locale,
       slug: row.slug,
+      locales: row.locales as Locale[],
       updatedAt: row.updatedAt.toISOString(),
     })),
-    categories: categoryRows.map((row) => ({ locale: row.locale as Locale, slug: row.slug })),
+    categories: categoryRows.map((row) => ({ slug: row.slug, locales: row.locales as Locale[] })),
   };
 }

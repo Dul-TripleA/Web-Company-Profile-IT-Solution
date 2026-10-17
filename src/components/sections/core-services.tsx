@@ -1,3 +1,4 @@
+import { Reveal, RevealItem, RevealList } from '@/components/shared/reveal';
 import Link from 'next/link';
 import { Eyebrow } from '@/components/ui/eyebrow';
 import { ArrowRightIcon } from '@/components/ui/icons';
@@ -25,7 +26,7 @@ export function CoreServices({ locale, dict, learnMore, showHeader = true }: Cor
 
       <div className="relative z-10 mx-auto max-w-7xl">
         {showHeader ? (
-          <div className="mb-16 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <Reveal className="mb-16 flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div className="space-y-3">
               <Eyebrow tone="light">{dict.eyebrow}</Eyebrow>
               <h2 className="text-3xl leading-tight font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
@@ -36,18 +37,18 @@ export function CoreServices({ locale, dict, learnMore, showHeader = true }: Cor
             <p className="max-w-md text-xs leading-relaxed text-slate-300 sm:text-sm">
               {dict.intro}
             </p>
-          </div>
+          </Reveal>
         ) : (
           <h2 className="sr-only">
             {dict.titleBefore} {dict.titleHighlight} {dict.titleAfter}
           </h2>
         )}
 
-        <ul className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3">
+        <RevealList className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3">
           {SERVICES.map((service) => {
             const copy = getServiceCopy(service, locale);
             return (
-              <li
+              <RevealItem
                 key={service.slug}
                 className="flex flex-col justify-between rounded-3xl border border-emerald-900/60 bg-forest/80 p-8 shadow-2xl transition-all duration-300 hover:border-brand/40 hover:shadow-[0_10px_30px_rgba(153,227,68,0.1)]"
               >
@@ -76,10 +77,10 @@ export function CoreServices({ locale, dict, learnMore, showHeader = true }: Cor
                     <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1.5" />
                   </Link>
                 </div>
-              </li>
+              </RevealItem>
             );
           })}
-        </ul>
+        </RevealList>
       </div>
     </section>
   );

@@ -16,11 +16,15 @@
     "db:migrate": "bun --bun drizzle-kit migrate",
     "db:studio": "bun --bun drizzle-kit studio",
     "admin:create": "bun scripts/create-user.ts",
+    "db:seed": "bun scripts/seed.ts seed",
+    "db:unseed": "bun scripts/seed.ts unseed",
     "test:e2e": "bun run build && playwright test",
     "test:e2e:only": "playwright test"
   },
   "dependencies": {
+    "@mdxeditor/editor": "^4.3.3",
     "drizzle-orm": "^0.45.4",
+    "motion": "^14.3.0",
     "next": "16.4.2",
     "postgres": "^3.4.9",
     "react": "19.3.0",

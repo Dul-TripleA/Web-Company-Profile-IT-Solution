@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function AdminRootLayout({ children }: LayoutProps<'/admin'>) {
   return (
     <html lang="id" className={plusJakartaSans.variable}>
-      <body suppressHydrationWarning={true} className="min-h-screen bg-slate-50 text-slate-900">
+      <body suppressHydrationWarning={true} className="min-h-screen bg-forest-deep text-slate-900">
         {children}
       </body>
     </html>

@@ -160,3 +160,35 @@ Status: `Proposed` (usulan, perlu konfirmasi) · `Accepted` · `Rejected` · `Su
 - Opsi: buat sendiri dengan `node:crypto`; Auth.js; Better Auth. Draf pertama (satu admin dari `.env`, cookie HMAC) ditolak pemilik repo karena membingungkan dan tidak multiuser.
 - Keputusan: tabel `users` (password scrypt) dan `sessions` (token acak di cookie, hanya hash SHA-256 yang disimpan, bisa dicabut); login dengan email atau username; batas 5 percobaan gagal per 15 menit per IP (`admin_login_attempts`). Akun dibuat lewat `bun run admin:create`. Tanpa dependency baru dan tanpa variabel env tambahan.
 - Konsekuensi: Tidak ada OAuth/reset password/peran; semua pengguna admin penuh. Pemeriksaan sesi dipanggil manual di setiap halaman dan action (`requireAdmin()`), jadi action baru wajib memanggilnya; ada tes E2E untuk akses tanpa sesi. Bila kebutuhan bertambah (SSO, 2FA), pertimbangkan library.
+
+## ADR-018: Editor WYSIWYG Markdown di admin (MDXEditor)
+- Tanggal: 2026-10-17
+- Status: Accepted (dipilih pemilik repo)
+- Konteks: Penulis artikel butuh editor visual, tetapi konten tetap disimpan sebagai Markdown (ADR-009) dan dirender `react-markdown`.
+- Opsi: MDXEditor (WYSIWYG yang membaca/menulis Markdown langsung); Tiptap + tiptap-markdown (fokus HTML, risiko format berubah, 3-5 paket); Milkdown (integrasi React manual); tanpa library (toolbar + pratinjau, bukan WYSIWYG).
+- Keputusan: `@mdxeditor/editor`, dimuat dengan `next/dynamic` (`ssr: false`) hanya di form artikel. Plugin dibatasi pada fitur Markdown standar (judul h2-h4, tebal/miring, kode, daftar, kutipan, tautan, gambar via URL, tabel, garis); tanpa JSX/HTML (`suppressHtmlProcessing`). Nilai dikirim lewat `<input type="hidden">`. Bila editor gagal membaca isi, otomatis beralih ke textarea Markdown.
+- Konsekuensi: Paket besar (±1 MB tidak terkompresi) tetapi tidak masuk bundle situs publik. Label bawaan toolbar berbahasa Inggris ("Block type"); bisa diterjemahkan lewat prop `translation` nanti. Warna placeholder pemilih diganti agar lolos kontras WCAG (`markdown-editor.css`).
+
+## ADR-019: Konten dua bahasa lewat tabel terjemahan (menggantikan "satu artikel = satu bahasa")
+- Tanggal: 2026-10-18
+- Status: Accepted (dipilih pemilik repo)
+- Konteks: Pemilik repo ingin satu artikel/kategori dengan versi Indonesia dan Inggris dalam satu entri, bukan entri terpisah per bahasa. Portofolio juga pindah dari file kode ke database agar dikelola di admin.
+- Opsi: tabel terjemahan; kolom per bahasa di satu tabel (`title_id`, `title_en`); baris per bahasa + `translation_group_id`.
+- Keputusan: tabel data bersama + tabel terjemahan dengan PK `(induk, locale)`: `posts` + `post_translations`, `categories` + `category_translations`, `portfolio_projects` + `portfolio_translations`. Slug unik global dan sama di semua bahasa (`/id/blog/x`, `/en/blog/x`). Bahasa Indonesia wajib (dijaga aplikasi), Inggris opsional; konten tampil di `/<locale>` hanya bila terjemahan bahasa itu ada. Nama kategori memakai bahasa Indonesia bila nama Inggris kosong. hreflang hanya dipasang bila semua bahasa tersedia. Migrasi `0004` menyalin data lama (setiap baris menjadi terjemahan bahasanya; slug kembar di bahasa lain diberi akhiran bahasa) dan memasukkan 3 proyek contoh portofolio.
+- Konsekuensi: Satu form per artikel dengan tab bahasa. Query publik memakai inner join ke terjemahan. Pengalih bahasa di situs pada artikel yang hanya berbahasa Indonesia mengarah ke halaman 404 `/en/...` (bisa diperbaiki nanti). `src/content/portfolio.ts` dihapus; portofolio publik kini dinamis (cache tag `portfolio`). Kolom `portfolio_projects.cover_image` dan `portfolio_translations.cover_alt` sudah ada tetapi belum dipakai UI.
+
+## ADR-020: Animasi situs dengan Motion
+- Tanggal: 2026-10-18
+- Status: Accepted (dipilih pemilik repo)
+- Konteks: Pemilik repo ingin animasi yang baik di semua halaman situs publik ([locale]).
+- Opsi: Motion (`motion`); CSS + IntersectionObserver tanpa library; GSAP + ScrollTrigger; AOS.
+- Keputusan: `motion` lewat komponen `components/shared/reveal.tsx` (`Reveal`, `RevealList`, `RevealItem`): fade + geser halus saat masuk layar, sekali, dengan `LazyMotion` + `domAnimation` agar bundle kecil. Hero dan PageHero memakai animasi CSS (`motion-safe:animate-rise`, `animate-hero-zoom`) supaya teks utama tampil sejak cat pertama dan tidak menunda LCP. Admin tidak dianimasikan.
+- Konsekuensi: Satu dependency baru, hanya di halaman yang memakai Reveal. Elemen Reveal dirender tersembunyi lalu dimunculkan JavaScript; karena itu ada aturan CSS `[data-reveal]` untuk `prefers-reduced-motion` dan `<noscript>` agar konten tetap tampil tanpa animasi/JS. Playwright berjalan dengan `reducedMotion: 'reduce'`; animasi dites di `tests/e2e/animation.spec.ts`.
+
+## ADR-021: Deploy di Vercel, migrasi manual, seeder terpisah
+- Tanggal: 2026-10-18
+- Status: Accepted (dipilih pemilik repo)
+- Konteks: Siap deploy. Database Neon punya branch dev dan prod; data contoh tidak boleh ikut ke prod.
+- Opsi migrasi: manual dari lokal sebelum deploy; otomatis saat build Production.
+- Keputusan: Vercel (`vercel.json`, region `sin1`, install/build lewat Bun). Migrasi dijalankan manual ke branch prod sebelum deploy (`docs/DEPLOY.md`). Data contoh hanya lewat `bun run db:seed` / `db:unseed` (`scripts/seed.ts`, `scripts/seed-data.ts`), idempoten, meminta konfirmasi dengan menampilkan host database. Isian 3 proyek contoh dikeluarkan dari migrasi `0004` (migrasi kini hanya skema + pemindahan data lama). Header keamanan dasar di `next.config.ts`.
+- Konsekuensi: Build Vercel tidak butuh dan tidak mengubah database. Pemilik repo wajib ingat menjalankan migrasi sebelum merge yang membawa migrasi baru. HSTS dan CSP belum dipasang (menunggu domain final).

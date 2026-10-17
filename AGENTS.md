@@ -9,7 +9,7 @@ Panduan untuk AI agent dan kontributor di repo **Do It**: landing page company p
 
 Dokumen ini ditulis agar agent mana pun bisa melanjutkan pekerjaan tanpa riwayat percakapan sebelumnya. Anggap tidak ada konteks lain selain isi repo.
 
-**Kondisi repo saat ini**: Fase 0 selesai (kecuali project Neon, tugas pemilik repo) dan Fase 1 berjalan: landing page, halaman About/Services/Contact, dan fondasi SEO sudah ada dengan tampilan mengikuti template Blade, dua bahasa `id`/`en`. Database Neon tersambung dan blog (Fase 2) sudah ada; admin tahap 1 (`/admin`: artikel, kategori, pesan; login multiuser dari tabel `users`; buat akun dengan `bun run admin:create`) juga sudah ada; belum ada: upload gambar dan artikel nyata. Email notifikasi form kontak sudah dikode (Resend) tetapi belum diuji ke layanan nyata. Git: dua commit awal (Fase 0 dan Fase 1) di branch `feat/nextjs-layout`. Status terbaru dan sisa pekerjaan ada di `docs/PROGRESS.md` serta catatan implementasi di tiap dokumen fitur.
+**Kondisi repo saat ini**: Fase 0 selesai (kecuali project Neon, tugas pemilik repo) dan Fase 1 berjalan: landing page, halaman About/Services/Contact, dan fondasi SEO sudah ada dengan tampilan mengikuti template Blade, dua bahasa `id`/`en`. Database Neon tersambung dan blog (Fase 2) sudah ada; admin tahap 1 (`/admin`: artikel, kategori, pesan; login multiuser dari tabel `users`; buat akun dengan `bun run admin:create`) juga sudah ada; konten artikel/kategori/portofolio dua bahasa lewat tabel terjemahan (ADR-019); portofolio dikelola di `/admin/portfolio` dan masih berisi 3 proyek contoh yang harus diganti proyek nyata; belum ada: upload gambar, artikel nyata, analytics, dan monitoring. Email notifikasi form kontak sudah dikode (Resend) tetapi belum diuji ke layanan nyata. Git: dua commit awal (Fase 0 dan Fase 1) di branch `feat/nextjs-layout`. Status terbaru dan sisa pekerjaan ada di `docs/PROGRESS.md` serta catatan implementasi di tiap dokumen fitur.
 
 **Urutan baca**
 
@@ -34,6 +34,8 @@ Dokumen ini ditulis agar agent mana pun bisa melanjutkan pekerjaan tanpa riwayat
 **Masih terbuka**: mekanisme i18n dan strategi URL locale (rincian di ADR-006 dalam `DECISION.md`), library auth (ADR-005, baru dibutuhkan di Fase 3), parser Markdown + sanitizer, penyedia email, rate limiting, hosting final, daftar layanan dan konten About, keaslian testimoni.
 
 **Ditunda tetapi wajib sebelum rilis**: notifikasi email Resend (dinyatakan penting oleh pemilik repo). Detail dan langkahnya di `docs/PROGRESS.md`, bagian "Ditunda tetapi Penting". Ingatkan pemilik repo sebelum deploy produksi.
+
+**Referensi desain admin**: `/admin` mengikuti `docs/reference/dashboard-ui.jpg`, dirangkum di `docs/DESIGN_SYSTEM.md` §11. Jangan memakai gaya situs publik untuk admin.
 
 **Referensi desain**: salinan template sumber ada di `docs/reference/welcome.blade.php` (Laravel Blade + Tailwind; hanya bacaan, jangan diedit atau dijalankan, bukan bagian build). Rangkumannya sudah di `docs/DESIGN_SYSTEM.md`; buka file aslinya hanya untuk detail yang belum tercakup (mis. section "Comprehensive Solution", baris 380-558). Aslinya ada di `C:\WANGDEF\Web-Company-Profile-IT-Solution\resources\views\welcome.blade.php`; file `DESIGN.md` di proyek lama itu **bukan** acuan (palet cyan, tidak cocok dengan template).
 
@@ -68,6 +70,7 @@ Baca dokumen yang relevan **sebelum** mengubah kode di areanya.
 | `docs/ROADMAP.md`         | Fase dan prioritas                                            | Memilih apa yang dikerjakan berikutnya                               |
 | `docs/features/N_NAMA.md` | Mini PRD per fitur: tujuan, scope, perilaku, kriteria selesai | **Sebelum** mengerjakan fitur itu, dan saat mengubah perilakunya     |
 | `docs/PROMPTS.md`         | Contoh prompt untuk pemilik repo (opsional bagi agent)        | Tidak perlu dibaca untuk mengerjakan tugas                           |
+| `docs/DEPLOY.md`          | Deploy Vercel, migrasi ke Neon prod, env, cek sebelum rilis   | Sebelum deploy atau mengubah migrasi/env                             |
 | `docs/PROGRESS.md`        | Status terkini, log pekerjaan, blocker                        | **Awal** sesi (lanjutkan dari mana) dan **akhir** sesi (catat hasil) |
 
 Kalau kode dan dokumen bertentangan, jangan diam-diam pilih salah satu. Tanyakan, lalu perbarui dokumennya di perubahan yang sama.
@@ -111,9 +114,11 @@ bun run format:check   # cek format tanpa mengubah file
 bun run db:generate    # buat migrasi SQL dari skema Drizzle
 bun run db:migrate     # terapkan migrasi
 bun run db:studio      # Drizzle Studio
+bun run db:seed        # data contoh ke database dev (konfirmasi host); db:unseed menghapus
+bun run admin:create   # buat akun admin
 ```
 
-`test:e2e` membangun lalu menjalankan Playwright (desktop dan mobile, memakai Chrome terpasang); `test:e2e:only` menjalankan tanpa build ulang. Belum ada: `db:seed` (dibuat saat ada data awal).
+`test:e2e` membangun lalu menjalankan Playwright (desktop dan mobile, memakai Chrome terpasang); `test:e2e:only` menjalankan tanpa build ulang. Deploy: `docs/DEPLOY.md` (migrasi ke prod manual, jangan seed ke prod).
 
 Gunakan `bun run test`, **bukan** `bun test`. Yang kedua menjalankan test runner bawaan Bun, bukan Vitest.
 

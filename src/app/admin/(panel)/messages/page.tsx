@@ -1,9 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { requireAdmin } from '@/features/admin/auth';
-import { BUTTON_SECONDARY, CARD } from '@/features/admin/components/ui';
+import { FilterTabs } from '@/features/admin/components/filter-tabs';
+import { CheckIcon, MailIcon } from '@/features/admin/components/icons';
+import { PageHeader } from '@/features/admin/components/page-header';
+import { MessageStatusPill } from '@/features/admin/components/status-pill';
+import { BUTTON, BUTTON_SECONDARY, CARD } from '@/features/admin/components/ui';
 import { setMessageHandled } from '@/features/admin/other-actions';
-import { MESSAGES_PAGE_SIZE, listMessages } from '@/features/admin/queries';
+import { MESSAGES_PAGE_SIZE, countUnhandledMessages, listMessages } from '@/features/admin/queries';
 import { parsePageParam } from '@/lib/pagination';
 
 export const metadata: Metadata = { title: 'Pesan' };
@@ -14,46 +18,84 @@ const dateFormat = new Intl.DateTimeFormat('id-ID', {
   timeZone: 'Asia/Jakarta',
 });
 
+function first(value: string | string[] | undefined) {
+  return (Array.isArray(value) ? value[0] : value) ?? '';
+}
+
 export default async function AdminMessagesPage({ searchParams }: PageProps<'/admin/messages'>) {
   await requireAdmin();
   const query = await searchParams;
-  const pageValue = Array.isArray(query.page) ? query.page[0] : query.page;
-  const page = parsePageParam(pageValue ?? '1') ?? 1;
+  const onlyUnhandled = first(query.filter) === 'unhandled';
+  const page = parsePageParam(first(query.page) || '1') ?? 1;
 
-  const { rows, total } = await listMessages(page);
+  const [{ rows, total }, unhandled] = await Promise.all([
+    listMessages(page, onlyUnhandled),
+    countUnhandledMessages(),
+  ]);
   const pageCount = Math.max(1, Math.ceil(total / MESSAGES_PAGE_SIZE));
+  const base = onlyUnhandled ? '/admin/messages?filter=unhandled&' : '/admin/messages?';
 
   return (
     <>
-      <h1 className="mb-6 text-2xl font-extrabold tracking-tight text-forest">Pesan kontak</h1>
+      <PageHeader
+        title="Pesan kontak"
+        description="Pesan dari form kontak situs. Balas lewat email, lalu tandai sudah ditangani."
+      />
+
+      <div className="mb-5">
+        <FilterTabs
+          label="Filter pesan"
+          tabs={[
+            { href: '/admin/messages', label: 'Semua', active: !onlyUnhandled },
+            {
+              href: '/admin/messages?filter=unhandled',
+              label: 'Belum ditangani',
+              active: onlyUnhandled,
+              count: unhandled,
+            },
+          ]}
+        />
+      </div>
 
       {rows.length === 0 ? (
-        <p className={CARD}>Belum ada pesan.</p>
+        <p className={`${CARD} text-sm text-slate-700`}>
+          {onlyUnhandled ? 'Semua pesan sudah ditangani.' : 'Belum ada pesan.'}
+        </p>
       ) : (
         <ul className="space-y-4">
           {rows.map((row) => (
-            <li key={row.id} className={CARD}>
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p className="font-bold text-forest">{row.name}</p>
-                  <p className="text-sm text-slate-800">
-                    <a href={`mailto:${row.email}`} className="underline">
-                      {row.email}
-                    </a>
+            <li
+              key={row.id}
+              className={`${CARD} ${row.handled ? '' : 'border-l-4 border-l-brand-strong'}`}
+            >
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h2 className="font-bold text-slate-900">{row.name}</h2>
+                    <MessageStatusPill handled={row.handled} />
+                  </div>
+                  <p className="mt-1 text-sm break-words text-slate-700">
+                    {row.email}
                     {row.phone ? ` · ${row.phone}` : ''}
                     {row.service ? ` · ${row.service}` : ''}
                   </p>
-                  <p className="text-xs text-slate-700">{dateFormat.format(row.createdAt)}</p>
+                  <p className="text-xs text-slate-600">{dateFormat.format(row.createdAt)}</p>
                 </div>
-                <form action={setMessageHandled.bind(null, row.id, !row.handled)}>
-                  <button type="submit" className={BUTTON_SECONDARY}>
-                    {row.handled ? 'Tandai belum ditangani' : 'Tandai sudah ditangani'}
-                  </button>
-                </form>
+                <div className="flex flex-wrap gap-2">
+                  <a href={`mailto:${row.email}`} className={BUTTON_SECONDARY}>
+                    <MailIcon className="h-4 w-4" />
+                    Balas
+                  </a>
+                  <form action={setMessageHandled.bind(null, row.id, !row.handled)}>
+                    <button type="submit" className={row.handled ? BUTTON_SECONDARY : BUTTON}>
+                      {row.handled ? null : <CheckIcon className="h-4 w-4" />}
+                      {row.handled ? 'Tandai belum ditangani' : 'Tandai sudah ditangani'}
+                    </button>
+                  </form>
+                </div>
               </div>
-              <p className="mt-3 text-sm whitespace-pre-wrap text-slate-900">{row.message}</p>
-              <p className="mt-3 text-xs font-semibold text-slate-800">
-                {row.handled ? 'Sudah ditangani' : 'Belum ditangani'}
+              <p className="mt-4 rounded-xl bg-slate-50 p-4 text-sm whitespace-pre-wrap text-slate-900">
+                {row.message}
               </p>
             </li>
           ))}
@@ -61,26 +103,27 @@ export default async function AdminMessagesPage({ searchParams }: PageProps<'/ad
       )}
 
       {pageCount > 1 ? (
-        <nav aria-label="Halaman pesan" className="mt-6 flex items-center gap-4 text-sm">
+        <nav
+          aria-label="Halaman pesan"
+          className="mt-6 flex flex-wrap items-center justify-between gap-4 text-sm"
+        >
           {page > 1 ? (
-            <Link
-              href={`/admin/messages?page=${page - 1}`}
-              className="font-semibold text-forest underline"
-            >
+            <Link href={`${base}page=${page - 1}`} className={BUTTON_SECONDARY}>
               Sebelumnya
             </Link>
-          ) : null}
-          <span>
+          ) : (
+            <span />
+          )}
+          <span className="text-slate-700">
             Halaman {page} dari {pageCount}
           </span>
           {page < pageCount ? (
-            <Link
-              href={`/admin/messages?page=${page + 1}`}
-              className="font-semibold text-forest underline"
-            >
+            <Link href={`${base}page=${page + 1}`} className={BUTTON_SECONDARY}>
               Berikutnya
             </Link>
-          ) : null}
+          ) : (
+            <span />
+          )}
         </nav>
       ) : null}
     </>

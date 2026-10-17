@@ -1,6 +1,6 @@
 # Database
 
-> Status: TEMPLATE. Stack ditetapkan di ADR-008: **PostgreSQL (Neon) + Drizzle ORM + driver `postgres.js`**. Konten blog berupa Markdown di database (ADR-009). Tabel `contact_messages`, `categories`, dan `posts` sudah ada di `src/lib/db/schema.ts` (migrasi di `drizzle/`); `posts` tanpa `translation_group_id` dan tag ditunda (satu bahasa per artikel, lihat `features/5_BLOG.md`). Bagian lain di bawah masih usulan.
+> Status: TEMPLATE. Stack ditetapkan di ADR-008: **PostgreSQL (Neon) + Drizzle ORM + driver `postgres.js`**. Konten blog berupa Markdown di database (ADR-009). Tabel yang sudah ada (lihat `src/lib/db/schema.ts`, migrasi di `drizzle/`): `contact_messages`, `users`, `sessions`, `admin_login_attempts`, `categories` + `category_translations`, `posts` + `post_translations`, `portfolio_projects` + `portfolio_translations`. Pola dua bahasa: data bersama di tabel induk, teks per bahasa di tabel `*_translations` dengan PK `(induk, locale)` (ADR-019). Tag ditunda. Bagian lain di bawah masih usulan.
 
 ## 1. Prinsip
 

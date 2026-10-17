@@ -12,7 +12,7 @@ import { RELATED_LIMIT } from '@/features/blog/constants';
 import { fillTemplate, formatDate, resolveImageUrl } from '@/features/blog/format';
 import { getPublishedPostBySlug, getRelatedPosts } from '@/features/blog/queries';
 import { readingMinutes } from '@/features/blog/reading-time';
-import { hasLocale, localizedPath } from '@/i18n/config';
+import { LOCALES, hasLocale, localizedPath } from '@/i18n/config';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { DEFAULT_OG_IMAGE, buildMetadata } from '@/lib/seo/metadata';
 import { blogPostingJsonLd, breadcrumbJsonLd } from '@/lib/seo/json-ld';
@@ -32,8 +32,8 @@ export async function generateMetadata({
     description: post.seoDescription ?? post.excerpt,
     type: 'article',
     image: post.coverImage ? resolveImageUrl(post.coverImage) : undefined,
-    // Satu artikel = satu bahasa: tanpa hreflang ke bahasa lain.
-    translations: false,
+    // hreflang hanya bila artikel punya terjemahan di semua bahasa situs.
+    translations: LOCALES.every((item) => post.locales.includes(item)),
     publishedTime: post.publishedAt,
     modifiedTime: post.updatedAt,
   });

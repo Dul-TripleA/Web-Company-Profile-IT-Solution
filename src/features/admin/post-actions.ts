@@ -1,82 +1,101 @@
 'use server';
 
-import { and, eq } from 'drizzle-orm';
+import { and, eq, notInArray } from 'drizzle-orm';
 import { updateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { getDb } from '@/lib/db';
-import { categories, posts } from '@/lib/db/schema';
+import { categories, postTranslations, posts } from '@/lib/db/schema';
 import { requireAdmin } from './auth';
-import { POST_FIELDS, postFormSchema, toPostValues } from './post-schema';
+import { POST_FIELDS, toPostRecords, validatePost } from './post-schema';
 import type { AdminFormState } from './state';
 
 const POSTS_TAG = 'posts';
+const CHECK_FORM = 'Periksa kembali isian yang ditandai.';
 
 function readValues(formData: FormData): Record<string, string> {
   return Object.fromEntries(POST_FIELDS.map((field) => [field, String(formData.get(field) ?? '')]));
 }
 
 function errorCode(error: unknown): string | undefined {
-  const code = (error as { code?: string; cause?: { code?: string } } | null) ?? {};
-  return code.code ?? code.cause?.code;
+  const value = (error as { code?: string; cause?: { code?: string } } | null) ?? {};
+  return value.code ?? value.cause?.code;
 }
 
-/** Validasi + simpan. Mengembalikan galat form, atau id artikel bila berhasil. */
+/** Validasi + simpan artikel dan terjemahannya. Mengembalikan galat form, atau id artikel. */
 async function save(
   id: string | null,
   formData: FormData,
-): Promise<AdminFormState | { id: string }> {
-  const values = readValues(formData);
-  const parsed = postFormSchema.safeParse(values);
-  if (!parsed.success) {
+): Promise<AdminFormState | { id: string; slug: string }> {
+  const raw = readValues(formData);
+  const { issues, values } = validatePost(raw);
+  if (issues.length > 0) {
     const fieldErrors: Record<string, string> = {};
-    for (const issue of parsed.error.issues) {
-      const field = String(issue.path[0]);
-      fieldErrors[field] ??= issue.message;
-    }
-    return { fieldErrors, values, message: 'Periksa kembali isian yang ditandai.' };
+    for (const issue of issues) fieldErrors[issue.field] ??= issue.message;
+    return { fieldErrors, values: raw, message: CHECK_FORM };
   }
 
-  const data = toPostValues(parsed.data);
+  const { post, translations } = toPostRecords(values);
   const db = getDb();
 
   try {
-    if (data.categoryId) {
+    if (post.categoryId) {
       const [category] = await db
         .select({ id: categories.id })
         .from(categories)
-        .where(and(eq(categories.id, data.categoryId), eq(categories.locale, data.locale)));
+        .where(eq(categories.id, post.categoryId));
       if (!category) {
         return {
-          fieldErrors: { categoryId: 'Kategori tidak ada atau bahasanya berbeda' },
-          values,
-          message: 'Periksa kembali isian yang ditandai.',
+          fieldErrors: { categoryId: 'Kategori tidak ditemukan' },
+          values: raw,
+          message: CHECK_FORM,
         };
       }
     }
 
-    if (id) {
-      const [row] = await db
-        .update(posts)
-        .set({ ...data, updatedAt: new Date() })
-        .where(eq(posts.id, id))
-        .returning({ id: posts.id });
-      if (!row) return { fieldErrors: {}, values, message: 'Artikel tidak ditemukan.' };
-      return { id: row.id };
-    }
+    const postId = await db.transaction(async (tx) => {
+      const [row] = id
+        ? await tx
+            .update(posts)
+            .set({ ...post, updatedAt: new Date() })
+            .where(eq(posts.id, id))
+            .returning({ id: posts.id })
+        : await tx.insert(posts).values(post).returning({ id: posts.id });
+      if (!row) return null;
 
-    const [row] = await db.insert(posts).values(data).returning({ id: posts.id });
-    if (!row) throw new Error('insert returned no row');
-    return { id: row.id };
+      for (const translation of translations) {
+        await tx
+          .insert(postTranslations)
+          .values({ ...translation, postId: row.id })
+          .onConflictDoUpdate({
+            target: [postTranslations.postId, postTranslations.locale],
+            set: translation,
+          });
+      }
+      // Bahasa yang dikosongkan (mis. versi Inggris dihapus) ikut dihapus.
+      await tx.delete(postTranslations).where(
+        and(
+          eq(postTranslations.postId, row.id),
+          notInArray(
+            postTranslations.locale,
+            translations.map((item) => item.locale),
+          ),
+        ),
+      );
+      return row.id;
+    });
+
+    if (!postId) return { fieldErrors: {}, values: raw, message: 'Artikel tidak ditemukan.' };
+    return { id: postId, slug: post.slug };
   } catch (error) {
     if (errorCode(error) === '23505') {
       return {
-        fieldErrors: { slug: 'Slug sudah dipakai artikel lain pada bahasa ini' },
-        values,
-        message: 'Periksa kembali isian yang ditandai.',
+        fieldErrors: { slug: 'Slug sudah dipakai artikel lain' },
+        values: raw,
+        message: CHECK_FORM,
       };
     }
     console.error('savePost failed:', error instanceof Error ? error.name : 'unknown');
-    return { fieldErrors: {}, values, message: 'Gagal menyimpan. Coba lagi.' };
+    return { fieldErrors: {}, values: raw, message: 'Gagal menyimpan. Coba lagi.' };
   }
 }
 
@@ -93,7 +112,12 @@ export async function updatePost(id: string, _previous: AdminFormState, formData
   const result = await save(id, formData);
   if (!('id' in result)) return result;
   updateTag(POSTS_TAG);
-  return { saved: true, message: 'Tersimpan.', fieldErrors: {}, values: readValues(formData) };
+  return {
+    saved: true,
+    message: 'Perubahan tersimpan.',
+    fieldErrors: {},
+    values: { ...readValues(formData), slug: result.slug },
+  };
 }
 
 export async function deletePost(id: string): Promise<void> {

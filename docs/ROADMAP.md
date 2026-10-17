@@ -66,6 +66,7 @@ Tugas non-fitur:
 
 | #   | Fitur                                                  | Dokumen                          | Status |
 | --- | ------------------------------------------------------ | -------------------------------- | ------ |
+| 8   | Portofolio | [8_PORTFOLIO](features/8_PORTFOLIO.md) | Selesai (kode, dikelola di admin), proyek contoh |
 | 7   | Growth (analytics, newsletter, portofolio, monitoring) | [7_GROWTH](features/7_GROWTH.md) | Draft  |
 
 ## Backlog / Ide
@@ -73,5 +74,6 @@ Tugas non-fitur:
 Belum punya dokumen fitur. Naikkan menjadi dokumen bila akan dikerjakan.
 
 - Pencarian artikel
+- Newsletter (double opt-in; menunggu Resend dan kebijakan privasi)
 - Mode terang/gelap pilihan user (saat ini situs bergaya gelap-hijau + section terang)
 - Halaman harga / paket layanan

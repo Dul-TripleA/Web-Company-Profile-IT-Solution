@@ -1,43 +1,33 @@
 import type { Metadata } from 'next';
 import { requireAdmin } from '@/features/admin/auth';
+import { PageHeader } from '@/features/admin/components/page-header';
 import { PostForm } from '@/features/admin/components/post-form';
-import { CARD } from '@/features/admin/components/ui';
 import { createPost } from '@/features/admin/post-actions';
+import { categoryLabel, postFormValues } from '@/features/admin/post-initial';
 import { listCategories } from '@/features/admin/queries';
 
 export const metadata: Metadata = { title: 'Artikel baru' };
 
-const EMPTY = {
-  locale: 'id',
-  title: '',
-  slug: '',
-  excerpt: '',
-  content: '',
-  coverImage: '',
-  coverAlt: '',
-  status: 'DRAFT',
-  publishedAt: '',
-  authorName: 'Do It',
-  categoryId: '',
-  seoTitle: '',
-  seoDescription: '',
-};
-
 export default async function NewPostPage() {
-  await requireAdmin();
+  const user = await requireAdmin();
   const categories = await listCategories();
 
   return (
     <>
-      <h1 className="mb-6 text-2xl font-extrabold tracking-tight text-forest">Artikel baru</h1>
-      <div className={CARD}>
-        <PostForm
-          action={createPost}
-          initial={EMPTY}
-          categories={categories}
-          submitLabel="Simpan artikel"
-        />
-      </div>
+      <PageHeader
+        title="Artikel baru"
+        description="Simpan sebagai draft dulu bila belum siap terbit."
+        back={{ href: '/admin/posts', label: 'Semua artikel' }}
+      />
+      <PostForm
+        action={createPost}
+        initial={postFormValues(null, [], user.firstName)}
+        categories={categories.map((category) => ({
+          id: category.id,
+          label: categoryLabel(category),
+        }))}
+        submitLabel="Simpan artikel"
+      />
     </>
   );
 }

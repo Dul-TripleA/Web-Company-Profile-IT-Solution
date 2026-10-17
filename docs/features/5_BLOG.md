@@ -11,7 +11,7 @@ Menarik trafik organik lewat artikel teknologi/bisnis, lalu mengarahkan pembaca 
 ## 2. Keputusan (2026-10-17, dipilih pemilik repo)
 
 - **Parser Markdown**: `react-markdown` v10 (ADR-016). Merender ke elemen React, HTML mentah tidak dieksekusi, URL `javascript:` dibuang; tanpa sanitizer terpisah.
-- **Bahasa**: satu bahasa per artikel (kolom `locale`, tanpa grup terjemahan). Konsekuensi: artikel, kategori, dan halaman 2+ tidak punya `hreflang`.
+- **Bahasa** (diubah 2026-10-18, ADR-019): satu artikel = satu entri dengan terjemahan per bahasa (`post_translations`). Bahasa Indonesia wajib, Inggris opsional. Slug sama untuk semua bahasa. Artikel tampil di `/en` hanya bila punya versi Inggris; hreflang dipasang bila kedua bahasa ada. Kategori juga satu entri dengan nama per bahasa (Inggris memakai nama Indonesia bila kosong).
 - **MVP tanpa tag**. Hanya kategori. Tabel `tags` ditambah nanti bila perlu.
 - **Penulisan**: awalnya lewat Drizzle Studio; sekarang tersedia `/admin` (`6_ADMIN.md`).
 
@@ -44,7 +44,7 @@ Catatan: dengan Cache Components, `notFound()` setelah streaming mulai berstatus
 
 ## 6. Data
 
-Tabel `categories` dan `posts` (`src/lib/db/schema.ts`, migrasi `drizzle/0001_clean_clea.sql`). Query di `features/blog/queries.ts` (`'use cache'` tingkat modul), memilih kolom seperlunya (daftar tanpa `content`).
+Tabel `categories` + `category_translations` dan `posts` + `post_translations` (`src/lib/db/schema.ts`, migrasi `0001` lalu `0004`). Query di `features/blog/queries.ts` (`'use cache'` tingkat modul), memilih kolom seperlunya (daftar tanpa `content`).
 
 ## 7. UI
 

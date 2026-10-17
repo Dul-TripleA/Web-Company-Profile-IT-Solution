@@ -69,6 +69,7 @@ export default async function RootLayout({ children, params }: LayoutProps<'/[lo
         { label: dict.nav.allServices, href: localizedPath(locale, '/services') },
       ],
     },
+    { id: 'portfolio', label: dict.nav.portfolio, href: localizedPath(locale, '/portfolio') },
     { id: 'blog', label: dict.nav.blog, href: localizedPath(locale, '/blog') },
     { id: 'contact', label: dict.nav.contact, href: localizedPath(locale, '/contact') },
   ];
@@ -76,6 +77,10 @@ export default async function RootLayout({ children, params }: LayoutProps<'/[lo
   return (
     <html lang={locale} className={plusJakartaSans.variable}>
       <body suppressHydrationWarning={true}>
+        {/* Tanpa JavaScript animasi tidak berjalan; tampilkan semua konten Reveal apa adanya. */}
+        <noscript>
+          <style>{'[data-reveal]{opacity:1!important;transform:none!important}'}</style>
+        </noscript>
         <a
           href="#main-content"
           className="sr-only z-[60] rounded-full bg-brand px-4 py-2 text-sm font-bold text-forest focus:not-sr-only focus:fixed focus:top-3 focus:left-3"

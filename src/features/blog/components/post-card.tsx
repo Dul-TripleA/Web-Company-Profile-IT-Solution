@@ -1,3 +1,4 @@
+import { RevealItem } from '@/components/shared/reveal';
 import Link from 'next/link';
 import { ArrowRightIcon } from '@/components/ui/icons';
 import { localizedPath, type Locale } from '@/i18n/config';
@@ -10,7 +11,7 @@ type PostCardProps = { post: PostSummary; locale: Locale; dict: Dictionary['blog
 
 export function PostCard({ post, locale, dict }: PostCardProps) {
   return (
-    <li className="group relative flex flex-col overflow-hidden rounded-3xl border border-emerald-900/60 bg-forest-deep shadow-2xl transition-all duration-300 hover:border-brand/40 hover:shadow-[0_10px_30px_rgba(153,227,68,0.1)]">
+    <RevealItem className="group relative flex flex-col overflow-hidden rounded-3xl border border-emerald-900/60 bg-forest-deep shadow-2xl transition-all duration-300 hover:border-brand/40 hover:shadow-[0_10px_30px_rgba(153,227,68,0.1)]">
       <div className="relative aspect-video overflow-hidden bg-linear-to-br from-forest to-forest-deep">
         {post.coverImage ? (
           <CoverImage
@@ -52,6 +53,6 @@ export function PostCard({ post, locale, dict }: PostCardProps) {
           <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1.5" />
         </span>
       </div>
-    </li>
+    </RevealItem>
   );
 }

@@ -25,6 +25,8 @@ export default defineConfig({
     baseURL: `http://localhost:${PORT}`,
     trace: 'on-first-retry',
     headless: !headed,
+    // Animasi (motion) dimatikan agar tes stabil; animasi dites terpisah di animation.spec.ts.
+    reducedMotion: 'reduce',
   },
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'], ...browser } },

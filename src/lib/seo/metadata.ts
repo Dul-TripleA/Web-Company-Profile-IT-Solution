@@ -31,6 +31,8 @@ type BuildMetadataInput = {
   modifiedTime?: string;
   /** URL umpan RSS yang diiklankan di <head>. */
   rssUrl?: string;
+  /** true untuk halaman contoh/placeholder yang belum boleh diindeks. */
+  noindex?: boolean;
 };
 
 export function buildMetadata({
@@ -44,6 +46,7 @@ export function buildMetadata({
   publishedTime,
   modifiedTime,
   rssUrl,
+  noindex = false,
 }: BuildMetadataInput): Metadata {
   const url = absoluteUrl(localizedPath(locale, path));
   const languages: Record<string, string> = Object.fromEntries(
@@ -56,6 +59,7 @@ export function buildMetadata({
   return {
     title,
     description: summary,
+    ...(noindex ? { robots: { index: false, follow: false } } : {}),
     alternates: {
       canonical: url,
       ...(translations ? { languages } : {}),

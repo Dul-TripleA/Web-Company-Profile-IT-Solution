@@ -1,0 +1,87 @@
+/* Gaya isi editor WYSIWYG. Tailwind preflight menghapus gaya heading/daftar, jadi diberikan ulang di sini. */
+.doit-editor {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  background: #fff;
+}
+
+.doit-editor-content {
+  min-height: 22rem;
+  padding: 1rem;
+  color: #0f172a;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.doit-editor-content h2 {
+  margin: 1.5rem 0 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.doit-editor-content h3 {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.doit-editor-content h4 {
+  margin: 1rem 0 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.doit-editor-content ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+
+.doit-editor-content ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+}
+
+.doit-editor-content blockquote {
+  border-left: 4px solid #99e344;
+  padding-left: 1rem;
+  color: #334155;
+}
+
+.doit-editor-content a {
+  color: #0b2923;
+  text-decoration: underline;
+}
+
+.doit-editor-content code {
+  background: #f1f5f9;
+  border-radius: 0.25rem;
+  padding: 0.1rem 0.3rem;
+}
+
+.doit-editor-content table {
+  border-collapse: collapse;
+}
+
+.doit-editor-content th,
+.doit-editor-content td {
+  border: 1px solid #cbd5e1;
+  padding: 0.25rem 0.6rem;
+}
+
+/* Teks toolbar dan pemilih diberi kontras lebih tinggi dari bawaan MDXEditor (lolos WCAG AA). */
+.mdxeditor.doit-editor {
+  --baseText: #0f172a;
+  --baseTextContrast: #020617;
+}
+
+/* Teks placeholder pemilih jenis blok ("Block type") terlalu pucat secara bawaan. */
+.mdxeditor.doit-editor [class*='_selectTrigger_'] span {
+  color: #334155;
+}
+
+/* Di layar sempit, tombol toolbar turun ke baris berikutnya alih-alih terpotong. */
+.mdxeditor.doit-editor [role='toolbar'] {
+  flex-wrap: wrap;
+  height: auto;
+  overflow: visible;
+}

@@ -85,3 +85,5 @@ Hasil terakhir (2026-10-17, build produksi lokal, throttling simulasi):
 | `/id` desktop | 100 | 100 | 100 | 100 | 0.7 s |
 
 \* Awalnya 98 (urutan heading); diperbaiki dengan `h2` tersembunyi dan diukur ulang. Elemen LCP beranda adalah gambar hero; LCP mobile 3.1 s masih di atas ambang "baik" (2.5 s) walau skor Performance ≥ 90. Ukur ulang di lingkungan produksi nyata (hosting + CDN) karena hasil lokal tidak mewakili.
+
+**Animasi**: Playwright berjalan dengan `reducedMotion: 'reduce'` (konten langsung tampil, hasil stabil). `tests/e2e/animation.spec.ts` menguji animasi aktif, mode kurangi gerakan, dan tanpa JavaScript.

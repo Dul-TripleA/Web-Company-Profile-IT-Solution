@@ -1,3 +1,4 @@
+import { Reveal, RevealItem, RevealList } from '@/components/shared/reveal';
 import Image from 'next/image';
 // DISEMBUNYIKAN (statistik, kartu "10K+", dan daftar 6 poin tidak dipakai, 2026-10): impor ikon dan STAT_ICONS di bawah.
 // import type { ReactNode } from 'react';
@@ -21,7 +22,7 @@ export function WhyChooseUs({ locale, dict }: WhyChooseUsProps) {
   return (
     <section className="mx-auto max-w-7xl px-6 py-12">
       <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
-        <div className="grid grid-cols-2 gap-4 lg:col-span-6">
+        <Reveal className="grid grid-cols-2 gap-4 lg:col-span-6">
           <div className="relative col-span-2 h-56 overflow-hidden rounded-3xl shadow-sm">
             <Image
               src="/images/team-meeting.jpg"
@@ -57,9 +58,9 @@ export function WhyChooseUs({ locale, dict }: WhyChooseUsProps) {
               className="object-cover object-[50%_28%]"
             />
           </div>
-        </div>
+        </Reveal>
 
-        <div className="space-y-8 lg:col-span-6">
+        <Reveal className="space-y-8 lg:col-span-6" delay={0.1}>
           <div className="space-y-4">
             <Eyebrow>{dict.eyebrow}</Eyebrow>
 
@@ -104,17 +105,17 @@ export function WhyChooseUs({ locale, dict }: WhyChooseUsProps) {
           </ul>
           */}
 
-          <ul className="space-y-5">
+          <RevealList className="space-y-5">
             {dict.commitments.map((item) => (
-              <li key={item.title} className="flex items-start gap-3">
+              <RevealItem key={item.title} className="flex items-start gap-3">
                 <CheckBullet className="mt-0.5" />
                 <div>
                   <h3 className="text-sm font-bold text-forest">{item.title}</h3>
                   <p className="mt-1 text-xs leading-relaxed text-slate-600">{item.description}</p>
                 </div>
-              </li>
+              </RevealItem>
             ))}
-          </ul>
+          </RevealList>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
             <ButtonLink variant="solid" href={localizedPath(locale, '/contact')}>
@@ -126,7 +127,7 @@ export function WhyChooseUs({ locale, dict }: WhyChooseUsProps) {
             </ButtonLink>
             */}
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

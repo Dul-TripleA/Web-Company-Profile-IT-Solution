@@ -3,56 +3,64 @@
 import { useActionState } from 'react';
 import { createCategory } from '../other-actions';
 import { initialAdminFormState } from '../state';
+import { Flag } from './flag';
 import { BUTTON, INPUT, LABEL } from './ui';
 
 export function CategoryCreateForm() {
   const [state, formAction, pending] = useActionState(createCategory, initialAdminFormState);
-  const nameError = state.fieldErrors.name;
+  const errors = state.fieldErrors;
 
   return (
-    <form action={formAction} noValidate className="flex flex-wrap items-start gap-4">
+    <form
+      action={formAction}
+      noValidate
+      className="grid gap-4 md:grid-cols-[1fr_1fr_auto] md:items-start"
+    >
       <div>
-        <label htmlFor="category-locale" className={LABEL}>
-          Bahasa
-        </label>
-        <select id="category-locale" name="locale" className={INPUT} defaultValue="id">
-          <option value="id">id</option>
-          <option value="en">en</option>
-        </select>
-      </div>
-      <div className="min-w-56 flex-1">
-        <label htmlFor="category-name" className={LABEL}>
-          Nama kategori baru
+        <label htmlFor="category-name_id" className={`${LABEL} flex items-center gap-2`}>
+          <Flag locale="id" /> Nama (Indonesia) <span className="text-red-700">*</span>
         </label>
         <input
-          id="category-name"
-          name="name"
+          id="category-name_id"
+          name="name_id"
           type="text"
           maxLength={60}
-          required
+          placeholder="mis. Teknologi"
           className={INPUT}
-          aria-invalid={nameError ? true : undefined}
-          aria-describedby={nameError ? 'category-name-error' : undefined}
+          aria-invalid={errors.name_id ? true : undefined}
+          aria-describedby={errors.name_id ? 'category-name_id-error' : undefined}
         />
-        {nameError ? (
-          <p id="category-name-error" className="mt-1 text-xs text-red-700">
-            {nameError}
-          </p>
-        ) : null}
-        {state.saved ? (
-          <p role="status" className="mt-1 text-xs text-green-800">
-            {state.message}
-          </p>
-        ) : null}
-        {state.message && !state.saved ? (
-          <p role="alert" className="mt-1 text-xs text-red-700">
-            {state.message}
+        {errors.name_id ? (
+          <p id="category-name_id-error" className="mt-1 text-xs text-red-700">
+            {errors.name_id}
           </p>
         ) : null}
       </div>
-      <button type="submit" disabled={pending} className={`${BUTTON} mt-5`}>
+      <div>
+        <label htmlFor="category-name_en" className={`${LABEL} flex items-center gap-2`}>
+          <Flag locale="en" /> Nama (English, opsional)
+        </label>
+        <input
+          id="category-name_en"
+          name="name_en"
+          type="text"
+          maxLength={60}
+          placeholder="e.g. Technology"
+          className={INPUT}
+        />
+        {errors.name_en ? <p className="mt-1 text-xs text-red-700">{errors.name_en}</p> : null}
+      </div>
+      <button type="submit" disabled={pending} className={`${BUTTON} w-full md:mt-6 md:w-auto`}>
         Tambah
       </button>
+      {state.message ? (
+        <p
+          role={state.saved ? 'status' : 'alert'}
+          className={`text-sm font-medium md:col-span-3 ${state.saved ? 'text-forest' : 'text-red-700'}`}
+        >
+          {state.message}
+        </p>
+      ) : null}
     </form>
   );
 }

@@ -16,6 +16,7 @@ Item di sini sengaja ditunda pemilik repo, bukan dilupakan. **Agent wajib mengin
 | Item | Mengapa penting | Keadaan | Cara melanjutkan |
 | --- | --- | --- | --- |
 | **Notifikasi email via Resend** (dinyatakan penting oleh pemilik repo, 2026-10-17) | Tanpa ini pesan dari form kontak tersimpan di database tetapi **pemilik tidak diberi tahu**; calon klien bisa tak terjawab karena tidak ada yang mengecek database. | Kode sudah siap dan diuji dengan `fetch` palsu. Belum diuji ke Resend nyata; akun dan kunci API belum dibuat. Form tetap berfungsi (menyimpan ke Neon) tanpa ini. | 1) Daftar di resend.com dengan `andiazizp123@gmail.com`. 2) Buat API key. 3) Isi `RESEND_API_KEY`, `CONTACT_TO_EMAIL=andiazizp123@gmail.com`, `CONTACT_FROM_EMAIL=Do It <onboarding@resend.dev>` di `.env` (jangan kosongkan salah satu). 4) Minta agent menjalankan uji kirim nyata (satu pesan lewat form, cek inbox dan spam, hapus baris uji). Di produksi: isi env yang sama di hosting; untuk mengirim ke alamat lain verifikasi domain di Resend dan ganti `CONTACT_FROM_EMAIL`. Detail: `docs/features/2_CONTACT.md`, ADR-012. |
+| **Proyek portofolio nyata** (proyek contoh sementara) | Tiga proyek di `/portfolio` fiktif. Bila tidak diganti, pengunjung mengira itu kerja nyata atau tampak mengarang. | Berlabel "Contoh", noindex, tidak masuk sitemap. | Tambah proyek nyata di `/admin/portfolio` (matikan "Ini proyek contoh") lalu hapus proyek contoh; lihat `docs/features/8_PORTFOLIO.md` bagian 4. |
 
 Ditunda lainnya yang juga perlu diputuskan sebelum rilis (belum dinyatakan "penting" oleh pemilik repo; keterangan di sini saran agent): halaman legal (Privacy Policy, karena form mengumpulkan data pribadi), nomor telepon asli (saat ini dummy), akun sosial, bagian Tim di About, dan hosting/domain/Search Console.
 
@@ -85,6 +86,42 @@ Entri terbaru di atas. Satu entri per sesi/tugas.
 - Belum selesai / catatan: sisa pekerjaan, asumsi, utang teknis
 - Berikutnya: langkah yang disarankan
 ```
+
+### 2026-10-18: Animasi, seeder data contoh, persiapan Vercel
+
+- Selesai: animasi situs publik dengan `motion` (ADR-020): `components/shared/reveal.tsx`, CSS hero (`animate-rise`, `animate-hero-zoom`), diterapkan di beranda (Approach, WhyChooseUs, CoreServices, TechStack, Workflow), About, Contact, detail layanan, daftar/related blog, portofolio. Konten tetap tampil untuk "kurangi gerakan" dan tanpa JavaScript (`[data-reveal]` + `<noscript>`). Seeder `bun run db:seed` / `db:unseed` (`scripts/seed.ts`, `scripts/seed-data.ts`): 3 kategori, 10 artikel (5 dua bahasa, 3 dengan cover), 5 proyek portofolio contoh; idempoten, konfirmasi dengan nama host. Isian proyek contoh dikeluarkan dari migrasi `0004`. Vercel: `vercel.json` (Bun, region `sin1`), header keamanan di `next.config.ts`, panduan `docs/DEPLOY.md` (ADR-021).
+- Verifikasi: lint, typecheck, tes unit, `bun run build`, Playwright penuh (termasuk `animation.spec.ts`: animasi aktif, kurangi gerakan, tanpa JS). Seeder dijalankan dua kali (idempoten), `db:unseed` lalu `db:seed` lagi ke database dev.
+- Belum selesai / catatan: belum pernah deploy; HSTS/CSP menunggu domain final. Tombol "View Our Portfolio" di beranda masih DISEMBUNYIKAN (dulu karena belum ada portofolio); bisa dibuka bila pemilik repo setuju. Resend masih wajib sebelum rilis.
+- Berikutnya: pemilik repo mengikuti `docs/DEPLOY.md`; agent mengingatkan daftar "Sebelum rilis".
+
+### 2026-10-18: Dua bahasa per entri, portofolio di admin, form dan tabel admin baru
+
+- Selesai: skema terjemahan (ADR-019): `post_translations`, `category_translations`, `portfolio_projects` + `portfolio_translations`; migrasi `0004` (data lama dipindah, 3 proyek contoh dimasukkan) diterapkan ke Neon dan dicek jumlah barisnya. Query blog publik memakai terjemahan; hreflang untuk artikel/proyek yang lengkap dua bahasa; sitemap per bahasa. Portofolio publik dari database (`features/portfolio`), `src/content/portfolio.ts` dihapus. Admin: menu Portofolio (CRUD), form artikel/proyek gaya `docs/reference/form-ui.webp` dengan tab bahasa berbendera, sakelar Terbit, penanda simpan; tabel dengan bendera bahasa dan tombol aksi (Ubah, Pratinjau, Lihat, Hapus + konfirmasi); kategori satu entri dua nama; pratinjau per bahasa. Dokumen: ADR-019, `DESIGN_SYSTEM.md` §11, `5_BLOG`, `6_ADMIN`, `8_PORTFOLIO`, `DATABASE`.
+- Klarifikasi ke pemilik repo: menu Portofolio di admin sebelumnya memang belum pernah ada (data di file kode); kini ditambahkan.
+- Verifikasi: lint, typecheck, 117 tes unit, `bun run build` (juga tanpa env DB), Playwright penuh 215 lolos (63 dilewati sesuai proyek desktop/mobile), termasuk artikel dua bahasa + hreflang, kategori dua nama, portofolio publik/admin, tombol aksi dan konfirmasi hapus. Tangkapan layar desktop dan ponsel dicek.
+- Belum selesai / catatan: pengalih bahasa situs pada artikel yang hanya berbahasa Indonesia menuju 404 `/en/...`; cover proyek portofolio belum ada di UI; label toolbar editor masih bahasa Inggris. Proyek contoh harus diganti sebelum rilis. Resend masih ditunda.
+- Berikutnya: commit bila disetujui; isi proyek dan artikel nyata; pilih alat analytics dan hosting.
+
+### 2026-10-17: Admin: editor WYSIWYG dan desain ulang UI
+
+- Selesai: editor WYSIWYG Markdown `@mdxeditor/editor` di form artikel (ADR-018; dimuat dinamis, fallback textarea, toolbar membungkus di ponsel, kontras diperbaiki). Desain ulang `/admin` mengikuti `docs/reference/dashboard-ui.jpg` (aturan di `DESIGN_SYSTEM.md` §11, ditautkan dari `AGENTS.md`): `AdminShell` (sidebar + laci ponsel, menu aktif, badge pesan), `PageHeader`, `FilterTabs`, pil status, ikon SVG sendiri, token `admin-canvas`/`admin-mint`; ringkasan dengan kartu statistik dan daftar terbaru; filter + pencarian artikel; form dua kolom dengan bilah simpan lengket dan peringatan perubahan belum disimpan; inbox dengan filter dan tombol Balas; login dua panel dengan tampilkan password.
+- Verifikasi: lint, typecheck, 114 tes unit, `bun run build`, Playwright penuh 236 lolos (66 dilewati sesuai proyek desktop/mobile), termasuk tes baru laci menu ponsel, tanpa scroll horizontal di semua halaman admin (ponsel), menu aktif, filter dan pencarian. Tangkapan layar desktop dan ponsel dicek manual. Timeout `expect` di `admin.spec.ts` dinaikkan ke 15 dtk karena tiap aksi menunggu Neon saat tes paralel.
+- Belum selesai / catatan: label toolbar editor masih bahasa Inggris ("Block type"). Belum ada halaman kelola pengguna.
+- Berikutnya: commit bila disetujui; lalu proyek portofolio nyata, alat analytics, hosting.
+
+### 2026-10-17: Fase 4: Portofolio (proyek contoh)
+
+- Selesai: `src/content/portfolio.ts` (3 proyek contoh dua bahasa, `dummy: true`), halaman `/portfolio` dan `/portfolio/[slug]`, item menu "Portofolio", kunci kamus `nav.portfolio`, `pages.portfolio`, `pages.portfolioDetail`; `buildMetadata` mendapat opsi `noindex`; sitemap hanya memuat portofolio bila ada proyek nyata; panjang meta blog dan portofolio masuk tes SEO. Dokumen `features/8_PORTFOLIO.md`; checklist `7_GROWTH.md` diperbarui. Keputusan: data di file, proyek contoh berlabel dan tidak diindeks.
+- Verifikasi: lint, typecheck, 114 tes unit, `bun run build`, Playwright penuh (desktop + mobile) termasuk `portfolio.spec.ts` dan axe/layout untuk semua halaman portofolio. Satu tes axe blog sempat timeout sekali (32 dtk, lalu lolos saat diulang), kemungkinan beban paralel.
+- Belum selesai / catatan: **proyek contoh wajib diganti proyek nyata sebelum rilis** (tidak ada angka atau klien asli yang dikarang). JSON-LD `CreativeWork` ditunda. Monitoring dan Analytics belum dimulai: analytics belum dipilih alatnya; monitoring menunggu hosting. Newsletter ditunda (Backlog).
+- Berikutnya: pemilik repo mengirim proyek nyata; lalu putuskan alat analytics dan hosting.
+
+### 2026-10-17: Fase 4 disiapkan (checklist), belum dikerjakan
+
+- Selesai: `docs/features/7_GROWTH.md` ditulis ulang berisi urutan pilihan pemilik repo (Portofolio, Monitoring, Analytics; Newsletter ditunda ke Backlog) dan checklist keputusan yang perlu dijawab. Tidak ada perubahan kode.
+- Verifikasi: hanya dokumen.
+- Belum selesai / catatan: menunggu checklist pemilik repo (proyek nyata untuk portofolio, sumber data, alat analytics/monitoring, hosting/domain, kebijakan privasi).
+- Berikutnya: setelah checklist dijawab, buat dokumen sub-fitur (`8_PORTFOLIO.md`, dst.) lalu bangun satu per satu.
 
 ### 2026-10-17: Fase 3 Admin (tahap 1)
 

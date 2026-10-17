@@ -4,7 +4,7 @@ import nextTs from 'eslint-config-next/typescript';
 
 // Setiap fitur baru di src/features/ harus didaftarkan di sini agar larangan
 // impor antar-fitur berlaku (docs/ARCHITECTURE.md bagian 2).
-const FEATURES = ['contact', 'blog', 'admin'];
+const FEATURES = ['contact', 'blog', 'admin', 'portfolio'];
 
 const featurePaths = (names) =>
   names.flatMap((name) => [`@/features/${name}`, `@/features/${name}/**`]);

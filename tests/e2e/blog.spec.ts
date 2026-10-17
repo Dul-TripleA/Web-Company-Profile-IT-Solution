@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
-import { SLUGS, TITLES } from './blog-fixtures';
+import { CATEGORY_NAMES, SLUGS, TITLES } from './blog-fixtures';
 
 // Butuh data uji dari global-setup, yang hanya dipasang bila DATABASE_URL tersedia.
 test.skip(!process.env.DATABASE_URL, 'DATABASE_URL tidak tersedia: tes blog dilewati');
@@ -110,6 +110,31 @@ test.describe('halaman artikel', () => {
     await page.goto(`/id/blog/${SLUGS.en}`);
     await expect(page.locator('head meta[name="robots"]')).toHaveAttribute('content', /noindex/);
     await expect(page.getByRole('heading', { level: 1, name: TITLES.en })).toHaveCount(0);
+  });
+
+  test('satu artikel dua bahasa: slug sama, judul per bahasa, hreflang saling menunjuk', async ({
+    page,
+  }) => {
+    await page.goto(`/id/blog/${SLUGS.bilingual}`);
+    await expect(page.getByRole('heading', { level: 1, name: TITLES.bilingualId })).toBeVisible();
+    await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute(
+      'href',
+      new RegExp(`/en/blog/${SLUGS.bilingual}$`),
+    );
+
+    await page.goto(`/en/blog/${SLUGS.bilingual}`);
+    await expect(page.getByRole('heading', { level: 1, name: TITLES.bilingualEn })).toBeVisible();
+    await expect(page.locator('link[rel="alternate"][hreflang="id"]')).toHaveAttribute(
+      'href',
+      new RegExp(`/id/blog/${SLUGS.bilingual}$`),
+    );
+  });
+
+  test('kategori yang sama memakai nama sesuai bahasa', async ({ page }) => {
+    await page.goto(`/en/blog/category/${SLUGS.category}`);
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(CATEGORY_NAMES.en);
+    await page.goto(`/id/blog/category/${SLUGS.category}`);
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(CATEGORY_NAMES.id);
   });
 });
 

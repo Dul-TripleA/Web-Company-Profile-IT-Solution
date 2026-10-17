@@ -35,6 +35,7 @@ README ini untuk **menjalankan, menguji, dan membangun**. Aturan kode, arsitektu
 | Database | Neon sudah tersambung dan migrasi pertama diterapkan. Form kontak menyimpan ke tabel `contact_messages` dengan batas 3 pesan per 10 menit per IP (teruji) | Belum ada inbox untuk membaca pesan (Fase 3); sementara lihat lewat `bun run db:studio` |
 | Email notifikasi | **Ditunda, tetapi penting sebelum rilis.** Kode siap (Resend), belum ada akun dan belum diuji ke Resend nyata. Tanpa ini pesan tetap tersimpan di database, hanya Anda tidak diberi tahu | Daftar Resend, isi 3 variabel email di `.env`, lalu minta uji kirim ([bagian 7](#7-variabel-environment); langkah lengkap di `docs/PROGRESS.md`) |
 | Blog | Ada: daftar, paginasi, kategori, artikel, RSS, sitemap. Artikel ditulis lewat `bun run db:studio` sampai admin (Fase 3) ada; panduan di `docs/features/5_BLOG.md` bagian 10. Belum ada artikel nyata | Isi 3-5 artikel peluncuran |
+| Portofolio | Ada di `/portfolio`, dikelola di `/admin/portfolio` (dua bahasa). Berisi 3 proyek **contoh** (berlabel, tidak diindeks, tidak masuk sitemap) | Ganti dengan proyek nyata sebelum rilis |
 | Admin | Ada di `/admin`: login (tabel `users`, multiuser), artikel (buat/ubah/pratinjau/hapus), kategori, inbox pesan. Buat akun dengan `bun run admin:create` (langkah di `docs/features/6_ADMIN.md` bagian 6). Belum ada upload gambar dan halaman kelola pengguna | Buat akun admin pertama; upload menunggu keputusan hosting |
 | Lighthouse | Sudah dijalankan lokal: Performance 93-100, Accessibility 100, Best Practices 100, SEO 100 (tabel di `docs/TESTING.md`). Belum diukur di produksi | Ukur ulang setelah deploy; cara menjalankan ada di `docs/TESTING.md` |
 
@@ -212,6 +213,10 @@ Salin `.env.example` menjadi `.env`. **Jangan commit `.env`** (sudah diabaikan G
 
 ---
 
+## Deploy
+
+Lihat `docs/DEPLOY.md` (Vercel, migrasi manual ke Neon prod, variabel environment). Data contoh untuk database dev: `bun run db:seed` (10 artikel, 5 portofolio) dan `bun run db:unseed` untuk menghapusnya; jangan dijalankan ke prod.
+
 ## 8. Bila ada masalah
 
 | Gejala | Penyebab dan cara mengatasi |
@@ -237,4 +242,3 @@ Repo ini disiapkan agar AI agent (mis. Claude Code) bisa melanjutkan pekerjaan t
 ```
 Baca AGENTS.md lalu docs/PROGRESS.md. Ringkas status terakhir, blocker, dan langkah berikutnya.
 ```
- 

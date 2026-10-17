@@ -1,3 +1,4 @@
+import { Reveal } from '@/components/shared/reveal';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { JsonLd } from '@/components/shared/json-ld';
@@ -52,7 +53,7 @@ export default async function AboutPage({ params }: PageProps<'/[locale]/about'>
       />
 
       <section className="mx-auto max-w-7xl px-6 py-20">
-        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
+        <Reveal className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
           <div className="space-y-3 lg:col-span-5">
             <Eyebrow>{about.introEyebrow}</Eyebrow>
             <h2 className="text-2xl font-extrabold tracking-tight text-forest sm:text-3xl">
@@ -62,14 +63,14 @@ export default async function AboutPage({ params }: PageProps<'/[locale]/about'>
           <p className="text-sm leading-relaxed text-slate-600 sm:text-base lg:col-span-7">
             {about.introBody}
           </p>
-        </div>
+        </Reveal>
       </section>
 
       <CoreServices locale={locale} dict={dict.home.services} learnMore={dict.common.learnMore} />
       <Approach dict={dict.home.approach} />
 
       <section className="bg-forest-deep px-6 py-20">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 rounded-3xl border border-emerald-900/60 bg-linear-to-r from-forest via-forest-deep to-forest p-8 shadow-2xl md:flex-row">
+        <Reveal className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 rounded-3xl border border-emerald-900/60 bg-linear-to-r from-forest via-forest-deep to-forest p-8 shadow-2xl md:flex-row">
           <div className="space-y-1 text-center md:text-left">
             <h2 className="text-lg font-bold text-white">{cta.title}</h2>
             <p className="text-xs text-slate-400">{cta.description}</p>
@@ -77,7 +78,7 @@ export default async function AboutPage({ params }: PageProps<'/[locale]/about'>
           <ButtonLink href={localizedPath(locale, '/contact')}>
             {dict.common.startFreeConsultation}
           </ButtonLink>
-        </div>
+        </Reveal>
       </section>
     </>
   );

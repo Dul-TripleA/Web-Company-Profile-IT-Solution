@@ -61,6 +61,19 @@ Akun tambahan dibuat dengan perintah yang sama. Halaman kelola pengguna di `/adm
 - [ ] Peran/hak akses berbeda dan halaman kelola pengguna (semua pengguna kini admin penuh)
 - [x] `PROGRESS.md` diperbarui
 
-## 8. Di luar scope tahap 1
+## 9. UI (desain ulang 2026-10-17)
+
+Acuan visual: `docs/reference/dashboard-ui.jpg`, aturan lengkap di `docs/DESIGN_SYSTEM.md` §11. Ringkas:
+
+- Sidebar gelap dengan menu aktif dan badge jumlah pesan belum ditangani; kartu akun + tombol keluar di bawah. Di layar `< lg` sidebar menjadi laci (tombol menu, `Escape`, klik latar untuk menutup, otomatis tertutup saat pindah halaman).
+- Ringkasan: 4 kartu statistik (terbit, terjadwal, draft, pesan belum ditangani; masing-masing tautan ke daftar terfilter), artikel terakhir diubah, pesan menunggu.
+- Artikel: filter pil (Semua/Terbit/Terjadwal/Draft) dan pencarian judul/slug lewat URL (`?status=&q=`); tabel di desktop, kartu di ponsel. Kolom **Bahasa** berupa bendera (pudar = belum ada versi itu) dan kolom **Aksi** (Ubah, Pratinjau, Lihat, Hapus dengan konfirmasi).
+- Form (artikel dan portofolio) mengikuti `docs/reference/form-ui.webp`: navigasi bagian di kiri (desktop), kartu per bagian, baris "label + keterangan | isian" dengan garis putus-putus, tab bahasa berbendera (Indonesia wajib, English opsional; titik merah bila ada galat), sakelar Terbit, slug dengan awalan `/blog/`, bilah simpan lengket dengan penanda "Belum disimpan / Perubahan tersimpan", peringatan saat meninggalkan form. Editor isi: MDXEditor (ADR-018).
+- Kategori: satu kategori dua nama (bendera), simpan per baris, hapus dengan konfirmasi.
+- Portofolio: menu sendiri; tabel dengan bendera, status (Tampil/Draft/Contoh), aksi.
+- Pesan: filter "Belum ditangani", tombol Balas (mailto) dan tandai ditangani.
+- Login: kartu dua panel (panel merek hanya di desktop), tombol tampilkan/sembunyikan password.
+
+## 10. Di luar scope tahap 1
 
 Upload gambar, tag, peran, halaman kelola/ubah password pengguna, reset password, soft delete, job terjadwal, deteksi konflik edit bersamaan (last write wins), redirect saat slug berubah, audit log.

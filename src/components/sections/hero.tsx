@@ -12,7 +12,7 @@ export function Hero({ locale, dict }: HeroProps) {
 
   return (
     <section className="relative flex min-h-[600px] w-full items-center overflow-hidden bg-forest lg:h-[750px]">
-      <div className="absolute inset-0 z-0 h-full w-full">
+      <div className="absolute inset-0 z-0 h-full w-full motion-safe:animate-hero-zoom">
         <Image
           src="/images/hero-3.jpg"
           alt={hero.imageAlt}
@@ -38,17 +38,23 @@ export function Hero({ locale, dict }: HeroProps) {
           </div>
           */}
 
-          <h1 className="text-4xl leading-[1.08] font-extrabold tracking-tight text-white uppercase sm:text-5xl lg:text-6xl">
+          <h1 className="text-4xl leading-[1.08] font-extrabold tracking-tight text-white uppercase motion-safe:animate-rise sm:text-5xl lg:text-6xl">
             {hero.titleLine1} <br /> {hero.titleLine2}{' '}
             <span className="text-brand">{hero.titleHighlight}</span>
           </h1>
 
-          <p className="max-w-3xl text-xs leading-relaxed text-slate-300 sm:text-sm">
+          <p
+            className="max-w-3xl text-xs leading-relaxed text-slate-300 motion-safe:animate-rise sm:text-sm"
+            style={{ animationDelay: '120ms' }}
+          >
             {/* DISEMBUNYIKAN (deskripsi baru tidak diawali nama merek): <span className="font-bold text-brand">{hero.brand} </span> */}
             {hero.description}
           </p>
 
-          <div className="flex flex-wrap items-center gap-4 pt-2">
+          <div
+            className="flex flex-wrap items-center gap-4 pt-2 motion-safe:animate-rise"
+            style={{ animationDelay: '240ms' }}
+          >
             <ButtonLink href={localizedPath(locale, '/contact')}>
               {dict.common.freeConsultation}
             </ButtonLink>

@@ -1,3 +1,4 @@
+import { Reveal } from '@/components/shared/reveal';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -70,7 +71,7 @@ export default async function ServiceDetailPage({
       />
 
       <section className="mx-auto max-w-7xl px-6 py-20">
-        <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-12">
+        <Reveal className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-12">
           <div className="rounded-3xl border border-emerald-900/60 bg-forest-deep p-8 shadow-2xl sm:p-10 lg:col-span-8">
             <h2 className="text-2xl font-extrabold tracking-tight text-brand sm:text-3xl">
               {detail.scope}
@@ -89,7 +90,7 @@ export default async function ServiceDetailPage({
               </ButtonLink>
             </div>
           </aside>
-        </div>
+        </Reveal>
 
         <div className="mt-14">
           <h2 className="text-xl font-extrabold tracking-tight text-forest">

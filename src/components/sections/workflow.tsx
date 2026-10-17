@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Reveal, RevealItem, RevealList } from '@/components/shared/reveal';
 import { ButtonLink } from '@/components/ui/button-link';
 import { Eyebrow } from '@/components/ui/eyebrow';
 import { BoltIcon, ChatIcon, CodeIcon, PuzzleIcon } from '@/components/ui/icons';
@@ -27,7 +28,7 @@ export function Workflow({ locale, dict, ctaLabel }: WorkflowProps) {
       <div className="pointer-events-none absolute top-1/3 left-1/2 h-[350px] w-[700px] -translate-x-1/2 rounded-full bg-brand/5 blur-[140px]" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        <div className="mx-auto mb-20 max-w-3xl space-y-4 text-center">
+        <Reveal className="mx-auto mb-20 max-w-3xl space-y-4 text-center">
           <Eyebrow tone="light" className="justify-center">
             {dict.eyebrow}
           </Eyebrow>
@@ -35,11 +36,14 @@ export function Workflow({ locale, dict, ctaLabel }: WorkflowProps) {
             {dict.titleBefore} <span className="text-brand">{dict.titleHighlight}</span>
           </h2>
           <p className="text-xs leading-relaxed text-slate-300 sm:text-sm">{dict.description}</p>
-        </div>
+        </Reveal>
 
-        <ol className="relative grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <RevealList
+          as="ol"
+          className="relative grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4"
+        >
           {dict.steps.map((step, index) => (
-            <li
+            <RevealItem
               key={step.title}
               className="group relative flex flex-col justify-between rounded-3xl border border-emerald-900/60 bg-forest/70 p-7 shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-brand/40 hover:shadow-[0_12px_30px_rgba(153,227,68,0.12)]"
             >
@@ -71,17 +75,17 @@ export function Workflow({ locale, dict, ctaLabel }: WorkflowProps) {
               <div className="mt-6 pt-3 font-mono text-[10px] tracking-wider text-brand/80 uppercase">
                 {step.phase}
               </div>
-            </li>
+            </RevealItem>
           ))}
-        </ol>
+        </RevealList>
 
-        <div className="mt-14 flex flex-col items-center justify-between gap-6 rounded-3xl border border-emerald-900/60 bg-linear-to-r from-forest via-forest-deep to-forest p-8 shadow-2xl md:flex-row">
+        <Reveal className="mt-14 flex flex-col items-center justify-between gap-6 rounded-3xl border border-emerald-900/60 bg-linear-to-r from-forest via-forest-deep to-forest p-8 shadow-2xl md:flex-row">
           <div className="space-y-1 text-center md:text-left">
             <h3 className="text-lg font-bold text-white">{dict.cta.title}</h3>
             <p className="text-xs text-slate-400">{dict.cta.description}</p>
           </div>
           <ButtonLink href={localizedPath(locale, '/contact')}>{ctaLabel}</ButtonLink>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

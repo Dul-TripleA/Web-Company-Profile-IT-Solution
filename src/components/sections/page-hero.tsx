@@ -18,7 +18,7 @@ export function PageHero({ eyebrow, title, description, breadcrumb, children }: 
     <section className="relative w-full overflow-hidden bg-forest px-6 pt-36 pb-16 sm:pt-44 sm:pb-20">
       <div className="pointer-events-none absolute -top-24 right-1/4 h-80 w-80 rounded-full bg-brand/10 blur-3xl" />
 
-      <div className="relative z-10 mx-auto max-w-7xl space-y-5">
+      <div className="relative z-10 mx-auto max-w-7xl space-y-5 motion-safe:animate-rise">
         {breadcrumb && breadcrumb.length > 0 ? (
           <nav aria-label="Breadcrumb">
             <ol className="flex flex-wrap items-center gap-2 text-xs text-slate-300">

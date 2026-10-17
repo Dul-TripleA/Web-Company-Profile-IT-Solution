@@ -1,3 +1,4 @@
+import { RevealList } from '@/components/shared/reveal';
 import { notFound } from 'next/navigation';
 import { Pagination } from '@/components/shared/pagination';
 import { localizedPath, type Locale } from '@/i18n/config';
@@ -45,11 +46,11 @@ export async function BlogIndex({
           {blog.empty}
         </p>
       ) : (
-        <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <RevealList className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {list.posts.map((post) => (
             <PostCard key={post.slug} post={post} locale={locale} dict={blog} />
           ))}
-        </ul>
+        </RevealList>
       )}
 
       {categorySlug ? null : (
