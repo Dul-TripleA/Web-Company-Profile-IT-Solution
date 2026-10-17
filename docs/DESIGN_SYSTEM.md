@@ -13,7 +13,8 @@ Nilai di bawah adalah sumber kebenaran. Komponen memakai **token**, bukan hex me
 | `brand`        | `#99e344` | CTA, aksen, heading di atas gelap, bintang rating, selection  |
 | `brand-hover`  | `#a8f553` | Hover tombol utama                                            |
 | `brand-soft`   | `#b4f268` | Highlight ringan                                              |
-| `brand-strong` | `#84cb32` | Pressed/active                                                |
+| `brand-strong` | `#84cb32` | Pressed/active, hover tombol sekunder |
+| `brand-ink` | `#5f9224` | **Teks hijau di latar terang** (judul sorotan). Kontras 3.6:1 di krem; `brand-strong` hanya 1.9:1 |
 | `brand-deep`   | `#88d234` | [TODO: cek pemakaian, mungkin digabung dengan `brand-strong`] |
 | `on-brand`     | `#0d2e28` | Teks di atas `brand` (top bar). Tombol memakai `forest`       |
 
@@ -188,7 +189,7 @@ Temuan saat membaca Blade; pilih mana yang diterapkan:
 - Kutipan review menyebut "**Biztop**", padahal brand-nya Do It.
 - Email placeholder `example@doit.com`; telepon `+62851 1053 0560` dan 3 review (Sarah Jenkins, David Pratama, Elena Rostova) perlu dikonfirmasi asli atau placeholder. Jangan publikasikan testimoni fiktif sebagai asli.
 - Gambar hero dari Unsplash (hotlink). Unduh, simpan di `public/` atau `src/assets`, pakai `next/image` dengan `priority`.
-- Ikon sosial berupa teks (`f`, `𝕏`, `ig`, `🌐`). Ganti dengan SVG + `aria-label`.
+- ~~Ikon sosial berupa teks~~ Selesai: diganti ikon SVG Simple Icons (`components/ui/social-icon.tsx`) dengan `aria-label`.
 - Dropdown nav hanya hover, tanpa tautan. Perlu rute nyata.
 - Tautan `href="#"` di nav. Ganti dengan route sesungguhnya.
 - Judul Blade "Do It - Modern Digital Solutions" menjadi basis `title` metadata.
@@ -196,3 +197,9 @@ Temuan saat membaca Blade; pilih mana yang diterapkan:
 ## 10. Status Implementasi (2026-10-17)
 
 Komponen sudah dibuat dengan tampilan mengikuti template: `src/components/ui` (Container, Eyebrow, Badge, ButtonLink dengan varian `primary` / `solid` / `outline`, CheckBullet, CheckBadge, ikon), `src/components/layout` (TopBar, SiteHeader, SiteFooter, LanguageSwitcher), `src/components/sections` (Hero, Approach, WhyChooseUs, CoreServices, TechStack, Workflow, Reviews, PageHero). Ukuran teks `text-xs` dari template dipertahankan (saran §2 belum diterapkan). Catatan penyimpangan per fitur ada di `docs/features/1_LANDING_PAGE.md` bagian 11.
+
+Pembaruan: teks hijau di latar terang kini memakai `brand-ink` (ditemukan axe), teks pendamping "/5.0" memakai `slate-500`, dan tautan sosial memakai ikon SVG. Target sentuh 44px berlaku untuk pointer kasar saja (ADR-014).
+
+Kartu "kaca" (dipakai di Our Approach, `components/sections/approach.tsx`): `bg-linear-to-br from-forest-deep via-forest/90 to-forest-deep/95`, `border-white/10`, `ring-1 ring-brand/10`, `backdrop-blur-md`, kilau `bg-brand/20 blur-3xl` di pojok, garis `via-white/30` di tepi atas, dan cahaya lime/emerald di belakang kartu supaya transparansinya terlihat di latar terang. Kotak ikon: `h-11 w-11 rounded-2xl bg-brand/15 text-brand`, berbalik menjadi `bg-brand text-forest` saat hover.
+
+Logo: file sumber di `public/images/logo` (`doit_logo.png` = logo lengkap di latar gelap, `do_it_logo2.png` = lambang di latar putih). `logo-full.png` (transparan, dipotong) dibuat oleh `docs/reference/make-brand-assets.cjs` dan dipakai di header (`h-11`) dan footer (`h-10`) lewat `next/image`. Lambang saja dipakai untuk favicon dan ikon aplikasi (latar putih agar terlihat di tab gelap). Ikon `LayersIcon` placeholder tidak dipakai lagi.

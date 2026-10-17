@@ -1,6 +1,6 @@
 # 4. SEO Foundation
 
-> Status: Berjalan (metadata, JSON-LD, sitemap, robots, hreflang selesai; OG image, redirect slug, favicon belum)
+> Status: Berjalan (metadata, JSON-LD, sitemap, robots, hreflang, ikon, manifest, dan gambar OG selesai; redirect slug menunggu blog)
 > Fase: 1 (dasar), berlanjut di Fase 2
 > Folder kode: `src/lib/seo.ts`, `src/app/sitemap.ts`, `src/app/robots.ts`, `src/app/layout.tsx`
 
@@ -17,7 +17,7 @@ Semua halaman publik punya metadata, data terstruktur, dan sinyal teknis yang be
 - `sitemap.ts`, `robots.ts`, `rss.xml` (Fase 2).
 - OG image default dan dinamis untuk artikel.
 - Redirect 301 untuk slug yang berubah.
-- Favicon, manifest [TODO].
+- Favicon (ICO + PNG), apple-icon, manifest, dan gambar OG bawaan (`public/og-default.png`), dibuat dari logo resmi di `public/images/logo` lewat `docs/reference/make-brand-assets.cjs`.
 - Dukungan dua bahasa (ADR-006): `alternates.languages` (`hreflang`, termasuk `x-default`), canonical per locale, sitemap memuat kedua versi tiap halaman, JSON-LD `inLanguage`.
 
 **Di luar scope**
@@ -66,15 +66,15 @@ Tidak ada UI. Pengecualian: breadcrumb tampil (`components/shared/breadcrumb.tsx
 
 - [x] Setiap halaman publik punya title, description, canonical, OG, Twitter (gambar OG belum ada)
 - [x] Test unit `buildMetadata` dan generator JSON-LD
-- [ ] Sitemap valid, tidak memuat `/admin` dan draft
+- [x] Sitemap valid, tidak memuat `/admin` dan draft (E2E memeriksa isi sitemap)
 - [ ] Rich Results Test lulus untuk `Organization`, `BlogPosting`, `BreadcrumbList`
 - [ ] Situs didaftarkan di Search Console dan sitemap dikirim
-- [ ] `PROGRESS.md` diperbarui
+- [x] `PROGRESS.md` diperbarui
 
 ## 10. Pertanyaan Terbuka
 
 - [ ] Domain produksi final?
-- [ ] Logo dan gambar OG default?
+- [x] Logo dan gambar OG default: logo resmi sudah ada; ikon dan OG dibuat dari logo itu
 - [ ] Trailing slash: tanpa (usulan)?
 
 ## 11. Catatan Implementasi (2026-10-17)
@@ -83,3 +83,4 @@ Tidak ada UI. Pengecualian: breadcrumb tampil (`components/shared/breadcrumb.tsx
 - Test memastikan title ≤ 60 dan description 70-160 karakter untuk semua halaman statis di kedua bahasa.
 - Sitemap memuat semua halaman x 2 bahasa dengan `alternates.languages`; belum memakai `lastModified` karena `new Date()` bermasalah di prerender Cache Components.
 - Belum: gambar OG default/dinamis, tabel `redirects`, favicon/manifest, `rss.xml` (Fase 2), Rich Results Test, pendaftaran Search Console.
+- Ikon, manifest, dan OG: `src/app/icon.png`, `favicon.ico`, `apple-icon.png`, `manifest.ts`, `public/icons/`, `public/og-default.png`. Semua halaman memakai gambar OG bawaan dan kartu Twitter `summary_large_image` kecuali memberi `image` sendiri ke `buildMetadata`. Satu gambar untuk dua bahasa (nama + tagline Inggris dan Indonesia). Diuji E2E (tag meta, tautan ikon, status 200).

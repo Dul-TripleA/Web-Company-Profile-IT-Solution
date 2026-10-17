@@ -20,7 +20,7 @@ Semua tugas non-fitur.
 - [x] ESLint `no-restricted-imports` untuk larangan impor antar-fitur (`ARCHITECTURE.md` §2)
 - [x] `lib/env.ts`, `.env.example`, `lib/utils.ts` (`cn`)
 - [x] Drizzle: `drizzle.config.ts`, `src/lib/db`, skrip `db:*` (`DATABASE.md`)
-- [ ] Buat project Neon dan isi `.env` (`DATABASE_URL`, `DATABASE_URL_UNPOOLED`); dikerjakan pemilik repo
+- [x] Buat project Neon dan isi `.env` (`DATABASE_URL`, `DATABASE_URL_UNPOOLED`); migrasi pertama sudah diterapkan 2026-10-17
 - [x] CI: lint, typecheck, test, build (`.github/workflows/ci.yml`; belum dijalankan di GitHub)
 - [x] Setup i18n `id` + `en` (ADR-006): `app/[locale]`, kamus JSON, helper locale, `src/proxy.ts`
 
@@ -35,9 +35,9 @@ Semua tugas non-fitur.
 
 Tugas non-fitur:
 
-- [ ] Primitif UI global (`Container`, `Button`, `Badge`, `Card`) dan layout (`TopBar`, `SiteHeader`, `SiteFooter`, skip link), dipakai semua fitur di atas
-- [ ] 404/error page bermerek
-- [ ] Audit Lighthouse, a11y, responsif lintas halaman
+- [x] Primitif UI global (`Container`, `Button`, `Badge`, `Card`) dan layout (`TopBar`, `SiteHeader`, `SiteFooter`, skip link), dipakai semua fitur di atas
+- [x] 404/error page bermerek dua bahasa (`[locale]/not-found`, `[locale]/error`, `global-not-found`, `global-error`; ADR-015)
+- [x] Audit Lighthouse, a11y, responsif lintas halaman (hasil di `TESTING.md`; axe dan layout mobile diuji otomatis di E2E)
 - [ ] Deploy produksi + domain + Search Console
 
 ## Fase 2: Blog

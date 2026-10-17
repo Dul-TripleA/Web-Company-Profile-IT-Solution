@@ -31,13 +31,13 @@ Memberi kedalaman di luar landing page: siapa Do It, apa saja layanannya. Halama
 | `/services`        | Statis                          | Grid layanan                   |
 | `/services/[slug]` | Statis (`generateStaticParams`) | `notFound()` bila slug tak ada |
 
-Daftar layanan awal dari template [TODO: konfirmasi dan lengkapi]:
+Daftar layanan (diputuskan pemilik repo, 2026-10):
 
-- Custom Web Applications & Portals
-- ERP System
-- Mobile Apps
-- UI/UX Design
-- [TODO: baris lain dari Blade 560-814]
+- Web Development (`web-development`)
+- Custom Software Development (`custom-software-development`)
+- UI/UX Design (`ui-ux-design`)
+
+ERP dan Mobile App tidak ditawarkan saat ini; datanya disimpan di `src/content/services-hidden.ts`.
 
 ## 4. Perilaku
 
@@ -73,13 +73,13 @@ Kasus tepi: slug tidak ada → `not-found.tsx`.
 
 - [x] Semua layanan di `content/` punya halaman dengan metadata unik (4 layanan x 2 bahasa; panjang title diuji)
 - [ ] Breadcrumb dan JSON-LD valid (Rich Results Test)
-- [ ] Tidak ada tautan `href="#"` tersisa
-- [ ] Lighthouse SEO 100, A11y ≥ 95
-- [ ] `PROGRESS.md` diperbarui
+- [x] Tidak ada tautan `href="#"` tersisa (ikon sosial disembunyikan; dijaga tes E2E)
+- [x] Lighthouse SEO 100, A11y ≥ 95 (lokal: SEO 100, A11y 100)
+- [x] `PROGRESS.md` diperbarui
 
 ## 10. Pertanyaan Terbuka
 
-- [ ] Daftar final layanan dan slug-nya?
+- [x] Daftar final layanan dan slug-nya: 3 layanan (lihat atas)
 - [ ] Konten About (sejarah, visi, tim) tersedia?
 - [ ] Perlu FAQ per layanan?
 
@@ -87,5 +87,5 @@ Kasus tepi: slug tidak ada → `not-found.tsx`.
 
 - Daftar layanan awal diambil dari template: `custom-web-applications`, `erp-systems`, `mobile-app-development`, `ui-ux-design` (`src/content/services.ts`, dua bahasa). Landing page dan halaman layanan membaca sumber yang sama.
 - `/about` belum punya konten resmi; sementara dirakit dari blok "Why Choose Us" dan "Workflow" milik landing page. Ganti saat ada konten asli.
-- Halaman detail layanan baru berisi ringkasan, daftar yang didapat, tech stack, CTA, dan layanan lain. Belum mencapai ±300 kata per halaman untuk SEO long-tail.
+- Halaman detail layanan berisi ringkasan, cakupan, CTA, dan layanan lain. Belum mencapai ±300 kata per halaman untuk SEO long-tail.
 - Hero halaman dalam (`PageHero`) tidak ada di template; dibuat dengan pola hero yang ada.

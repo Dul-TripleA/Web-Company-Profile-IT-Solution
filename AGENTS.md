@@ -9,7 +9,7 @@ Panduan untuk AI agent dan kontributor di repo **Do It**: landing page company p
 
 Dokumen ini ditulis agar agent mana pun bisa melanjutkan pekerjaan tanpa riwayat percakapan sebelumnya. Anggap tidak ada konteks lain selain isi repo.
 
-**Kondisi repo saat ini**: Fase 0 selesai (kecuali project Neon, tugas pemilik repo) dan Fase 1 berjalan: landing page, halaman About/Services/Contact, dan fondasi SEO sudah ada dengan tampilan mengikuti template Blade, dua bahasa `id`/`en`. Belum ada: database yang tersambung, email notifikasi, blog, admin, dan commit git. Status terbaru dan sisa pekerjaan ada di `docs/PROGRESS.md` serta catatan implementasi di tiap dokumen fitur.
+**Kondisi repo saat ini**: Fase 0 selesai (kecuali project Neon, tugas pemilik repo) dan Fase 1 berjalan: landing page, halaman About/Services/Contact, dan fondasi SEO sudah ada dengan tampilan mengikuti template Blade, dua bahasa `id`/`en`. Belum ada: database yang tersambung, blog, dan admin. Email notifikasi form kontak sudah dikode (Resend) tetapi belum diuji ke layanan nyata. Git: dua commit awal (Fase 0 dan Fase 1) di branch `feat/nextjs-layout`. Status terbaru dan sisa pekerjaan ada di `docs/PROGRESS.md` serta catatan implementasi di tiap dokumen fitur.
 
 **Urutan baca**
 
@@ -54,6 +54,7 @@ Baca dokumen yang relevan **sebelum** mengubah kode di areanya.
 
 | Dokumen                   | Isi                                                           | Baca saat                                                            |
 | ------------------------- | ------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `README.md` | Cara menjalankan, menguji, build, alur kerja tiap perubahan, panduan pengguna | Sebelum menjalankan perintah atau membuka PR |
 | `docs/PRD.md`             | Tujuan, target user, fitur, scope                             | Menambah/mengubah fitur                                              |
 | `docs/ARCHITECTURE.md`    | Struktur folder, rendering, data flow                         | Menambah modul, route, atau layer baru                               |
 | `docs/DESIGN_SYSTEM.md`   | Token warna, tipografi, komponen, pola section                | Menyentuh UI apa pun                                                 |
@@ -101,6 +102,7 @@ bun run start          # jalankan hasil build
 bun run lint           # ESLint
 bun run typecheck      # next typegen + tsc --noEmit
 bun run test           # unit/integration test
+bun run test:e2e       # build + Playwright (E2E, a11y axe, layout mobile)
 bun run test:watch     # Vitest mode watch
 bun run format         # Prettier (kode saja; Markdown dikecualikan)
 bun run format:check   # cek format tanpa mengubah file
@@ -109,7 +111,7 @@ bun run db:migrate     # terapkan migrasi
 bun run db:studio      # Drizzle Studio
 ```
 
-Belum ada: `test:e2e` (Playwright dipasang saat E2E pertama dibutuhkan) dan `db:seed` (dibuat saat ada data awal).
+`test:e2e` membangun lalu menjalankan Playwright (desktop dan mobile, memakai Chrome terpasang); `test:e2e:only` menjalankan tanpa build ulang. Belum ada: `db:seed` (dibuat saat ada data awal).
 
 Gunakan `bun run test`, **bukan** `bun test`. Yang kedua menjalankan test runner bawaan Bun, bukan Vitest.
 
@@ -128,6 +130,20 @@ Definition of done: `bun run lint && bun run typecheck && bun run test && bun ru
 8. **Satu perubahan, satu tujuan.** Jangan refactor di luar scope tugas. Catat sebagai saran.
 9. **Library seperlunya.** Pakai fitur Next.js/React dan JavaScript/Web API dulu. Library baru hanya bila itu tidak cukup. Lihat bagian "Aturan Dependency".
 10. **SQL efisien.** Pilih kolom yang dibutuhkan, hindari N+1, pakai index dan paginasi keyset. Lihat `docs/DATABASE.md` §5.
+11. **Sederhana dulu, jangan over-engineering.** Pilih cara paling sederhana yang memenuhi kebutuhan saat ini. Lihat bagian "Sederhana Dulu".
+
+## Sederhana Dulu
+
+Kode yang rumit membuat perawatan sulit. **Prioritaskan solusi paling sederhana yang bekerja, kecuali pemilik repo meminta yang lebih kompleks.**
+
+- Kerjakan kebutuhan **yang ada sekarang**. Jangan menambah fitur, opsi, konfigurasi, atau titik perluasan "untuk jaga-jaga" atau "siapa tahu nanti perlu".
+- **Jangan membuat abstraksi lebih awal.** Tiga baris yang mirip lebih baik daripada satu helper/komponen/generik yang dipakai sekali. Ekstrak setelah pola yang sama muncul di ≥ 3 tempat dan bentuknya sudah jelas.
+- Pilih kode yang **mudah dibaca dari atas ke bawah** daripada yang "cerdas": fungsi biasa, `if` yang jelas, data sebagai objek/array sederhana. Hindari lapisan (factory, wrapper, hook, context) yang tidak menyelesaikan masalah nyata.
+- **Tambah sedikit file dan indirection.** Bila ada dua cara yang sama baiknya, pilih yang menyentuh lebih sedikit file dan lebih sedikit konsep baru.
+- Jangan membangun mesin umum untuk satu kasus. Contoh: tidak perlu sistem plugin, registry, atau konfigurasi dinamis bila hanya ada satu implementasi.
+- Jangan menambah dependency, kerangka kerja, atau pola arsitektur baru demi kerapian. Lihat juga "Aturan Dependency".
+- Bila pendekatan sederhana punya kekurangan nyata (performa terukur, keamanan, kebutuhan yang sudah pasti), jelaskan trade-off-nya dan **tawarkan pilihan** ("Tawarkan Pilihan Dulu"); jangan diam-diam memilih yang rumit.
+- Aturan ini tidak melonggarkan keamanan, aksesibilitas, validasi di server, atau tes untuk perilaku penting.
 
 ## Aturan Dependency
 
@@ -157,6 +173,7 @@ Tidak perlu bertanya bila: hanya ada satu cara yang wajar, sudah diputuskan di `
 - File/folder: `kebab-case`. Komponen: `PascalCase` (nama export), file `kebab-case.tsx`.
 - Path alias: `@/*` → `src/*`. Hindari import relatif lebih dari satu level naik (`../../`).
 - Komentar hanya untuk **mengapa**, bukan **apa**. Jangan komentari kode yang sudah jelas.
+- **Menyembunyikan, bukan menghapus**: konten/section yang untuk sementara tidak dipakai atas permintaan pemilik repo dikomentari (bukan dihapus) dengan tanda `DISEMBUNYIKAN (alasan, tanggal)`. Komentari pemakaiannya (baris di `page.tsx`, `import`, tautan menu/footer yang menunjuk ke sana); komponen dan kunci kamus tetap utuh. Cari dengan `grep -rn DISEMBUNYIKAN src`. Ini satu-satunya pengecualian larangan kode yang dikomentari.
 - Commit: Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`).
 - Detail lengkap: `docs/CODE_STYLE.md`.
 

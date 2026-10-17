@@ -172,7 +172,8 @@ Variabel server dibaca lewat `getEnv()` di `src/lib/env.ts` (Zod), divalidasi sa
 | `DATABASE_URL`                      | server | Neon, endpoint **pooled** (`-pooler`); dipakai aplikasi |
 | `DATABASE_URL_UNPOOLED`             | server | Neon, koneksi langsung; dipakai `drizzle-kit migrate`   |
 | `AUTH_SECRET`                       | server | [TODO: tergantung library auth]                         |
-| `EMAIL_API_KEY`, `CONTACT_TO_EMAIL` | server |                                                         |
+| `IP_HASH_SALT` | server | Garam hash IP untuk rate limit form kontak (min. 16 karakter) |
+| `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` | server | Opsional. Notifikasi email form kontak; bila salah satu kosong, email dilewati |
 
 Sediakan `.env.example`. Jangan commit `.env*` lain.
 

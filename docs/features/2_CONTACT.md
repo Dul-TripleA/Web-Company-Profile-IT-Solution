@@ -1,6 +1,6 @@
 # 2. Contact (Form Konsultasi)
 
-> Status: Berjalan (form, validasi, rate limit, dan penyimpanan sudah ada; belum teruji ke database; email notifikasi belum ada)
+> Status: Berjalan (form, validasi, rate limit, penyimpanan, dan notifikasi email sudah dikode; belum teruji ke database dan Resend nyata)
 > Fase: 1
 > Folder kode: `src/features/contact/`, route `src/app/(marketing)/contact/`
 
@@ -66,12 +66,12 @@ Kasus tepi:
 ## 6. UI
 
 - Komponen form: `features/contact/components/contact-form.tsx` (client, `useActionState`).
-- Gaya input dan tombol: `DESIGN_SYSTEM.md`. [TODO: gaya input belum ada di template Blade; usulan tema gelap `forest-deep`, border `emerald-900/60`, fokus `ring-brand`.]
+- Gaya input dan tombol: tema gelap `forest-deep`, border `emerald-900/60`, fokus `brand`; tombol memakai gaya `primary`.
 - Aksesibilitas: `<label>` terhubung, error lewat `aria-describedby`, status sukses/gagal di `aria-live="polite"`, target tap ≥ 44px.
 
 ## 7. SEO
 
-- Title: "Contact Us | Do It" [TODO: final]; description unik.
+- Title dan description dari kamus (panjang diuji).
 - JSON-LD: `ContactPage` atau `Organization.contactPoint`.
 - Masuk sitemap: ya.
 
@@ -82,25 +82,30 @@ Kasus tepi:
 
 ## 9. Kriteria Selesai
 
-- [ ] Form valid tersimpan dan notifikasi terkirim
+- [ ] Form valid tersimpan dan notifikasi terkirim (tersimpan ke Neon: teruji; notifikasi email: belum diuji ke Resend nyata)
 - [x] Semua aturan validasi punya test (valid, kosong, terlalu panjang, email salah)
-- [ ] Honeypot dan rate limit teruji
-- [ ] Bekerja tanpa JavaScript
-- [ ] Lolos cek a11y (axe) dan keyboard
+- [x] Honeypot dan rate limit teruji (honeypot di E2E; rate limit diuji ke Neon nyata: 3 pesan tersimpan, pesan ke-4 ditolak)
+- [x] Bekerja tanpa JavaScript (validasi server dan isian dipertahankan; diuji E2E)
+- [x] Lolos cek a11y (axe) halaman kontak; interaksi pengiriman form belum diuji E2E karena butuh database
 - [x] Tidak ada data pribadi di log (yang dicatat hanya nama jenis galat)
-- [ ] `PROGRESS.md` diperbarui
+- [x] `PROGRESS.md` diperbarui
 
 ## 10. Pertanyaan Terbuka
 
-- [ ] Penyedia email dan alamat tujuan?
+- [ ] Penyedia email sudah diputuskan (Resend, ADR-012); akun, domain pengirim, dan alamat tujuan masih dari pemilik repo
 - [ ] Perlu WhatsApp click-to-chat?
-- [ ] Daftar layanan untuk dropdown `service`?
+- [x] Daftar layanan untuk dropdown `service`: 3 layanan dari `src/content/services.ts`
 - [ ] Kebijakan privasi dan retensi data?
 
 ## 11. Catatan Implementasi (2026-10-17)
 
 - Kode: `src/features/contact/` (`schema.ts`, `actions.ts`, `state.ts`, `ip-hash.ts`, `components/contact-form.tsx`), tabel `contact_messages` + migrasi `drizzle/0000_*.sql`.
 - Rate limit: maksimal 3 pesan per IP per 10 menit, dihitung dari tabel `contact_messages` memakai `ip_hash` (SHA-256 IP + `IP_HASH_SALT`); tanpa library tambahan.
-- **Belum**: email notifikasi (penyedia email belum dipilih; sementara pesan hanya tersimpan di DB dan nanti dibaca lewat inbox admin, `6_ADMIN.md`). Jalur DB (insert, rate limit) belum pernah dijalankan karena project Neon belum ada; sebelum itu, form menampilkan galat "failed".
+- Email notifikasi (ADR-012): `notify.ts` mengirim teks polos lewat REST API Resend dengan `fetch`, dijalankan lewat `after()`; dilewati bila env kosong; kegagalan hanya dicatat. Diuji dengan `fetch` palsu (5 tes), **belum** dengan Resend nyata.
+- **Belum**: jalur DB (insert, rate limit) belum pernah dijalankan karena project Neon belum ada; sebelum itu, form menampilkan galat "failed".
 - Butuh env `DATABASE_URL` dan `IP_HASH_SALT` (lihat `.env.example`); migrasi dijalankan dengan `bun run db:migrate`.
 - "Bekerja tanpa JavaScript" belum diuji.
+
+Pembaruan (2026-10): kartu info kontak (email dan telepon) disembunyikan karena datanya masih placeholder; halaman `/contact` kini hanya berisi form.
+
+Verifikasi ke database nyata (2026-10-17): migrasi `0000_*` diterapkan ke Neon; tabel `contact_messages` punya 9 kolom dan 3 index sesuai skema. Uji lewat browser: 3 pesan berturut-turut tersimpan (kolom terisi benar, `ip_hash` berupa hash, bukan IP), pesan ke-4 dalam jendela 10 menit ditolak dengan pesan batas kirim dan isian form dipertahankan. Data uji sudah dihapus. Uji ini manual (butuh database nyata), tidak masuk E2E otomatis.

@@ -10,7 +10,7 @@ Tujuan: kode **mudah dibaca**, **mudah dirawat**, dan **SEO-friendly** secara de
 - Nama menjelaskan maksud (`getPublishedPosts`, bukan `getData`). Boolean berawalan `is/has/can/should`.
 - Teks yang tampil ke pengguna tidak ditulis langsung di JSX; ambil dari kamus `id`/`en` (ADR-006). Tautan internal lewat helper locale.
 - Tidak ada magic number/string berulang. Pindahkan ke konstanta bernama atau `content/`.
-- Komentar menjelaskan **mengapa** (keputusan non-obvious, workaround, batasan). Jangan menceritakan apa yang kode lakukan, dan jangan tinggalkan kode yang dikomentari.
+- Komentar menjelaskan **mengapa** (keputusan non-obvious, workaround, batasan). Jangan menceritakan apa yang kode lakukan, dan jangan tinggalkan kode yang dikomentari. **Pengecualian**: kode yang disembunyikan sementara atas permintaan pemilik repo (bukan dihapus) boleh dikomentari dengan alasan dan tanda `DISEMBUNYIKAN (alasan, tanggal)`; cari dengan `grep -rn DISEMBUNYIKAN src`.
 - Gunakan `import type` untuk tipe. Urutan import: node/react → library → `@/` → relatif.
 
 ## 2. Penamaan
@@ -122,11 +122,13 @@ Aturan lengkap ada di `AGENTS.md` ("Aturan Dependency"). Ringkasnya: fitur Next.
 | `zod`                                                                          | Validasi input di batas sistem + inferensi tipe     |
 | `server-only`                                                                  | Mencegah modul server terbawa ke client             |
 | `eslint`, `eslint-config-next`, `prettier`, `prettier-plugin-tailwindcss`      | Kualitas kode                                       |
-| `vitest`, `@vitejs/plugin-react`, `jsdom` (dipin v26 agar jalan di Node 20), `@testing-library/react`, `@testing-library/dom` | Pengujian (`TESTING.md`). `@playwright/test` dan `@axe-core/playwright` dipasang saat E2E pertama |
+| `vitest`, `@vitejs/plugin-react`, `jsdom` (dipin v26 agar jalan di Node 20), `@testing-library/react`, `@testing-library/dom`, `@playwright/test`, `@axe-core/playwright` | Pengujian (`TESTING.md`) |
 
 ### Disetujui secara prinsip, pilihan paketnya belum ditentukan
 
-Tawarkan opsi saat tiba waktunya ("Tawarkan Pilihan Dulu"): parser Markdown + sanitizer HTML (ADR-009), autentikasi admin (ADR-005), pengiriman email, rate limiting.
+Tawarkan opsi saat tiba waktunya ("Tawarkan Pilihan Dulu"): parser Markdown + sanitizer HTML (ADR-009), autentikasi admin (ADR-005).
+
+Sudah diputuskan tanpa library tambahan: pengiriman email lewat REST API Resend dengan `fetch` (ADR-012) dan rate limit form kontak berbasis tabel database.
 
 ### Contoh: gunakan native
 

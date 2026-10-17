@@ -4,22 +4,52 @@ Catatan status pekerjaan terkini. Beda dengan `ROADMAP.md` (rencana), file ini m
 
 ## Status Saat Ini
 
-- **Fase aktif**: Fase 1 (Landing page), UI selesai, belum diverifikasi penuh
+- **Fase aktif**: Fase 1 (Landing page + tugas non-fitur): semua tugas non-fitur selesai kecuali deploy
 - **Terakhir diperbarui**: 2026-10-17
 - **Sedang dikerjakan**: tidak ada
-- **Blocker**: project Neon belum dibuat (butuh pemilik repo); form kontak tidak bisa menyimpan sebelum itu
+- **Blocker**: keputusan hosting dan akses akun (deploy, domain, Search Console); akun Resend untuk email notifikasi
 
 ## Langkah Berikutnya (untuk agent yang melanjutkan)
 
-1. Pemilik repo: buat project Neon, isi `.env` dari `.env.example` (termasuk `IP_HASH_SALT`), jalankan `bun run db:migrate`, lalu uji form `/id/contact` end-to-end. Jalur DB belum pernah dijalankan.
-2. Pemilik repo: putuskan hal terbuka di dokumen fitur 1-3: tinggi tombol (tap target 44px), penyedia email notifikasi, isi halaman About, isi menu dropdown "Pages", nasib tautan Blog (404 sampai Fase 2), tautan sosial/telepon/email asli, keaslian testimoni.
-3. Agent: verifikasi yang belum dilakukan di fitur 1-4: Lighthouse (mobile ≥ 90, SEO 100, A11y ≥ 95), uji keyboard (dropdown, menu mobile), tampilan 360px di perangkat/emulator nyata, "form tanpa JavaScript", Rich Results Test, axe. Playwright belum dipasang.
-4. Agent: sisa fitur 4 (SEO): gambar OG, tabel `redirects`, favicon/manifest. Lalu Fase 2 (Blog) setelah dokumen fitur 5 dikonfirmasi.
+1. ~~Neon~~ selesai 2026-10-17 (migrasi diterapkan, form dan rate limit teruji). Pemilik repo: perbaiki `DATABASE_URL_UNPOOLED` di `.env` agar memakai host tanpa `-pooler` (koneksi langsung).
+2. Pemilik repo: putuskan hal terbuka di dokumen fitur 1-3: isi halaman About, isi menu dropdown "Pages", nasib tautan Blog (404 sampai Fase 2), tautan sosial/telepon/email asli, keaslian testimoni.
+3. Pemilik repo: putuskan hosting dan siapkan akun, lalu deploy (tugas non-fitur terakhir Fase 1): lihat daftar langkah di bawah. Setelah deploy, agent mengukur ulang Lighthouse di produksi, mengisi `NEXT_PUBLIC_SITE_URL`, dan menguji kirim form + email nyata.
+4. Agent: Fase 2 (Blog) setelah dokumen fitur 5 dikonfirmasi; sebelum itu, bahas konten landing page (lihat "Topik yang Ditampung").
 5. Tinjau ADR-010 (Cache Components) dan ADR-011 (jsdom v26).
 6. Tambahkan nama fitur baru ke `FEATURES` di `eslint.config.mjs` saat membuat folder di `src/features/`.
 7. Pemilik repo: push ke GitHub agar CI pertama kali jalan; buat commit pertama bila siap.
 
 Kondisi repo saat ini: Fase 1 berjalan (lint, typecheck, test, build lolos), repositori git sudah di-init tanpa commit.
+
+### Daftar langkah deploy (pemilik repo)
+
+1. Pilih hosting (usulan agent: Vercel; Next.js 16 + Cache Components butuh runtime Node.js, dan Neon tersedia sebagai integrasi) dan hubungkan repositori.
+2. Isi env produksi: `NEXT_PUBLIC_SITE_URL` (domain asli), `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `IP_HASH_SALT`, dan opsional tiga env Resend. Jalankan `bun run db:migrate` ke database produksi.
+3. Arahkan domain; paksa HTTPS dan pilih satu hostname kanonik (`www` atau tanpa `www`).
+4. Daftarkan situs di Google Search Console, kirim `https://<domain>/sitemap.xml`.
+5. Ganti placeholder (testimoni, kontak, sosial) dan pastikan halaman legal ada.
+
+## Topik yang Ditampung (dibahas bertahap bersama pemilik repo)
+
+Dibahas satu per satu, dimulai dari Fase 1. Belum ada keputusan; **jangan mengubah kode atau konten berdasarkan daftar ini sebelum pemilik repo menyetujui**.
+
+**1. Sisa Fase 1** (hasil audit 2026-10-17):
+- Menunggu pemilik repo: deploy + domain + Search Console; project Neon; akun Resend dan alamat tujuan; konten asli (testimoni, kontak, sosial, About); daftar final layanan; halaman legal dan kebijakan retensi data IP; logo, gambar OG, domain final.
+- Sudah dikerjakan (2026-10-17): favicon, manifest, dan gambar OG; uji form tanpa JavaScript, validasi, dan honeypot di E2E; kebersihan dokumen fitur 1-4.
+- Masih bisa dikerjakan agent tetapi **menunggu keputusan**: konten halaman layanan (±300 kata; bergantung keputusan konten); link sosial `href="#"` (butuh URL asli); uji kirim form sampai database dan rate limit (butuh Neon); tabel `redirects` (tunda sampai blog).
+- Manual setelah ada URL publik: Rich Results Test, Lighthouse produksi, kirim sitemap.
+- Kebersihan dokumen: pertanyaan terbuka dan `[TODO]` yang sudah terjawab oleh implementasi; checkbox "PROGRESS.md diperbarui".
+
+**2. Konten landing page untuk usaha baru** (dibahas bertahap; kelompok 1-4 selesai 2026-10):
+- Kelompok 1 (Top bar + Hero) **selesai**; keputusan ada di `docs/features/1_LANDING_PAGE.md` bagian 12. Kelompok 2 (Our Approach, Why Choose Us, Services) **selesai**, keputusan di bagian 12 yang sama. Kelompok 3 (Tech Stack, Workflow) **selesai**. Kelompok 4 (Reviews, Footer, sosial) **selesai**: Reviews dan semua ikon sosial disembunyikan, footer dipertahankan. Halaman legal belum ada.
+- Cara menyembunyikan: dikomentari dengan tanda `DISEMBUNYIKAN (alasan, tanggal)`, bukan dihapus (`AGENTS.md`, Konvensi Singkat).
+- Daftar saran awal di bawah ini tetap berlaku untuk kelompok 2-4:
+- Klaim tanpa data yang sebaiknya tidak tampil: badge "4.9 ★ 5K+ Reviews", "one of the best software houses in Indonesia", statistik di Why Choose Us (10K+ works, 100+ clients, 12+ regions, 200+ projects, 98%), "trusted by government agencies", 3 testimoni bernama + rating 4.9/120+ ulasan, janji "24/7 monitoring"/"pentest", teknologi yang belum benar-benar dipakai.
+- Saran per section: pertahankan Hero (tanpa rating), Core Services, Tech Stack (dipangkas), Workflow, Footer, dan top bar (ganti kalimat). Hapus "Our Approach" (duplikat Services) dan Reviews (sampai ada testimoni asli). Ubah "Why Choose Us" menjadi komitmen tanpa angka.
+- Tambahan yang disarankan: artikel terbaru (setelah Fase 2), "Tentang kami" singkat dengan foto asli, studi kasus bila ada proyek nyata.
+- Urutan usulan: Hero, Alasan memilih kami, Layanan, Tech stack, Workflow + CTA, Artikel terbaru, Footer.
+- Pertanyaan yang menentukan: ada proyek/klien nyata yang boleh disebut? ada foto asli? teknologi apa yang benar-benar dikuasai? layanan mana yang siap dikerjakan sekarang?
+- Aturan yang disarankan: setiap angka/klaim harus punya sumber yang bisa ditunjukkan; bila belum, tulis komitmen, bukan pencapaian.
 
 ## Ringkasan per Fase
 
@@ -45,6 +75,77 @@ Entri terbaru di atas. Satu entri per sesi/tugas.
 - Belum selesai / catatan: sisa pekerjaan, asumsi, utang teknis
 - Berikutnya: langkah yang disarankan
 ```
+
+### 2026-10-17: Neon tersambung, migrasi, uji form ke database nyata
+
+- Selesai: `.env` diperiksa tanpa menampilkan nilai (DATABASE_URL, DATABASE_URL_UNPOOLED, IP_HASH_SALT terisi; Resend belum diisi). Migrasi `0000_*` diterapkan ke Neon (`bun run db:migrate`). Skema diverifikasi langsung: 9 kolom dan 3 index sesuai `schema.ts`. Uji lewat browser: 3 pesan tersimpan dengan benar (`ip_hash` berupa hash), pesan ke-4 ditolak batas kirim; data uji dihapus (0 baris tersisa), berkas uji sementara dihapus.
+- Temuan: `DATABASE_URL_UNPOOLED` di `.env` ternyata alamat **pooled** (ada `-pooler`). Untuk migrasi saya turunkan alamat langsung di memori saja; `.env` tidak diubah. Perlu diperbaiki pemilik repo (README dan `.env.example` sudah menjelaskan).
+- Verifikasi (dijalankan, lolos): migrasi, pemeriksaan skema, uji kirim 4 pesan di Neon nyata, `build`.
+- Tidak diverifikasi: email notifikasi ke Resend (belum ada kunci), perilaku di produksi (hosting nyata, header `x-forwarded-for`).
+- Catatan: rate limit memakai IP dari `x-forwarded-for`/`x-real-ip`; di lokal semua permintaan memakai nilai `unknown`, di hosting nyata perlu dipastikan header itu diisi platform.
+- Berikutnya: akun Resend (opsional), deploy/domain, konten About, halaman legal.
+
+### 2026-10-17: Logo resmi, email/telepon/legal disembunyikan
+
+- Selesai: logo resmi (`public/images/logo`) dipakai di header dan footer; `logo-full.png` transparan dibuat otomatis dari `doit_logo.png`, favicon/ikon/manifest/OG dibuat ulang dari logo (skrip `docs/reference/make-brand-assets.cjs` ditulis ulang; `icon.svg` lama dihapus, diganti `icon.png`). Email (top bar, kartu kontak, JSON-LD), telepon (hero, kartu kontak, JSON-LD), dan tautan legal footer dikomentari dengan tanda `DISEMBUNYIKAN`; halaman `/contact` kini hanya form. Tes E2E baru: email/telepon/legal tidak tampil, JSON-LD tanpa telepon, logo termuat, kontak satu kolom.
+- Verifikasi (dijalankan, lolos): `lint`, `typecheck`, 67 tes unit, Playwright 123 lulus / 0 gagal (3 run berturut-turut). Tampilan header, footer, gambar OG, dan ikon dilihat langsung.
+- Perubahan dari pemilik repo di luar sesi ini: `hero.jpg` dan `collaboration.jpg` diganti (hero lama menjadi `hero-2.jpg`, tidak dipakai); tidak disentuh.
+- Belum: konten About, domain/hosting, Neon, Resend, email dan telepon asli, halaman legal.
+- Berikutnya: daftar "menunggu pemilik repo".
+
+### 2026-10-17: Konten kelompok 4 dan menu aktif
+
+- Selesai: Reviews disembunyikan (import/pemakaian di `page.tsx`, item dropdown "Pages", tautan footer, semuanya dikomentari dengan tanda `DISEMBUNYIKAN`); footer dipertahankan; semua ikon sosial (top bar + footer) dikomentari. Menu navbar kini aktif mengikuti halaman dan section beranda yang sedang dibaca (`nav-active.ts`, desktop dan mobile, anak dropdown ikut ditandai). Tes: 14 tes unit baru untuk logika menu aktif; E2E untuk menu aktif (halaman, gulir section, dropdown, mobile) dan untuk Reviews/sosial yang tersembunyi.
+- Verifikasi (dijalankan, lolos): `lint`, `typecheck`, 67 tes unit, Playwright 117 lulus / 0 gagal (3 run berturut-turut). Tampilan menu aktif dan footer dilihat langsung.
+- Belum: halaman legal (Privacy/Terms/Security), email dan telepon asli, logo resmi, gambar OG/`meta.title` yang masih memakai kalimat lama.
+- Berikutnya: lanjut ke daftar "menunggu pemilik repo" (Neon, Resend, deploy/domain, konten About, halaman legal, logo).
+
+### 2026-10-17: Konten kelompok 3 (Tech Stack dan Workflow)
+
+- Selesai: Tech Stack dibiarkan. Workflow dipertahankan dengan teks baru yang selaras dengan Our Approach (4 langkah, fase memakai nama langkah Approach); semua janji yang tidak bisa dipenuhi diganti (pentest, 24/7, backup harian, CI/CD, pelatihan, "dampak terukur", "konsultasi 30 menit dengan solutions architect"), termasuk kartu ajakan. Terjemahan Indonesia ditulis agent. Tes E2E ditambah agar frasa janji lama tidak muncul lagi. Penyempurnaan Our Approach (ikon + kartu kaca) ikut selesai; regresi scroll horizontal di mobile akibat cahaya dekoratif ditangkap tes dan diperbaiki.
+- Stabilitas tes: Playwright dibatasi 4 worker lokal (2 di CI). Dengan 16 worker, tes gagal acak di tempat yang berpindah-pindah; setelah dibatasi, 4 run berturut-turut hijau.
+- Verifikasi (dijalankan, lolos): `lint`, `typecheck`, 53 tes unit, Playwright 111 lulus / 0 gagal (4 run).
+- Berikutnya: kelompok 4 (Reviews, Footer, halaman legal).
+
+### 2026-10-17: Konten kelompok 2 (Our Approach, Why Choose Us, Services)
+
+- Selesai: Our Approach diganti proses 4 langkah; Why Choose Us memakai 3 komitmen (statistik, kartu "10K+", daftar 6 poin, dan tombol portofolio dikomentari dengan tanda `DISEMBUNYIKAN`); Services menjadi 3 layanan (Web Development, Custom Software Development, UI/UX Design) dengan baris cakupan. Versi lama disimpan utuh: `approach-bento.tsx`, `core-services-bento.tsx`, `services-hidden.ts`, kamus `home.approachBento`. Teks `id` dan `en` lengkap; deskripsi meta dan halaman `/services` disesuaikan; halaman detail layanan menampilkan cakupan. Tes E2E diperbarui dan ditambah (3 layanan di beranda, layanan tersembunyi 404 dan tidak di sitemap, klaim statistik/portofolio tidak tampil).
+- Verifikasi (dijalankan, lolos): `lint`, `typecheck`, 53 tes unit, Playwright 111 lulus / 0 gagal. Tampilan desktop dan mobile dilihat langsung (satu crop foto diperbaiki).
+- Keputusan sendiri yang perlu ditinjau: terjemahan Indonesia, header section Services, slug layanan baru, foto potret stok. Detail di `docs/features/1_LANDING_PAGE.md` bagian 12.
+- Perubahan dari pemilik repo di luar sesi ini: `src/content/tech-stack.ts` (AWS dan MongoDB dihapus dari daftar).
+- Penyempurnaan Our Approach: ikon per langkah (`ClipboardIcon` baru + ikon yang sudah ada) dan kartu bergaya kaca bergradasi halus (lihat `DESIGN_SYSTEM.md`). Pemilik repo ikut menyetel kelas gradasi kartu; versi itu dipertahankan.
+- Berikutnya: kelompok 3 (Tech Stack, Workflow). Perhatikan tumpang tindih Workflow dengan Our Approach.
+
+### 2026-10-17: Konten kelompok 1 (Top bar dan Hero)
+
+- Selesai: kalimat top bar diganti; badge rating hero dan awalan merek pada deskripsi disembunyikan (dikomentari, tanda `DISEMBUNYIKAN`); judul dan deskripsi hero diganti sesuai keputusan pemilik repo (ID dan EN). Aturan "menyembunyikan, bukan menghapus" ditambahkan ke `AGENTS.md` dan `CODE_STYLE.md`. Tes E2E baru: klaim tanpa bukti tidak tampil, dan hero memakai teks baru.
+- Verifikasi (dijalankan, lolos): `lint`, `typecheck`, 53 tes unit, Playwright 117 lulus / 0 gagal. Tampilan hero dilihat langsung.
+- Belum: kelompok 2-4; gambar OG dan `meta.title` masih memakai kalimat lama (menunggu tahap branding).
+- Berikutnya: bahas kelompok 2 (Our Approach, Why Choose Us, Services).
+
+### 2026-10-17: Sisa Fase 1 yang bisa dikerjakan agent
+
+- Selesai: favicon (SVG + ICO + apple-icon), manifest, ikon 192/512, dan gambar OG default 1200x630 dari logo template; `buildMetadata` memakai gambar OG bawaan dan kartu Twitter besar. Skrip pembuat ulang aset: `docs/reference/make-brand-assets.cjs` (Playwright + Chrome, tanpa dependency baru). Tes form kontak di E2E: galat per kolom + isian dipertahankan, honeypot, dan **form tanpa JavaScript** (validasi server berjalan). Tes ikon/manifest/OG. Dokumen fitur 1-4 dirapikan (checklist, pertanyaan terjawab, `[TODO]` basi).
+- Verifikasi (dijalankan, lolos): `lint`, `typecheck`, `test` (6 berkas, 53 tes), Playwright 113 lulus / 0 gagal (3 run berturut-turut). Gambar OG dan ikon dilihat langsung.
+- Tidak dikerjakan (menunggu keputusan/akun): konten layanan ±300 kata, link sosial asli, kirim form sampai database dan rate limit, tabel `redirects`, deploy.
+- Berikutnya: lihat "Langkah Berikutnya".
+
+### 2026-10-17: Fase 1 tugas non-fitur (404/error, Lighthouse, perbaikan)
+
+- Selesai: halaman 404 dan error bermerek dua bahasa (`[locale]/not-found`, `[locale]/error`, `global-not-found`, `global-error`, `components/shared/status-screen`, `i18n/boundary-copy`; ADR-015). Audit Lighthouse lokal 7 halaman (tabel di `TESTING.md`). Perbaikan dari temuan: hero memakai `preload` + `fetchPriority="high"` (`priority` deprecated di Next 16), tautan Blog `prefetch={false}` (sebelumnya memicu galat 404 di konsol setiap halaman), `h2` tersembunyi di `/services` (urutan heading), tes E2E tidak lagi memakai `networkidle`, dan server uji memakai `--keepAliveTimeout 65000` karena `page.goto` kadang gagal acak `net::ERR_ABORTED`.
+- Verifikasi (dijalankan, lolos): `lint`, `typecheck`, `test` (6 berkas, 51 tes), `build`, Playwright 107 lulus / 0 gagal (5 run berturut-turut hijau setelah perbaikan keep-alive; sebelumnya sekitar 2 dari 5 run gagal acak), Lighthouse (Perf 93-100, A11y 100, BP 100, SEO 100).
+- Tidak diverifikasi: skor di produksi nyata (hosting/CDN), pemicu `error.tsx` dan `global-error` di browser sungguhan (hanya diuji unit), jalur database dan email nyata.
+- Belum dikerjakan: deploy produksi + domain + Search Console (butuh keputusan hosting dan akun pemilik repo).
+- Berikutnya: lihat "Langkah Berikutnya".
+
+### 2026-10-17: Keputusan tombol/email/Playwright, commit, perbaikan aksesibilitas
+
+- Selesai: dua commit di branch `feat/nextjs-layout` (Fase 0, Fase 1; `.env` tidak ikut, tidak ada push). Keputusan: tap target 44px hanya untuk pointer kasar (ADR-014); email lewat Resend REST + `fetch` (ADR-012, `features/contact/notify.ts`, env opsional); Playwright + axe dipasang (ADR-013, `tests/e2e`, `playwright.config.ts`, skrip `test:e2e`, langkah CI). Perbaikan yang ditemukan tes: token `brand-ink` untuk teks hijau di latar terang (kontras), ikon sosial SVG (label-content-name-mismatch), target ≥ 24px, CTA header tidak lagi meluber di layar kecil, tinggi menu mobile memperhitungkan top bar.
+- Verifikasi (dijalankan, lolos): `lint`, `typecheck`, `test` (5 berkas, 45 tes), `build`, dan Playwright 103 lulus / 0 gagal / 23 dilewati sesuai desain (desktop dan mobile Pixel 7: redirect, h1, bahasa, sitemap/robots/metadata/JSON-LD, dropdown + menu mobile, tap target, tanpa scroll horizontal, axe semua halaman). Screenshot mobile (contact, menu) diperiksa.
+- Tidak diverifikasi: Lighthouse, jalur database form kontak, pengiriman email ke Resend nyata, form tanpa JavaScript, Rich Results Test, lebar 360px khusus.
+- Catatan: slug layanan tak dikenal menghasilkan status 200 + `noindex` (batasan Cache Components, dicatat di ADR-010). Perubahan setelah dua commit di atas belum di-commit.
+- `README.md` ditulis: panduan pengguna (status, placeholder), persiapan, alur kerja 9 langkah tiap perubahan, daftar perintah, tugas umum, database, env, pemecahan masalah.
+- Berikutnya: lihat "Langkah Berikutnya".
 
 ### 2026-10-17: Fase 1 (Landing page, Contact, About/Services, SEO)
 

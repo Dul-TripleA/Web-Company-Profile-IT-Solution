@@ -22,7 +22,7 @@
 
 Server Component async dijalankan lewat E2E atau diuji sebagai fungsi data; Testing Library belum andal untuk itu.
 
-Status Fase 0: hanya Vitest + Testing Library yang terpasang (lingkungan `jsdom`, berkas `src/**/*.test.{ts,tsx}`). Playwright dan axe dipasang saat fitur pertama butuh E2E.
+Status: Vitest + Testing Library (`src/**/*.test.{ts,tsx}`, lingkungan `jsdom`) dan Playwright + axe (`tests/e2e`, proyek `desktop` dan `mobile` = Pixel 7). Lokal Playwright memakai Chrome yang terpasang (`channel: 'chrome'`); CI memasang Chromium. `bun run test:e2e` membangun lalu menjalankan; `bun run test:e2e:only` memakai hasil build yang ada. Playwright dibatasi 4 worker lokal (2 di CI) karena terlalu banyak browser paralel membuat tes gagal acak. Cakupan E2E: redirect locale, satu `h1` per halaman, pengalih bahasa, sitemap/robots/metadata/JSON-LD, dropdown dan menu mobile (keyboard, Escape, muat di layar), target sentuh 44px, tanpa scroll horizontal di semua halaman, dan axe (WCAG 2.x A/AA + 2.2 AA) di semua halaman desktop.
 
 ## 3. Yang Wajib Diuji
 
@@ -60,3 +60,27 @@ Status Fase 0: hanya Vitest + Testing Library yang terpasang (lingkungan `jsdom`
 
 Urutan: install → lint → typecheck → unit/integrasi → build → E2E (terhadap hasil build) → Lighthouse CI.
 Test harus deterministik: tanpa jaringan nyata (mock layanan email), tanpa ketergantungan waktu (inject jam), DB uji terisolasi.
+
+## Lighthouse (manual, sebelum rilis)
+
+Tidak dipasang sebagai dependency; dijalankan lewat `bunx` terhadap hasil build produksi.
+
+```sh
+bun run build && bun run start -- --port 3104        # terminal 1
+bunx lighthouse http://localhost:3104/id --view      # terminal 2: mobile (default)
+bunx lighthouse http://localhost:3104/id --preset=desktop --view
+```
+
+Hasil terakhir (2026-10-17, build produksi lokal, throttling simulasi):
+
+| Halaman | Perf | A11y | Best Practices | SEO | LCP |
+| --- | --- | --- | --- | --- | --- |
+| `/id` mobile | 94 | 100 | 100 | 100 | 3.1 s |
+| `/en` mobile | 93 | 100 | 100 | 100 | 3.2 s |
+| `/id/about` mobile | 96 | 100 | 100 | 100 | 2.9 s |
+| `/id/services` mobile | 97 | 100* | 100 | 100 | 2.6 s |
+| `/id/services/erp-systems` mobile | 99 | 100 | 100 | 100 | 2.3 s |
+| `/id/contact` mobile | 98 | 100 | 100 | 100 | 2.4 s |
+| `/id` desktop | 100 | 100 | 100 | 100 | 0.7 s |
+
+\* Awalnya 98 (urutan heading); diperbaiki dengan `h2` tersembunyi dan diukur ulang. Elemen LCP beranda adalah gambar hero; LCP mobile 3.1 s masih di atas ambang "baik" (2.5 s) walau skor Performance ≥ 90. Ukur ulang di lingkungan produksi nyata (hosting + CDN) karena hasil lokal tidak mewakili.

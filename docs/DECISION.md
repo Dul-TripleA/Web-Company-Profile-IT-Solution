@@ -106,7 +106,7 @@ Status: `Proposed` (usulan, perlu konfirmasi) · `Accepted` · `Rejected` · `Su
 - Konteks: Scaffold mengaktifkan `cacheComponents: true` dan `partialPrefetching: true`. Dokumentasi Next menyatakan keduanya akan aktif di mana-mana pada major berikutnya.
 - Opsi: (A) tetap aktif; (B) matikan dan memakai model caching lama (`export const revalidate`, `dynamic`).
 - Keputusan: A, agar selaras dengan arah framework. Caching dipilih eksplisit dengan `"use cache"`, `cacheLife`, `cacheTag`; tag dibatalkan dengan `revalidateTag`.
-- Konsekuensi: Butuh runtime Node.js (sesuai ADR-007). Akses data runtime harus dibungkus `<Suspense>` atau di-cache; config segmen lama (`dynamic`, `revalidate`, `runtime`) tidak dipakai. Halaman berdata (blog, admin) perlu dirancang dengan model ini sejak awal.
+- Konsekuensi: Butuh runtime Node.js (sesuai ADR-007). Akses data runtime harus dibungkus `<Suspense>` atau di-cache; config segmen lama (`dynamic`, `revalidate`, `runtime`) tidak dipakai. Halaman berdata (blog, admin) perlu dirancang dengan model ini sejak awal. `dynamicParams` tidak didukung, sehingga slug yang tidak dikenal (mis. `/id/services/tidak-ada`) dirender saat request dan `notFound()` dikirim lewat streaming: respons berstatus **200** dengan tubuh 404 dan `<meta name="robots" content="noindex">`, bukan status 404 sungguhan.
 
 ## ADR-011: Pin jsdom v26 untuk Vitest
 - Tanggal: 2026-10-17
@@ -114,4 +114,34 @@ Status: `Proposed` (usulan, perlu konfirmasi) · `Accepted` · `Rejected` · `Su
 - Konteks: `jsdom` 30 gagal dimuat di Node 20.20 (dependensi `undici` memakai API yang belum ada). Next.js 16 mendukung Node 20.9+.
 - Keputusan: `jsdom@26`. Naikkan setelah lingkungan dev dan CI memakai Node 22+.
 - Konsekuensi: Tes komponen jalan di Node 20. Sesuaikan versi Node di CI bila ingin memakai jsdom terbaru.
+
+## ADR-012: Notifikasi email lewat Resend REST API (tanpa SDK)
+- Tanggal: 2026-10-17
+- Status: Accepted (dipilih oleh agent atas persetujuan pemilik repo)
+- Konteks: Form kontak perlu memberi tahu tim. Aturan dependency: native dulu.
+- Opsi: Resend (REST); SMTP + Nodemailer; layanan lain (SendGrid, Postmark).
+- Keputusan: Resend lewat `fetch` ke `https://api.resend.com/emails`, tanpa SDK. Email berupa teks polos (tanpa HTML), `reply_to` diisi email pengirim, dikirim lewat `after()` agar tidak menunda respons. Bila `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, atau `CONTACT_FROM_EMAIL` kosong, notifikasi dilewati. Kegagalan pengiriman dicatat dan tidak membatalkan pesan yang sudah tersimpan di database.
+- Konsekuensi: Tanpa dependency baru dan mudah diganti. Perlu domain pengirim terverifikasi di Resend. Bentuk permintaan dites dengan `fetch` palsu, **belum** dengan layanan nyata.
+- Rate limit form kontak: berbasis tabel `contact_messages` (`ip_hash`), tanpa library atau layanan KV.
+
+## ADR-013: Playwright untuk E2E dan aksesibilitas
+- Tanggal: 2026-10-17
+- Status: Accepted
+- Konteks: Perlu uji keyboard, layout mobile, dan aksesibilitas yang tidak terjangkau Vitest.
+- Keputusan: `@playwright/test` + `@axe-core/playwright`, dua proyek (desktop, mobile = Pixel 7) terhadap hasil build. Lokal memakai Chrome terpasang agar tidak mengunduh browser; CI memasang Chromium.
+- Konsekuensi: CI lebih lama. Temuan axe langsung menjadi tes gagal. Teks hijau di latar terang memakai token `brand-ink` (#5f9224) karena lime asli (#84cb32) hanya 1.9:1 di krem.
+
+## ADR-014: Target sentuh 44px hanya untuk pointer kasar
+- Tanggal: 2026-10-17
+- Status: Accepted
+- Konteks: Template memakai tombol ±36px; `AGENTS.md` mensyaratkan target tap 44px; pemilik repo ingin tampilan sama dengan template.
+- Keputusan: `pointer-coarse:min-h-11` pada tombol, pengalih bahasa, dan tombol kirim. Desktop (mouse) tetap persis template; perangkat sentuh mendapat 44px.
+- Konsekuensi: Tampilan desktop tidak berubah. Tautan teks kecil (footer, top bar) hanya dijamin ≥ 24px (WCAG 2.2 AA).
+
+## ADR-015: Halaman 404 dan error bermerek; `globalNotFound` eksperimental
+- Tanggal: 2026-10-17
+- Status: Accepted
+- Konteks: Root layout ada di segmen dinamis `[locale]`, sehingga URL yang tidak cocok rute apa pun (mis. `/id/xyz`) tidak punya layout untuk dirender. Dokumentasi Next.js 16.4 merekomendasikan `global-not-found.js` untuk kasus ini, namun masih berstatus eksperimental (`experimental.globalNotFound`).
+- Keputusan: `[locale]/not-found.tsx` (di dalam layout, bahasa dari `next/root-params`), `[locale]/error.tsx` (client; di Next 16.4 prop-nya `retry`, bukan `reset`), serta `global-not-found.tsx` dan `global-error.tsx` yang dua bahasa karena locale tidak diketahui. Teks ada di `src/i18n/boundary-copy.ts` (client-safe), terpisah dari kamus utama yang server-only.
+- Konsekuensi: URL tak cocok rute mendapat status 404 sungguhan dengan tampilan bermerek. Bergantung pada flag eksperimental: cek ulang saat upgrade Next. Slug yang tak dikenal di dalam rute dinamis tetap 200 + `noindex` (ADR-010).
 
