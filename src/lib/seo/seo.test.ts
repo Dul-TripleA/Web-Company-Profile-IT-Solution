@@ -41,6 +41,21 @@ describe('buildMetadata', () => {
     expect(home.alternates?.canonical).toBe('http://localhost:3000/id');
   });
 
+  it('memakai gambar OG bawaan dan kartu Twitter besar', () => {
+    expect(meta.openGraph?.images).toEqual([{ url: 'http://localhost:3000/og-default.png' }]);
+    expect(meta.twitter).toMatchObject({ card: 'summary_large_image' });
+  });
+
+  it('gambar khusus halaman menggantikan gambar bawaan', () => {
+    const custom = buildMetadata({
+      locale: 'id',
+      title: 'T',
+      description: 'D',
+      image: 'http://localhost:3000/lain.png',
+    });
+    expect(custom.openGraph?.images).toEqual([{ url: 'http://localhost:3000/lain.png' }]);
+  });
+
   it('Open Graph memakai locale yang sesuai', () => {
     expect(meta.openGraph).toMatchObject({ locale: 'en_US', alternateLocale: ['id_ID'] });
   });

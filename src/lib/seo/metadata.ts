@@ -5,6 +5,8 @@ import { absoluteUrl } from '@/lib/site';
 const OG_LOCALE: Record<Locale, string> = { id: 'id_ID', en: 'en_US' };
 const SITE_NAME = 'Do It';
 const MAX_DESCRIPTION = 160;
+/** Gambar OG bawaan (1200x630) di public/; dipakai bila halaman tidak memberi gambar sendiri. */
+export const DEFAULT_OG_IMAGE = '/og-default.png';
 
 export function truncate(text: string, max = MAX_DESCRIPTION): string {
   if (text.length <= max) return text;
@@ -35,6 +37,7 @@ export function buildMetadata({
   );
   languages['x-default'] = absoluteUrl(localizedPath(DEFAULT_LOCALE, path));
   const summary = truncate(description);
+  const imageUrl = image ?? absoluteUrl(DEFAULT_OG_IMAGE);
 
   return {
     title,
@@ -48,13 +51,13 @@ export function buildMetadata({
       siteName: SITE_NAME,
       locale: OG_LOCALE[locale],
       alternateLocale: LOCALES.filter((item) => item !== locale).map((item) => OG_LOCALE[item]),
-      ...(image ? { images: [{ url: image }] } : {}),
+      images: [{ url: imageUrl }],
     },
     twitter: {
-      card: image ? 'summary_large_image' : 'summary',
+      card: 'summary_large_image',
       title,
       description: summary,
-      ...(image ? { images: [image] } : {}),
+      images: [imageUrl],
     },
   };
 }
