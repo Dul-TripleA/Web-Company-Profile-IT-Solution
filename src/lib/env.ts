@@ -8,6 +8,10 @@ const schema = z.object({
   DATABASE_URL_UNPOOLED: z.string().min(1).optional(),
   // Garam untuk hash IP pada rate limit form kontak. Jangan dipakai ulang untuk hal lain.
   IP_HASH_SALT: z.string().min(16),
+  // Notifikasi email form kontak (Resend). Bila salah satu kosong, notifikasi dilewati.
+  RESEND_API_KEY: z.string().min(1).optional(),
+  CONTACT_TO_EMAIL: z.email().optional(),
+  CONTACT_FROM_EMAIL: z.string().min(3).optional(),
 });
 
 export type Env = z.infer<typeof schema>;

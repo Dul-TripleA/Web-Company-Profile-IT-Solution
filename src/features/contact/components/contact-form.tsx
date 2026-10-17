@@ -137,7 +137,7 @@ export function ContactForm({ dict, services }: ContactFormProps) {
       <button
         type="submit"
         disabled={pending}
-        className="inline-flex items-center justify-center rounded-full bg-brand px-6 py-3 text-xs font-bold text-forest transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_8px_20px_rgba(153,227,68,0.35)] disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex items-center justify-center rounded-full bg-brand px-6 py-3 text-xs font-bold text-forest transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_8px_20px_rgba(153,227,68,0.35)] disabled:cursor-not-allowed disabled:opacity-60 pointer-coarse:min-h-11"
       >
         {pending ? dict.sending : dict.submit}
       </button>

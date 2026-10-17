@@ -2,11 +2,13 @@
 
 import { and, count, eq, gt } from 'drizzle-orm';
 import { headers } from 'next/headers';
+import { after } from 'next/server';
 import { getDb } from '@/lib/db';
 import { contactMessages } from '@/lib/db/schema';
 import { getEnv } from '@/lib/env';
 import { CONTACT_FIELDS, RATE_LIMIT_MAX_MESSAGES, RATE_LIMIT_WINDOW_MINUTES } from './constants';
 import { hashIp } from './ip-hash';
+import { sendContactNotification } from './notify';
 import { contactFormSchema } from './schema';
 import type { ContactErrorCode, ContactField, ContactFormState } from './state';
 
@@ -57,6 +59,18 @@ export async function submitContact(
       service: parsed.data.service || null,
       message: parsed.data.message,
       ipHash,
+    });
+
+    // Email dikirim setelah respons; kegagalan tidak membatalkan pesan yang sudah tersimpan.
+    after(async () => {
+      const result = await sendContactNotification({
+        name: parsed.data.name,
+        email: parsed.data.email,
+        phone: parsed.data.phone || null,
+        service: parsed.data.service || null,
+        message: parsed.data.message,
+      });
+      if (result === 'failed') console.error('submitContact: notifikasi email gagal');
     });
     return { status: 'success' };
   } catch (error) {

@@ -25,7 +25,7 @@ describe('contactFormSchema', () => {
     const result = contactFormSchema.safeParse({
       ...valid,
       phone: '+62 851-1053-0560',
-      service: 'erp-systems',
+      service: 'web-development',
     });
     expect(result.success).toBe(true);
   });
