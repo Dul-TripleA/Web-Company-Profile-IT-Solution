@@ -145,3 +145,10 @@ Status: `Proposed` (usulan, perlu konfirmasi) · `Accepted` · `Rejected` · `Su
 - Keputusan: `[locale]/not-found.tsx` (di dalam layout, bahasa dari `next/root-params`), `[locale]/error.tsx` (client; di Next 16.4 prop-nya `retry`, bukan `reset`), serta `global-not-found.tsx` dan `global-error.tsx` yang dua bahasa karena locale tidak diketahui. Teks ada di `src/i18n/boundary-copy.ts` (client-safe), terpisah dari kamus utama yang server-only.
 - Konsekuensi: URL tak cocok rute mendapat status 404 sungguhan dengan tampilan bermerek. Bergantung pada flag eksperimental: cek ulang saat upgrade Next. Slug yang tak dikenal di dalam rute dinamis tetap 200 + `noindex` (ADR-010).
 
+## ADR-016: Blog: react-markdown, cache runtime, Suspense di header
+- Tanggal: 2026-10-17
+- Status: Accepted (parser dipilih pemilik repo)
+- Konteks: Blog butuh render Markdown aman dari database. Aturan dependency: native dulu, tawarkan opsi. CI tidak punya database, jadi build tidak boleh mengambil data blog.
+- Opsi: `react-markdown` (elemen React, tanpa HTML mentah); `marked` + sanitizer (dua library, string HTML); `next-mdx-remote` (MDX, berlebihan).
+- Keputusan: `react-markdown` ^10. Halaman blog tidak diprerender dengan data: query memakai `'use cache'` + `cacheTag('posts')` + `cacheLife` pendek, dan halaman memanggil `connection()` agar data dibaca saat runtime. `SiteHeader` (client, memakai `usePathname`) dibungkus `<Suspense>` dengan `SiteHeaderFallback` karena rute dinamis `/blog/[slug]` melarang hook itu di luar Suspense.
+- Konsekuensi: Satu dependency baru. Build lolos tanpa DB. Perubahan konten dari Drizzle Studio tampil dalam beberapa menit (admin nanti memakai `revalidateTag`). Slug tak dikenal berstatus 200 + `noindex` (batasan Cache Components, ADR-010).

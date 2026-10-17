@@ -312,5 +312,33 @@
         }
       }
     }
+  },
+  "blog": {
+    "metaTitle": "Blog | Do It",
+    "metaDescription": "Articles from Do It about websites, web applications, and custom software for your business.",
+    "eyebrow": "Blog",
+    "title": "Articles from Do It",
+    "description": "Notes on building websites, web applications, and custom software.",
+    "empty": "No articles yet. Please check back soon.",
+    "categoriesLabel": "Categories",
+    "allCategories": "All",
+    "readArticle": "Read article",
+    "readingTime": "{minutes} min read",
+    "publishedOn": "Published",
+    "updatedOn": "Updated",
+    "by": "By",
+    "relatedTitle": "Related articles",
+    "backToBlog": "Back to blog",
+    "categoryEyebrow": "Category",
+    "categoryMetaDescription": "Articles in the {name} category from Do It.",
+    "pageTitleSuffix": "Page {page}",
+    "pagination": {
+      "navigation": "Blog pages",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page}"
+    },
+    "rss": "RSS feed",
+    "rssDescription": "Latest articles from Do It"
   }
 }

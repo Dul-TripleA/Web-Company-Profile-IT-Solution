@@ -312,5 +312,33 @@
         }
       }
     }
+  },
+  "blog": {
+    "metaTitle": "Blog | Do It",
+    "metaDescription": "Artikel dari Do It tentang website, aplikasi web, dan software khusus untuk bisnis Anda.",
+    "eyebrow": "Blog",
+    "title": "Artikel dari Do It",
+    "description": "Catatan seputar pembuatan website, aplikasi web, dan software khusus.",
+    "empty": "Belum ada artikel. Silakan kembali lagi nanti.",
+    "categoriesLabel": "Kategori",
+    "allCategories": "Semua",
+    "readArticle": "Baca artikel",
+    "readingTime": "{minutes} menit baca",
+    "publishedOn": "Diterbitkan",
+    "updatedOn": "Diperbarui",
+    "by": "Oleh",
+    "relatedTitle": "Artikel terkait",
+    "backToBlog": "Kembali ke blog",
+    "categoryEyebrow": "Kategori",
+    "categoryMetaDescription": "Artikel kategori {name} dari Do It.",
+    "pageTitleSuffix": "Halaman {page}",
+    "pagination": {
+      "navigation": "Halaman blog",
+      "previous": "Sebelumnya",
+      "next": "Berikutnya",
+      "page": "Halaman {page}"
+    },
+    "rss": "Umpan RSS",
+    "rssDescription": "Artikel terbaru dari Do It"
   }
 }

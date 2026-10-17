@@ -4,7 +4,7 @@ Catatan status pekerjaan terkini. Beda dengan `ROADMAP.md` (rencana), file ini m
 
 ## Status Saat Ini
 
-- **Fase aktif**: Fase 1 (Landing page + tugas non-fitur): semua tugas non-fitur selesai kecuali deploy
+- **Fase aktif**: Fase 2 (Blog) selesai di kode; Fase 1 tinggal deploy
 - **Terakhir diperbarui**: 2026-10-17
 - **Sedang dikerjakan**: tidak ada
 - **Blocker**: keputusan hosting dan akses akun (deploy, domain, Search Console). Notifikasi email (Resend) **ditunda tetapi penting**, lihat bagian di bawah
@@ -24,7 +24,7 @@ Ditunda lainnya yang juga perlu diputuskan sebelum rilis (belum dinyatakan "pent
 1. ~~Neon~~ selesai 2026-10-17 (migrasi diterapkan, form dan rate limit teruji). Pemilik repo: perbaiki `DATABASE_URL_UNPOOLED` di `.env` agar memakai host tanpa `-pooler` (koneksi langsung).
 2. Pemilik repo: putuskan hal terbuka di dokumen fitur 1-3: isi halaman About, isi menu dropdown "Pages", nasib tautan Blog (404 sampai Fase 2), tautan sosial/telepon/email asli, keaslian testimoni.
 3. Pemilik repo: putuskan hosting dan siapkan akun, lalu deploy (**sebelum deploy, ingatkan soal notifikasi email Resend di bagian "Ditunda tetapi Penting"**) (tugas non-fitur terakhir Fase 1): lihat daftar langkah di bawah. Setelah deploy, agent mengukur ulang Lighthouse di produksi, mengisi `NEXT_PUBLIC_SITE_URL`, dan menguji kirim form + email nyata.
-4. Agent: Fase 2 (Blog) setelah dokumen fitur 5 dikonfirmasi; sebelum itu, bahas konten landing page (lihat "Topik yang Ditampung").
+4. ~~Fase 2 (Blog)~~ selesai di kode 2026-10-17. Pemilik repo: tulis 3-5 artikel peluncuran lewat `bun run db:studio`. Agent berikutnya: Fase 3 (Admin) atau teaser artikel di Home.
 5. Tinjau ADR-010 (Cache Components) dan ADR-011 (jsdom v26).
 6. Tambahkan nama fitur baru ke `FEATURES` di `eslint.config.mjs` saat membuat folder di `src/features/`.
 7. Pemilik repo: push ke GitHub agar CI pertama kali jalan; buat commit pertama bila siap.
@@ -85,6 +85,13 @@ Entri terbaru di atas. Satu entri per sesi/tugas.
 - Belum selesai / catatan: sisa pekerjaan, asumsi, utang teknis
 - Berikutnya: langkah yang disarankan
 ```
+
+### 2026-10-17: Fase 2 Blog
+
+- Selesai: tabel `categories`/`posts` + migrasi `0001_clean_clea` (diterapkan ke Neon); `features/blog` (query ter-cache, RSS, waktu baca, komponen); route `/blog`, `/blog/page/[n]`, `/blog/category/[slug]`, `/blog/[slug]`, `/blog/rss.xml`; `components/shared/markdown.tsx` (react-markdown) dan `pagination.tsx`; `buildMetadata` (tanpa hreflang, waktu artikel, RSS) + `blogPostingJsonLd`; sitemap memuat artikel/kategori; `SiteHeader` dibungkus Suspense (+ fallback); tautan Markdown memakai `text-forest` (kontras). Keputusan di ADR-016 dan `features/5_BLOG.md`.
+- Verifikasi: lint, typecheck, 96 tes unit, `bun run build` (juga tanpa env DB), Playwright penuh (desktop + mobile) termasuk `blog.spec.ts` dengan data uji berawalan `zz-e2e-` yang dipasang/dihapus `global-setup/teardown` (dilewati bila tanpa `DATABASE_URL`).
+- Belum selesai / catatan: tidak ada artikel nyata; Rich Results Test, `EXPLAIN` pada data nyata, dan Lighthouse artikel belum dijalankan. Slug tak dikenal berstatus 200 + `noindex`. E2E blog menyentuh database di `.env` (hanya baris `zz-e2e-`). Resend masih ditunda (wajib sebelum rilis).
+- Berikutnya: tulis artikel awal; lalu Fase 3 (Admin) atau deploy.
 
 ### 2026-10-17: Resend dicatat sebagai ditunda tetapi penting
 

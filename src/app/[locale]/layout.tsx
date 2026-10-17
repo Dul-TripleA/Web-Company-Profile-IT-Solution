@@ -1,5 +1,6 @@
 import { SiteFooter } from '@/components/layout/site-footer';
 import { SiteHeader, type NavItem } from '@/components/layout/site-header';
+import { SiteHeaderFallback } from '@/components/layout/site-header-fallback';
 import { TopBar } from '@/components/layout/top-bar';
 import { JsonLd } from '@/components/shared/json-ld';
 import { SERVICES, getServiceCopy } from '@/content/services';
@@ -11,6 +12,7 @@ import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 import '../globals.css';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -67,8 +69,7 @@ export default async function RootLayout({ children, params }: LayoutProps<'/[lo
         { label: dict.nav.allServices, href: localizedPath(locale, '/services') },
       ],
     },
-    // /blog baru ada di Fase 2; tanpa prefetch agar tidak ada 404 di latar belakang.
-    { id: 'blog', label: dict.nav.blog, href: localizedPath(locale, '/blog'), prefetch: false },
+    { id: 'blog', label: dict.nav.blog, href: localizedPath(locale, '/blog') },
     { id: 'contact', label: dict.nav.contact, href: localizedPath(locale, '/contact') },
   ];
 
@@ -84,19 +85,22 @@ export default async function RootLayout({ children, params }: LayoutProps<'/[lo
         <JsonLd data={organizationJsonLd()} />
         <JsonLd data={websiteJsonLd(locale)} />
         <TopBar dict={dict.topBar} />
-        <SiteHeader
-          locale={locale}
-          brand={SITE.name}
-          homeHref={homeHref}
-          items={navItems}
-          cta={{ label: dict.common.freeConsultation, href: localizedPath(locale, '/contact') }}
-          labels={{
-            mainNavigation: dict.nav.mainNavigation,
-            openMenu: dict.nav.openMenu,
-            closeMenu: dict.nav.closeMenu,
-            language: dict.nav.language,
-          }}
-        />
+        {/* Suspense: SiteHeader membaca pathname, yang baru diketahui saat request di rute dinamis (mis. /blog/[slug]). */}
+        <Suspense fallback={<SiteHeaderFallback brand={SITE.name} homeHref={homeHref} />}>
+          <SiteHeader
+            locale={locale}
+            brand={SITE.name}
+            homeHref={homeHref}
+            items={navItems}
+            cta={{ label: dict.common.freeConsultation, href: localizedPath(locale, '/contact') }}
+            labels={{
+              mainNavigation: dict.nav.mainNavigation,
+              openMenu: dict.nav.openMenu,
+              closeMenu: dict.nav.closeMenu,
+              language: dict.nav.language,
+            }}
+          />
+        </Suspense>
         <main id="main-content">{children}</main>
         <SiteFooter locale={locale} dict={dict.footer} />
       </body>

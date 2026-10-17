@@ -3,7 +3,7 @@ import { SERVICES } from '@/content/services';
 import en from '@/i18n/dictionaries/en.json';
 import id from '@/i18n/dictionaries/id.json';
 import { LOCALES } from '@/i18n/config';
-import { breadcrumbJsonLd, serviceJsonLd, websiteJsonLd } from './json-ld';
+import { blogPostingJsonLd, breadcrumbJsonLd, serviceJsonLd, websiteJsonLd } from './json-ld';
 import { buildMetadata, truncate } from './metadata';
 
 describe('truncate', () => {
@@ -109,5 +109,82 @@ describe('panjang metadata di kamus', () => {
         expect(`${service.copy[locale].title} | Do It`.length).toBeLessThanOrEqual(60);
       }
     }
+  });
+});
+
+describe('buildMetadata: halaman satu bahasa (artikel)', () => {
+  const article = buildMetadata({
+    locale: 'id',
+    path: '/blog/artikel-uji',
+    title: 'Artikel',
+    description: 'Deskripsi',
+    type: 'article',
+    translations: false,
+    publishedTime: '2026-10-17T08:00:00.000Z',
+    modifiedTime: '2026-10-18T08:00:00.000Z',
+    rssUrl: 'http://localhost:3000/id/blog/rss.xml',
+  });
+
+  it('tanpa hreflang dan tanpa alternateLocale, tetapi tetap ber-canonical', () => {
+    expect(article.alternates?.canonical).toBe('http://localhost:3000/id/blog/artikel-uji');
+    expect(article.alternates).not.toHaveProperty('languages');
+    expect(article.openGraph).not.toHaveProperty('alternateLocale');
+  });
+
+  it('memuat waktu terbit/ubah untuk artikel dan umpan RSS', () => {
+    expect(article.openGraph).toMatchObject({
+      type: 'article',
+      publishedTime: '2026-10-17T08:00:00.000Z',
+      modifiedTime: '2026-10-18T08:00:00.000Z',
+    });
+    expect(article.alternates?.types).toEqual({
+      'application/rss+xml': 'http://localhost:3000/id/blog/rss.xml',
+    });
+  });
+
+  it('waktu terbit diabaikan untuk halaman non-artikel', () => {
+    const page = buildMetadata({
+      locale: 'id',
+      title: 'T',
+      description: 'D',
+      publishedTime: '2026-10-17T08:00:00.000Z',
+    });
+    expect(page.openGraph).not.toHaveProperty('publishedTime');
+  });
+});
+
+describe('blogPostingJsonLd', () => {
+  const data = blogPostingJsonLd('en', {
+    slug: 'artikel-uji',
+    title: 'Judul',
+    description: 'Deskripsi',
+    image: 'http://localhost:3000/og-default.png',
+    publishedAt: '2026-10-17T08:00:00.000Z',
+    updatedAt: '2026-10-18T08:00:00.000Z',
+    authorName: 'Budi',
+  });
+
+  it('memuat bidang wajib BlogPosting dengan URL absolut', () => {
+    expect(data['@type']).toBe('BlogPosting');
+    expect(data.headline).toBe('Judul');
+    expect(data.url).toBe('http://localhost:3000/en/blog/artikel-uji');
+    expect(data.datePublished).toBe('2026-10-17T08:00:00.000Z');
+    expect(data.dateModified).toBe('2026-10-18T08:00:00.000Z');
+    expect(data.inLanguage).toBe('en');
+    expect(data.publisher.logo.url).toContain('/images/logo/logo-full.png');
+  });
+
+  it('penulis perorangan = Person, penulis "Do It" = Organization', () => {
+    expect(data.author['@type']).toBe('Person');
+    const org = blogPostingJsonLd('id', {
+      slug: 'a',
+      title: 'T',
+      description: 'D',
+      image: 'x',
+      publishedAt: '2026-10-17T08:00:00.000Z',
+      updatedAt: '2026-10-17T08:00:00.000Z',
+      authorName: 'Do It',
+    });
+    expect(org.author['@type']).toBe('Organization');
   });
 });

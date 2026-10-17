@@ -45,7 +45,7 @@ Tugas non-fitur:
 
 | #   | Fitur | Dokumen                      | Status |
 | --- | ----- | ---------------------------- | ------ |
-| 5   | Blog  | [5_BLOG](features/5_BLOG.md) | Draft  |
+| 5   | Blog  | [5_BLOG](features/5_BLOG.md) | Selesai (kode) |
 
 Tugas non-fitur:
 

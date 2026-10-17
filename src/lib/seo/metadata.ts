@@ -21,6 +21,16 @@ type BuildMetadataInput = {
   description: string;
   type?: 'website' | 'article';
   image?: string;
+  /**
+   * false untuk halaman yang hanya ada di satu bahasa (mis. artikel): tanpa hreflang dan
+   * alternateLocale supaya tidak menunjuk ke halaman yang tidak ada.
+   */
+  translations?: boolean;
+  /** Tanggal ISO untuk `type: 'article'`. */
+  publishedTime?: string;
+  modifiedTime?: string;
+  /** URL umpan RSS yang diiklankan di <head>. */
+  rssUrl?: string;
 };
 
 export function buildMetadata({
@@ -30,6 +40,10 @@ export function buildMetadata({
   description,
   type = 'website',
   image,
+  translations = true,
+  publishedTime,
+  modifiedTime,
+  rssUrl,
 }: BuildMetadataInput): Metadata {
   const url = absoluteUrl(localizedPath(locale, path));
   const languages: Record<string, string> = Object.fromEntries(
@@ -42,7 +56,11 @@ export function buildMetadata({
   return {
     title,
     description: summary,
-    alternates: { canonical: url, languages },
+    alternates: {
+      canonical: url,
+      ...(translations ? { languages } : {}),
+      ...(rssUrl ? { types: { 'application/rss+xml': rssUrl } } : {}),
+    },
     openGraph: {
       type,
       url,
@@ -50,7 +68,15 @@ export function buildMetadata({
       description: summary,
       siteName: SITE_NAME,
       locale: OG_LOCALE[locale],
-      alternateLocale: LOCALES.filter((item) => item !== locale).map((item) => OG_LOCALE[item]),
+      ...(translations
+        ? {
+            alternateLocale: LOCALES.filter((item) => item !== locale).map(
+              (item) => OG_LOCALE[item],
+            ),
+          }
+        : {}),
+      ...(type === 'article' && publishedTime ? { publishedTime } : {}),
+      ...(type === 'article' && modifiedTime ? { modifiedTime } : {}),
       images: [{ url: imageUrl }],
     },
     twitter: {

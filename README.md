@@ -34,7 +34,7 @@ README ini untuk **menjalankan, menguji, dan membangun**. Aturan kode, arsitektu
 | --- | --- | --- |
 | Database | Neon sudah tersambung dan migrasi pertama diterapkan. Form kontak menyimpan ke tabel `contact_messages` dengan batas 3 pesan per 10 menit per IP (teruji) | Belum ada inbox untuk membaca pesan (Fase 3); sementara lihat lewat `bun run db:studio` |
 | Email notifikasi | **Ditunda, tetapi penting sebelum rilis.** Kode siap (Resend), belum ada akun dan belum diuji ke Resend nyata. Tanpa ini pesan tetap tersimpan di database, hanya Anda tidak diberi tahu | Daftar Resend, isi 3 variabel email di `.env`, lalu minta uji kirim ([bagian 7](#7-variabel-environment); langkah lengkap di `docs/PROGRESS.md`) |
-| Blog | Belum ada. Menu "Blog" mengarah ke `/blog` dan menghasilkan 404 (tidak di-prefetch, jadi tidak ada galat di konsol) | Fase 2 |
+| Blog | Ada: daftar, paginasi, kategori, artikel, RSS, sitemap. Artikel ditulis lewat `bun run db:studio` sampai admin (Fase 3) ada; panduan di `docs/features/5_BLOG.md` bagian 10. Belum ada artikel nyata | Isi 3-5 artikel peluncuran |
 | Admin | Belum ada | Fase 3 |
 | Lighthouse | Sudah dijalankan lokal: Performance 93-100, Accessibility 100, Best Practices 100, SEO 100 (tabel di `docs/TESTING.md`). Belum diukur di produksi | Ukur ulang setelah deploy; cara menjalankan ada di `docs/TESTING.md` |
 

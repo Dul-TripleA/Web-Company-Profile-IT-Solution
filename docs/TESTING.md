@@ -39,6 +39,7 @@ Status: Vitest + Testing Library (`src/**/*.test.{ts,tsx}`, lingkungan `jsdom`) 
 - Query blog hanya mengembalikan `PUBLISHED` dan `publishedAt <= now`.
 - Halaman artikel: slug tak ada → 404; metadata dan `BlogPosting` JSON-LD benar.
 - Sitemap dan RSS memuat artikel terbit, tidak memuat draft.
+- Sudah ada di `tests/e2e/blog.spec.ts`: data uji berawalan `zz-e2e-` dipasang/dihapus oleh `global-setup.ts`/`global-teardown.ts` ke database di `.env`; tanpa `DATABASE_URL` (mis. CI) tes blog dilewati.
 
 **Fase 3**
 

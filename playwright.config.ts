@@ -1,4 +1,8 @@
+import { loadEnvConfig } from '@next/env';
 import { defineConfig, devices } from '@playwright/test';
+
+// Memuat .env lokal agar global-setup bisa memasang data uji blog; di CI tanpa DB, tes blog dilewati.
+loadEnvConfig(process.cwd());
 
 const PORT = 3100;
 const isCI = Boolean(process.env.CI);
@@ -9,6 +13,8 @@ const browser = isCI ? {} : { channel: 'chrome' as const };
 
 export default defineConfig({
   testDir: './tests/e2e',
+  globalSetup: './tests/e2e/global-setup.ts',
+  globalTeardown: './tests/e2e/global-teardown.ts',
   fullyParallel: true,
   // Dibatasi: puluhan browser sekaligus melawan satu server membuat tes lambat dan gagal acak.
   workers: isCI ? 2 : 4,

@@ -52,3 +52,40 @@ export function serviceJsonLd(
     provider: { '@type': 'Organization', name: SITE.legalName, url: SITE_URL },
   };
 }
+
+export function blogPostingJsonLd(
+  locale: Locale,
+  post: {
+    slug: string;
+    title: string;
+    description: string;
+    image: string;
+    publishedAt: string;
+    updatedAt: string;
+    authorName: string;
+  },
+) {
+  const url = absoluteUrl(localizedPath(locale, `/blog/${post.slug}`));
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.description,
+    image: post.image,
+    datePublished: post.publishedAt,
+    dateModified: post.updatedAt,
+    inLanguage: locale,
+    mainEntityOfPage: url,
+    url,
+    author: {
+      '@type': post.authorName === SITE.name ? 'Organization' : 'Person',
+      name: post.authorName,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: SITE.legalName,
+      url: SITE_URL,
+      logo: { '@type': 'ImageObject', url: absoluteUrl('/images/logo/logo-full.png') },
+    },
+  };
+}
