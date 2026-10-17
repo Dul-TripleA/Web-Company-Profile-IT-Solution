@@ -175,11 +175,11 @@ Item navbar menyala sesuai posisi: halaman yang dibuka (Beranda, About Us, Servi
 | Elemen | Keputusan |
 | --- | --- |
 | Tautan legal footer | Privacy Policy, Terms of Service, Security dikomentari (halamannya belum ada). Kunci kamus `legal` dipertahankan |
-| Email | Dikomentari di top bar, di kartu kontak halaman `/contact`, dan di JSON-LD Organization (`email`). Data `SITE.email` dipertahankan |
-| Telepon | Dikomentari di hero, di kartu kontak, dan di JSON-LD (`telephone`). Data `SITE.phone` dan kunci `callUs` dipertahankan |
-| Halaman `/contact` | Kartu "Hubungi kami langsung" disembunyikan, sehingga halaman hanya berisi form (satu kolom, `max-w-3xl`) |
+| Email | Aktif kembali dengan email asli `andiazizp123@gmail.com` (top bar, kartu kontak `/contact`, JSON-LD Organization). Diatur di `src/content/site.ts` |
+| Telepon | Tampil kembali dengan nomor **dummy** (nomor dari template) di hero dan kartu kontak. Sengaja **tidak** dikirim ke JSON-LD (`telephone` tetap dikomentari) agar nomor palsu tidak masuk data terstruktur Google. Ganti dengan nomor resmi sebelum rilis |
+| Halaman `/contact` | Kembali dua kolom: kartu "Hubungi kami langsung" (email, telepon) dan form |
 | Logo | Logo resmi (`public/images/logo`) dipakai di header dan footer menggantikan ikon placeholder + teks "Do It". File turunan `logo-full.png` (latar transparan) dibuat otomatis; favicon, ikon aplikasi, dan gambar OG dibuat ulang dari logo |
 
-Mengaktifkan lagi email/telepon: isi data asli di `src/content/site.ts`, lalu buka komentar bertanda `DISEMBUNYIKAN` (cari dengan `grep -rn DISEMBUNYIKAN src`).
+Yang masih disembunyikan dari daftar ini: tautan legal footer dan `telephone` di JSON-LD. Cari semuanya dengan `grep -rn DISEMBUNYIKAN src`.
 
 Semua kelompok konten (1-4) sudah dibahas.

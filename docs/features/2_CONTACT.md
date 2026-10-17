@@ -106,6 +106,8 @@ Kasus tepi:
 - Butuh env `DATABASE_URL` dan `IP_HASH_SALT` (lihat `.env.example`); migrasi dijalankan dengan `bun run db:migrate`.
 - "Bekerja tanpa JavaScript" belum diuji.
 
-Pembaruan (2026-10): kartu info kontak (email dan telepon) disembunyikan karena datanya masih placeholder; halaman `/contact` kini hanya berisi form.
+Pembaruan (2026-10): kartu info kontak (email dan telepon) sempat disembunyikan, lalu ditampilkan kembali dengan email asli dan telepon dummy.
 
 Verifikasi ke database nyata (2026-10-17): migrasi `0000_*` diterapkan ke Neon; tabel `contact_messages` punya 9 kolom dan 3 index sesuai skema. Uji lewat browser: 3 pesan berturut-turut tersimpan (kolom terisi benar, `ip_hash` berupa hash, bukan IP), pesan ke-4 dalam jendela 10 menit ditolak dengan pesan batas kirim dan isian form dipertahankan. Data uji sudah dihapus. Uji ini manual (butuh database nyata), tidak masuk E2E otomatis.
+
+Diagnosis notifikasi email: bila Resend menolak atau jaringan gagal, server mencatat hanya status HTTP dan jenis galat (mis. `403 validation_error`), tanpa isi pesan/alamat email. Penyiapan Resend untuk uji: akun dengan email pemilik, kunci API, `CONTACT_FROM_EMAIL=Do It <onboarding@resend.dev>`, dan `CONTACT_TO_EMAIL` sama dengan email pendaftaran akun (pengirim uji Resend hanya mengirim ke pemilik akun; ke alamat lain perlu verifikasi domain).

@@ -1,6 +1,6 @@
 # 3. About dan Services (Halaman Statis)
 
-> Status: Berjalan (halaman ada; isi About masih rakitan dari landing page)
+> Status: Berjalan (About, Services, dan detail layanan sudah memakai konten yang disetujui; bagian Tim menunggu data asli)
 > Fase: 1
 > Folder kode: `src/app/(marketing)/about`, `src/app/(marketing)/services`, `src/components/sections`, `src/content/`
 
@@ -12,7 +12,7 @@ Memberi kedalaman di luar landing page: siapa Do It, apa saja layanannya. Halama
 
 **Termasuk**
 
-- `/about`: profil perusahaan, nilai, tim [TODO: konten].
+- `/about`: paragraf siapa Do It, ringkasan 3 layanan, proses kerja, dan ajakan konsultasi (bagian Tim ditunda sampai ada nama dan foto asli).
 - `/services`: daftar layanan.
 - `/services/[slug]`: satu halaman per layanan.
 - Konten layanan terpusat di `src/content/services.ts`; landing page juga membaca dari sana.
@@ -80,7 +80,7 @@ Kasus tepi: slug tidak ada → `not-found.tsx`.
 ## 10. Pertanyaan Terbuka
 
 - [x] Daftar final layanan dan slug-nya: 3 layanan (lihat atas)
-- [ ] Konten About (sejarah, visi, tim) tersedia?
+- [x] Konten About: memakai usulan (paragraf Do It, layanan, proses, CTA); Tim dilewati; belum ada fakta tahun berdiri/kota
 - [ ] Perlu FAQ per layanan?
 
 ## 11. Catatan Implementasi (2026-10-17)
@@ -89,3 +89,13 @@ Kasus tepi: slug tidak ada → `not-found.tsx`.
 - `/about` belum punya konten resmi; sementara dirakit dari blok "Why Choose Us" dan "Workflow" milik landing page. Ganti saat ada konten asli.
 - Halaman detail layanan berisi ringkasan, cakupan, CTA, dan layanan lain. Belum mencapai ±300 kata per halaman untuk SEO long-tail.
 - Hero halaman dalam (`PageHero`) tidak ada di template; dibuat dengan pola hero yang ada.
+
+## 12. Konten About (2026-10)
+
+Susunan `/about` (diputuskan pemilik repo, hanya memakai kalimat yang sudah disetujui, tanpa klaim baru):
+1. Hero halaman: judul "Mitra Teknologi untuk Pertumbuhan Bisnis Anda" dan deskripsi komitmen (memahami kebutuhan, ekspektasi jelas, hasil sesuai kesepakatan).
+2. "Siapa Kami": "Do It adalah software house yang membantu bisnis mewujudkan ide melalui website, aplikasi web, dan software khusus yang disesuaikan dengan kebutuhan mereka." Judul bagian "Software House yang Berpusat pada Bisnis Anda" dibuat agent; mohon ditinjau.
+3. Layanan (3 kartu, komponen yang sama dengan beranda) dan proses kerja (Our Approach, 4 langkah).
+4. Ajakan konsultasi (judul dan teks sama dengan kartu CTA Workflow).
+
+Ditunda: bagian Tim, tahun berdiri, lokasi, dan angka apa pun (belum ada data). Klaim lama (instansi pemerintah, arsitektur skalabel) dihapus dari deskripsi SEO; tes E2E menjaganya. Workflow tidak lagi dipakai di halaman About (masih di beranda).

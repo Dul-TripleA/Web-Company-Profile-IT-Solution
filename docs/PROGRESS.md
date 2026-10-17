@@ -76,6 +76,21 @@ Entri terbaru di atas. Satu entri per sesi/tugas.
 - Berikutnya: langkah yang disarankan
 ```
 
+### 2026-10-17: Konten halaman About
+
+- Selesai: `/about` memakai usulan yang disetujui: hero (tagline + komitmen), paragraf "Siapa Kami", 3 layanan, proses kerja (Approach), dan ajakan konsultasi; Workflow dan Why Choose Us tidak lagi dipakai di About. Deskripsi SEO About diganti (klaim lama dihapus). Terjemahan id dan en lengkap. Tes E2E baru untuk isi About dan ketiadaan klaim lama.
+- Verifikasi (dijalankan, lolos): `lint`, `typecheck`, 67 tes unit, Playwright 125 lulus / 0 gagal. Tampilan dilihat langsung.
+- Ditunda: bagian Tim, tahun berdiri, lokasi (belum ada data); halaman legal; hosting/domain.
+- Menunggu pemilik repo: akun Resend dan 3 variabel di `.env` (lalu agent menjalankan uji kirim email nyata).
+- Berikutnya: Resend (setelah kunci tersedia), lalu deploy/domain bila siap.
+
+### 2026-10-17: Diagnosis email, email asli dan telepon dummy
+
+- Selesai: log diagnosis notifikasi email (hanya status HTTP + jenis galat, tanpa alamat) dan tesnya; email asli `andiazizp123@gmail.com` dan telepon dummy ditampilkan kembali (top bar, hero, kartu kontak `/contact` dua kolom); `telephone` tetap tidak dikirim ke JSON-LD. Tes E2E disesuaikan.
+- Verifikasi (dijalankan, lolos): `lint`, `typecheck`, 67 tes unit, Playwright 123 lulus / 0 gagal.
+- Menunggu pemilik repo: akun Resend, kunci API, dan 3 variabel di `.env` (lihat `docs/features/2_CONTACT.md`); lalu agent menjalankan uji kirim nyata. Konten About (lihat usulan di sesi ini). Hosting/domain (nanti). Halaman legal (ditunda).
+- Berikutnya: konten About.
+
 ### 2026-10-17: Neon tersambung, migrasi, uji form ke database nyata
 
 - Selesai: `.env` diperiksa tanpa menampilkan nilai (DATABASE_URL, DATABASE_URL_UNPOOLED, IP_HASH_SALT terisi; Resend belum diisi). Migrasi `0000_*` diterapkan ke Neon (`bun run db:migrate`). Skema diverifikasi langsung: 9 kolom dan 3 index sesuai `schema.ts`. Uji lewat browser: 3 pesan tersimpan dengan benar (`ip_hash` berupa hash), pesan ke-4 ditolak batas kirim; data uji dihapus (0 baris tersisa), berkas uji sementara dihapus.

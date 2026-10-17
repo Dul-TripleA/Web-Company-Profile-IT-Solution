@@ -41,8 +41,8 @@ README ini untuk **menjalankan, menguji, dan membangun**. Aturan kode, arsitektu
 ### Masih placeholder (ganti sebelum rilis)
 
 - **Testimoni, nama, dan foto klien**: dari template, bukan klien asli. Section Reviews sudah disembunyikan; jangan diaktifkan sebelum ada testimoni asli.
-- **Email, telepon, ikon sosial, dan tautan legal**: disembunyikan (dikomentari) sampai datanya asli. Data ada di `src/content/site.ts`; aktifkan dengan membuka komentar `DISEMBUNYIKAN` (`grep -rn DISEMBUNYIKAN src`).
-- **Halaman About**: dirakit dari section landing page karena konten resminya belum ada.
+- **Telepon**: masih dummy (nomor dari template) di `src/content/site.ts`; email sudah asli. **Ikon sosial dan tautan legal** disembunyikan (dikomentari) sampai ada akunnya/halamannya; aktifkan dengan membuka komentar `DISEMBUNYIKAN` (`grep -rn DISEMBUNYIKAN src`).
+- **Halaman About**: sudah berisi paragraf Do It, layanan, proses, dan ajakan konsultasi; bagian Tim, tahun berdiri, dan lokasi belum ada (menunggu data asli).
 - **Halaman Privacy Policy, Terms, Security**: belum ada; tautannya disembunyikan dari footer.
 - Tombol "View Our Portfolio" mengarah ke `/services` (portofolio baru Fase 4).
 
