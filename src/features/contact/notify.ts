@@ -54,8 +54,17 @@ export async function sendContactNotification(input: ContactNotification): Promi
       }),
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
-    return response.ok ? 'sent' : 'failed';
-  } catch {
+    if (response.ok) return 'sent';
+
+    // Hanya kode status dan jenis galat yang dicatat; isi pesan Resend bisa memuat alamat email.
+    const detail = (await response.json().catch(() => null)) as { name?: string } | null;
+    console.error('notifikasi email ditolak Resend:', response.status, detail?.name ?? '-');
+    return 'failed';
+  } catch (error) {
+    console.error(
+      'notifikasi email gagal dikirim:',
+      error instanceof Error ? error.name : 'unknown',
+    );
     return 'failed';
   }
 }

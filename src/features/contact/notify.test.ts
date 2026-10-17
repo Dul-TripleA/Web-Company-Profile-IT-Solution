@@ -74,15 +74,27 @@ describe('sendContactNotification', () => {
     expect(body).not.toHaveProperty('html');
   });
 
-  it('gagal bila Resend membalas galat', async () => {
+  it('gagal bila Resend membalas galat, dan hanya mencatat status serta jenis galat', async () => {
+    const logged = vi.spyOn(console, 'error').mockImplementation(() => {});
     getEnv.mockReturnValue(fullEnv);
-    fetchMock.mockResolvedValue({ ok: false });
+    fetchMock.mockResolvedValue({
+      ok: false,
+      status: 403,
+      json: async () => ({ name: 'validation_error', message: 'hanya ke budi@example.com' }),
+    });
     expect(await sendContactNotification(input)).toBe('failed');
+    const output = JSON.stringify(logged.mock.calls);
+    expect(output).toContain('403');
+    expect(output).toContain('validation_error');
+    expect(output).not.toContain('budi@example.com');
+    logged.mockRestore();
   });
 
   it('gagal bila jaringan error, tanpa melempar', async () => {
+    const logged = vi.spyOn(console, 'error').mockImplementation(() => {});
     getEnv.mockReturnValue(fullEnv);
     fetchMock.mockRejectedValue(new Error('network'));
     expect(await sendContactNotification(input)).toBe('failed');
+    logged.mockRestore();
   });
 });
