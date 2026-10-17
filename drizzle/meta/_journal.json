@@ -15,6 +15,20 @@
       "when": 1792246964612,
       "tag": "0001_clean_clea",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792248154547,
+      "tag": "0002_wooden_longshot",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792249126265,
+      "tag": "0003_chemical_kang",
+      "breakpoints": true
     }
   ]
 }

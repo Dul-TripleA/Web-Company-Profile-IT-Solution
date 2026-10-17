@@ -7,7 +7,7 @@ import { BOUNDARY_COPY } from '@/i18n/boundary-copy';
 // Dipakai saat notFound() dipanggil di dalam segmen [locale] (mis. slug layanan tak dikenal).
 export default async function NotFound() {
   const current = await getLocale();
-  const locale = hasLocale(current) ? current : DEFAULT_LOCALE;
+  const locale = current && hasLocale(current) ? current : DEFAULT_LOCALE;
   const copy = BOUNDARY_COPY[locale];
 
   return (

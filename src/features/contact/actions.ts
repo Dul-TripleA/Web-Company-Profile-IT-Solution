@@ -1,22 +1,15 @@
 'use server';
 
 import { and, count, eq, gt } from 'drizzle-orm';
-import { headers } from 'next/headers';
 import { after } from 'next/server';
 import { getDb } from '@/lib/db';
 import { contactMessages } from '@/lib/db/schema';
 import { getEnv } from '@/lib/env';
+import { getClientIp, hashIp } from '@/lib/ip';
 import { CONTACT_FIELDS, RATE_LIMIT_MAX_MESSAGES, RATE_LIMIT_WINDOW_MINUTES } from './constants';
-import { hashIp } from './ip-hash';
 import { sendContactNotification } from './notify';
 import { contactFormSchema } from './schema';
 import type { ContactErrorCode, ContactField, ContactFormState } from './state';
-
-async function getClientIp(): Promise<string> {
-  const requestHeaders = await headers();
-  const forwarded = requestHeaders.get('x-forwarded-for')?.split(',')[0]?.trim();
-  return forwarded || requestHeaders.get('x-real-ip') || 'unknown';
-}
 
 export async function submitContact(
   _previous: ContactFormState,

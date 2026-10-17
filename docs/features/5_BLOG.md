@@ -1,6 +1,6 @@
 # 5. Blog
 
-> Status: Selesai (kode); artikel diisi lewat Drizzle Studio sampai admin (Fase 3) ada
+> Status: Selesai (kode); artikel ditulis lewat `/admin` (Fase 3) atau Drizzle Studio
 > Fase: 2
 > Folder kode: `src/features/blog/`, route `src/app/[locale]/blog/`
 
@@ -13,7 +13,7 @@ Menarik trafik organik lewat artikel teknologi/bisnis, lalu mengarahkan pembaca 
 - **Parser Markdown**: `react-markdown` v10 (ADR-016). Merender ke elemen React, HTML mentah tidak dieksekusi, URL `javascript:` dibuang; tanpa sanitizer terpisah.
 - **Bahasa**: satu bahasa per artikel (kolom `locale`, tanpa grup terjemahan). Konsekuensi: artikel, kategori, dan halaman 2+ tidak punya `hreflang`.
 - **MVP tanpa tag**. Hanya kategori. Tabel `tags` ditambah nanti bila perlu.
-- **Penulisan**: lewat Drizzle Studio (`bun run db:studio`) sampai admin (Fase 3).
+- **Penulisan**: awalnya lewat Drizzle Studio; sekarang tersedia `/admin` (`6_ADMIN.md`).
 
 ## 3. Scope
 

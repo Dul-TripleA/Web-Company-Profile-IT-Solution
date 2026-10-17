@@ -35,6 +35,51 @@ export const contactMessages = pgTable(
   ],
 );
 
+// Akun admin/penulis. Email dan username disimpan huruf kecil (dijaga CHECK).
+export const users = pgTable(
+  'users',
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    email: text().notNull(),
+    username: text().notNull(),
+    firstName: text().notNull(),
+    lastName: text(),
+    // scrypt: "<salt hex>:<hash hex>" (features/admin/password.ts).
+    passwordHash: text().notNull(),
+    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex('users_email_idx').on(t.email),
+    uniqueIndex('users_username_idx').on(t.username),
+    check('users_email_lower', sql`${t.email} = lower(${t.email})`),
+    check('users_username_check', sql`${t.username} ~ '^[a-z0-9_]{3,30}$'`),
+  ],
+);
+
+// Sesi login. `id` adalah SHA-256 dari token di cookie, jadi isi tabel ini tidak bisa dipakai masuk.
+export const sessions = pgTable(
+  'sessions',
+  {
+    id: text().primaryKey(),
+    userId: uuid()
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    expiresAt: timestamp({ withTimezone: true }).notNull(),
+  },
+  (t) => [index('sessions_user_idx').on(t.userId)],
+);
+
+// Percobaan login admin yang gagal; dipakai untuk membatasi brute force per IP.
+export const adminLoginAttempts = pgTable(
+  'admin_login_attempts',
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    ipHash: text().notNull(),
+    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('admin_login_attempts_idx').on(t.ipHash, t.createdAt.desc())],
+);
+
 // Blog (docs/features/5_BLOG.md). Satu artikel = satu bahasa (kolom `locale`).
 export const postStatus = pgEnum('post_status', ['DRAFT', 'PUBLISHED']);
 

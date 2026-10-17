@@ -4,7 +4,7 @@ Catatan status pekerjaan terkini. Beda dengan `ROADMAP.md` (rencana), file ini m
 
 ## Status Saat Ini
 
-- **Fase aktif**: Fase 2 (Blog) selesai di kode; Fase 1 tinggal deploy
+- **Fase aktif**: Fase 3 (Admin tahap 1) selesai di kode; Fase 1 tinggal deploy
 - **Terakhir diperbarui**: 2026-10-17
 - **Sedang dikerjakan**: tidak ada
 - **Blocker**: keputusan hosting dan akses akun (deploy, domain, Search Console). Notifikasi email (Resend) **ditunda tetapi penting**, lihat bagian di bawah
@@ -85,6 +85,14 @@ Entri terbaru di atas. Satu entri per sesi/tugas.
 - Belum selesai / catatan: sisa pekerjaan, asumsi, utang teknis
 - Berikutnya: langkah yang disarankan
 ```
+
+### 2026-10-17: Fase 3 Admin (tahap 1)
+
+- Selesai: login multiuser di database: tabel `users` (id, email, username, nama, password scrypt) dan `sessions` (token acak di cookie, hash-nya di DB), batas 5 gagal/15 menit lewat `admin_login_attempts` (migrasi `0002`, `0003` diterapkan ke Neon); `src/features/admin` (aksi dan query artikel, kategori, pesan; form; skema Zod); route `/admin/*` dengan layout akar sendiri; skrip `bun run admin:create` untuk membuat akun (password tersembunyi saat diketik); helper IP dipindah ke `src/lib/ip.ts`; `not-found.tsx` menyesuaikan `locale` yang kini opsional (dua layout akar). Keputusan di ADR-017 dan `features/6_ADMIN.md`. Draf pertama (satu admin dari `.env` + cookie HMAC) diganti atas permintaan pemilik repo karena membingungkan dan tidak multiuser; tidak ada lagi variabel env admin.
+- Temuan: `getCurrentUser()` wajib memanggil `connection()` lebih dulu; tanpa itu hasil "belum login" ikut terpanggang ke halaman statis saat build sehingga login selalu gagal.
+- Verifikasi: lint, typecheck, 108 tes unit, `bun run build`, Playwright penuh (184 lolos) termasuk `admin.spec.ts` (akses tanpa sesi, token palsu, password salah, penguncian, login dengan username, sesi lama ditolak setelah keluar, cookie, buat/ubah/draft/hapus artikel dan efeknya di situs publik, kategori, axe semua halaman admin). E2E membuat akun uji `zz_e2e_admin` di database lalu menghapusnya.
+- Belum selesai / catatan: belum ada akun admin sungguhan (pemilik repo menjalankan `bun run admin:create`); belum ada upload gambar, halaman kelola pengguna, peran, reset password, redirect saat slug berubah, atau deteksi konflik edit. Resend masih ditunda (wajib sebelum rilis).
+- Berikutnya: pemilik repo membuat akun admin dan artikel awal; lalu deploy (ingatkan Resend), atau halaman kelola pengguna / Fase 4.
 
 ### 2026-10-17: Fase 2 Blog
 

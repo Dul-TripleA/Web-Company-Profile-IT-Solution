@@ -55,11 +55,12 @@ Tugas non-fitur:
 
 | #   | Fitur | Dokumen                        | Status |
 | --- | ----- | ------------------------------ | ------ |
-| 6   | Admin | [6_ADMIN](features/6_ADMIN.md) | Draft  |
+| 6   | Admin | [6_ADMIN](features/6_ADMIN.md) | Selesai (kode), tahap 1 |
 
 Tugas non-fitur:
 
-- [ ] Putuskan library autentikasi (ADR-005 di `DECISION.md`) sebelum mulai fitur Admin
+- [x] Autentikasi diputuskan: buatan sendiri, satu admin (ADR-017)
+- [ ] Upload gambar cover (menunggu keputusan hosting/penyimpanan)
 
 ## Fase 4: Pertumbuhan
 

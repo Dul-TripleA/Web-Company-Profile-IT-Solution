@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { hashIp } from './ip-hash';
+import { hashIp } from '@/lib/ip';
 import { contactFormSchema } from './schema';
 
 const valid = {

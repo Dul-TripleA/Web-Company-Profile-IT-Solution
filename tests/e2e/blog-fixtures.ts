@@ -1,4 +1,6 @@
 import postgres from 'postgres';
+import { hashPassword } from '../../src/features/admin/password';
+import { E2E_ADMIN } from './admin-credentials';
 
 // Data uji blog untuk E2E. Semua slug berawalan `zz-e2e-` agar mudah dikenali dan dihapus;
 // tidak menyentuh artikel asli. Dimasukkan sekali oleh global-setup, dihapus oleh global-teardown.
@@ -33,6 +35,9 @@ export function connect(): Sql | null {
 export async function removeFixtures(sql: Sql) {
   await sql`delete from posts where slug like ${FIXTURE_PREFIX + '%'}`;
   await sql`delete from categories where slug like ${FIXTURE_PREFIX + '%'}`;
+  // Sesi ikut terhapus (FK cascade).
+  await sql`delete from users where username = ${E2E_ADMIN.username}`;
+  await sql`delete from admin_login_attempts`;
 }
 
 const words = (count: number) => Array.from({ length: count }, () => 'kata').join(' ');
@@ -53,6 +58,11 @@ ${words(450)}`;
 
 export async function insertFixtures(sql: Sql) {
   await removeFixtures(sql);
+
+  await sql`
+    insert into users (email, username, first_name, password_hash)
+    values (${E2E_ADMIN.email}, ${E2E_ADMIN.username}, ${E2E_ADMIN.firstName},
+            ${await hashPassword(E2E_ADMIN.password)})`;
 
   const [categoryId] = await sql`
     insert into categories (locale, slug, name) values ('id', ${SLUGS.category}, ${CATEGORY_NAMES.id})

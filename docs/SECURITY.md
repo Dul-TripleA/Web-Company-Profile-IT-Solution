@@ -25,7 +25,7 @@
 
 ## 4. Autentikasi dan Otorisasi (Admin)
 
-- Gunakan library mapan (lihat ADR-005); jangan menulis kripto/sesi sendiri.
+- Admin memakai auth buatan sendiri yang sengaja minimal (ADR-017: pengguna di tabel `users`, password scrypt, sesi di tabel `sessions` dengan token acak yang disimpan sebagai hash). Hanya primitif `node:crypto`; jangan menambah kripto sendiri di luar itu.
 - Password: argon2id/bcrypt. Cookie sesi: `HttpOnly`, `Secure`, `SameSite=Lax`.
 - Cek otorisasi di **setiap** Server Action/Route Handler admin, bukan hanya di `proxy.ts`/layout. Proteksi di UI bukan proteksi.
 - Batasi percobaan login (rate limit) dan catat kegagalan.

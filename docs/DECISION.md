@@ -152,3 +152,11 @@ Status: `Proposed` (usulan, perlu konfirmasi) · `Accepted` · `Rejected` · `Su
 - Opsi: `react-markdown` (elemen React, tanpa HTML mentah); `marked` + sanitizer (dua library, string HTML); `next-mdx-remote` (MDX, berlebihan).
 - Keputusan: `react-markdown` ^10. Halaman blog tidak diprerender dengan data: query memakai `'use cache'` + `cacheTag('posts')` + `cacheLife` pendek, dan halaman memanggil `connection()` agar data dibaca saat runtime. `SiteHeader` (client, memakai `usePathname`) dibungkus `<Suspense>` dengan `SiteHeaderFallback` karena rute dinamis `/blog/[slug]` melarang hook itu di luar Suspense.
 - Konsekuensi: Satu dependency baru. Build lolos tanpa DB. Perubahan konten dari Drizzle Studio tampil dalam beberapa menit (admin nanti memakai `revalidateTag`). Slug tak dikenal berstatus 200 + `noindex` (batasan Cache Components, ADR-010).
+
+## ADR-017: Login admin buatan sendiri, multiuser di database (menggantikan ADR-005)
+- Tanggal: 2026-10-17
+- Status: Accepted (dipilih pemilik repo; menggantikan ADR-005)
+- Konteks: Akan ada lebih dari satu admin. Pemilik repo ingin tabel `users` biasa (id, email, username, nama), tanpa akun di `.env`, dan sederhana tetapi aman.
+- Opsi: buat sendiri dengan `node:crypto`; Auth.js; Better Auth. Draf pertama (satu admin dari `.env`, cookie HMAC) ditolak pemilik repo karena membingungkan dan tidak multiuser.
+- Keputusan: tabel `users` (password scrypt) dan `sessions` (token acak di cookie, hanya hash SHA-256 yang disimpan, bisa dicabut); login dengan email atau username; batas 5 percobaan gagal per 15 menit per IP (`admin_login_attempts`). Akun dibuat lewat `bun run admin:create`. Tanpa dependency baru dan tanpa variabel env tambahan.
+- Konsekuensi: Tidak ada OAuth/reset password/peran; semua pengguna admin penuh. Pemeriksaan sesi dipanggil manual di setiap halaman dan action (`requireAdmin()`), jadi action baru wajib memanggilnya; ada tes E2E untuk akses tanpa sesi. Bila kebutuhan bertambah (SSO, 2FA), pertimbangkan library.

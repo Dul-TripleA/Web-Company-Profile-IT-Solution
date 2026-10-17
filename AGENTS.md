@@ -9,7 +9,7 @@ Panduan untuk AI agent dan kontributor di repo **Do It**: landing page company p
 
 Dokumen ini ditulis agar agent mana pun bisa melanjutkan pekerjaan tanpa riwayat percakapan sebelumnya. Anggap tidak ada konteks lain selain isi repo.
 
-**Kondisi repo saat ini**: Fase 0 selesai (kecuali project Neon, tugas pemilik repo) dan Fase 1 berjalan: landing page, halaman About/Services/Contact, dan fondasi SEO sudah ada dengan tampilan mengikuti template Blade, dua bahasa `id`/`en`. Database Neon tersambung dan blog (Fase 2) sudah ada; belum ada: admin dan artikel nyata. Email notifikasi form kontak sudah dikode (Resend) tetapi belum diuji ke layanan nyata. Git: dua commit awal (Fase 0 dan Fase 1) di branch `feat/nextjs-layout`. Status terbaru dan sisa pekerjaan ada di `docs/PROGRESS.md` serta catatan implementasi di tiap dokumen fitur.
+**Kondisi repo saat ini**: Fase 0 selesai (kecuali project Neon, tugas pemilik repo) dan Fase 1 berjalan: landing page, halaman About/Services/Contact, dan fondasi SEO sudah ada dengan tampilan mengikuti template Blade, dua bahasa `id`/`en`. Database Neon tersambung dan blog (Fase 2) sudah ada; admin tahap 1 (`/admin`: artikel, kategori, pesan; login multiuser dari tabel `users`; buat akun dengan `bun run admin:create`) juga sudah ada; belum ada: upload gambar dan artikel nyata. Email notifikasi form kontak sudah dikode (Resend) tetapi belum diuji ke layanan nyata. Git: dua commit awal (Fase 0 dan Fase 1) di branch `feat/nextjs-layout`. Status terbaru dan sisa pekerjaan ada di `docs/PROGRESS.md` serta catatan implementasi di tiap dokumen fitur.
 
 **Urutan baca**
 
