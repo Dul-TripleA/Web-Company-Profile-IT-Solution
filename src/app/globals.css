@@ -1,0 +1,35 @@
+@import 'tailwindcss';
+
+/* Token desain: docs/DESIGN_SYSTEM.md. Komponen memakai nama token, bukan hex. */
+@theme {
+  --color-brand: #99e344;
+  --color-brand-hover: #a8f553;
+  --color-brand-soft: #b4f268;
+  --color-brand-strong: #84cb32;
+  --color-on-brand: #0d2e28;
+
+  --color-forest: #0b2923;
+  --color-forest-deep: #071d18;
+  --color-cream: #fcfbf7;
+}
+
+/* inline: nilai --font-plus-jakarta baru ada saat runtime, di elemen <html>. */
+@theme inline {
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-cream font-sans text-slate-800 antialiased;
+  }
+
+  ::selection {
+    @apply bg-brand text-black;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

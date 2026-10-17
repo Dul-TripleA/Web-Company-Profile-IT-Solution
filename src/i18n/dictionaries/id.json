@@ -1,0 +1,250 @@
+{
+  "meta": {
+    "title": "Do It - Solusi Digital Modern",
+    "description": "Do It adalah software house yang membangun solusi digital modern: aplikasi web, sistem ERP, aplikasi mobile, dan desain UI/UX untuk bisnis Anda."
+  },
+  "site": {
+    "name": "Do It",
+    "tagline": "Solusi Digital Modern untuk Pertumbuhan Bisnis Anda"
+  },
+  "common": {
+    "freeConsultation": "Konsultasi Gratis",
+    "startFreeConsultation": "Mulai Konsultasi Gratis",
+    "callUs": "Hubungi Kami",
+    "ratingLabel": "Rating 5 dari 5 bintang",
+    "learnMore": "Selengkapnya"
+  },
+  "topBar": {
+    "tagline": "Kami adalah salah satu software house terbaik di Indonesia.",
+    "followUs": "Ikuti Kami —"
+  },
+  "nav": {
+    "home": "Beranda",
+    "about": "Tentang Kami",
+    "pages": "Halaman",
+    "services": "Layanan",
+    "blog": "Blog",
+    "contact": "Kontak",
+    "allServices": "Semua layanan",
+    "technology": "Teknologi",
+    "workflow": "Alur Kerja",
+    "reviews": "Ulasan",
+    "mainNavigation": "Navigasi utama",
+    "openMenu": "Buka menu",
+    "closeMenu": "Tutup menu",
+    "language": "Bahasa",
+    "skipToContent": "Lewati ke konten"
+  },
+  "home": {
+    "hero": {
+      "rating": "5K+ Ulasan",
+      "titleLine1": "Solusi Digital Modern",
+      "titleLine2": "Untuk",
+      "titleHighlight": "Pertumbuhan Bisnis Anda",
+      "brand": "Do It Solutions",
+      "description": "adalah software house yang menyediakan solusi teknologi modern untuk menjawab tantangan bisnis Anda. Lewat layanan pengembangan website, kami membantu bisnis di seluruh Indonesia bertransformasi digital agar tumbuh lebih optimal.",
+      "imageAlt": "Developer berkolaborasi menulis kode"
+    },
+    "approach": {
+      "eyebrow": "Pendekatan Kami",
+      "title": "Sistem Digital yang Selaras dengan Proses Bisnis Anda yang Sebenarnya",
+      "intro": "Kami menghadirkan solusi digital modern lewat rekayasa perangkat lunak, otomasi proses, dan antarmuka yang intuitif untuk meningkatkan efisiensi dan mempercepat operasional bisnis Anda.",
+      "main": {
+        "badge": "Siap Cloud & SaaS",
+        "title": "Aplikasi Web & Sistem Custom",
+        "description": "Membangun portal operasional, sistem manajemen dokumen, dan integrasi API berkecepatan tinggi yang melindungi dari kebocoran data dan mampu menangani ribuan transaksi harian dengan lancar.",
+        "features": [
+          { "title": "API-First", "description": "Konektivitas antar sistem yang mulus" },
+          { "title": "Sangat Cepat", "description": "Akses data tanpa jeda" },
+          { "title": "Multi-Platform", "description": "Responsif di desktop & mobile" }
+        ],
+        "link": "Jelajahi Aplikasi Web"
+      },
+      "side": {
+        "badge": "Efisiensi Operasional",
+        "title": "Sistem Manajemen & ERP",
+        "description": "Pusatkan kontrol inventaris, data penjualan, pencatatan transaksi, dan koordinasi tim dalam satu dasbor analitik yang mudah dipantau.",
+        "bullets": [
+          "Hilangkan rekap manual dan kesalahan perhitungan",
+          "Laporan operasional dan keuangan otomatis",
+          "Kontrol akses berjenjang berdasarkan divisi"
+        ],
+        "footnote": "Solusi POS, Inventaris & ERP Custom",
+        "link": "Lihat Fitur"
+      }
+    },
+    "why": {
+      "eyebrow": "Mengapa Memilih Kami",
+      "titleBefore": "Membangun Solusi Digital yang Memberi",
+      "titleHighlight": "Dampak Nyata",
+      "description": "Dipercaya instansi pemerintah, perusahaan swasta, dan institusi terkemuka di berbagai wilayah untuk menghadirkan solusi digital yang inovatif, aman, dan sangat skalabel.",
+      "completed": { "value": "10K+", "label": "Total Pekerjaan yang Kami Selesaikan" },
+      "stats": [
+        { "value": "100+", "label": "Klien" },
+        { "value": "12+", "label": "Wilayah" },
+        { "value": "200+", "label": "Proyek" },
+        { "value": "98%", "label": "Kepuasan" }
+      ],
+      "values": [
+        "Berpengalaman di Pemerintah & Swasta",
+        "Dukungan & Pemeliharaan Khusus",
+        "Solusi Digital End-to-End",
+        "Proses Pengembangan Agile",
+        "Arsitektur Aman & Skalabel",
+        "Berbasis Inovasi & Teknologi"
+      ],
+      "primaryCta": "Jadwalkan Konsultasi",
+      "secondaryCta": "Lihat Portofolio Kami",
+      "imageAlts": {
+        "meeting": "Rapat tim",
+        "collaboration": "Kolaborasi tim"
+      }
+    },
+    "services": {
+      "eyebrow": "Layanan Utama Kami",
+      "titleBefore": "",
+      "titleHighlight": "Solusi Digital",
+      "titleAfter": "Inovatif untuk Perusahaan yang Berkembang",
+      "intro": "Memberdayakan bisnis Anda dengan platform web custom yang skalabel, arsitektur ERP yang tangguh, aplikasi mobile berkualitas native, dan antarmuka yang berpusat pada pengguna."
+    },
+    "tech": {
+      "title": "Teknologi Modern yang Kami Gunakan",
+      "description": "Standar industri global yang teruji untuk membangun aplikasi digital yang berkinerja tinggi, aman, dan mudah dirawat."
+    },
+    "workflow": {
+      "eyebrow": "Cara Kami Menghasilkan Karya",
+      "titleBefore": "Siklus Pengembangan Kami yang",
+      "titleHighlight": "Terstruktur",
+      "description": "Dari penemuan awal hingga peluncuran cloud skala penuh, kami menerapkan kerangka kerja agile yang transparan, berbasis sprint, dan berfokus pada dampak bisnis yang terukur.",
+      "steps": [
+        {
+          "title": "Penemuan & Konsultasi",
+          "description": "Memahami hambatan operasional, memperjelas tujuan bisnis, menilai anggaran, dan menguraikan lingkup teknis proyek.",
+          "items": [
+            "Wawancara kebutuhan bisnis",
+            "Analisis kelayakan teknis",
+            "Peta jalan proyek & estimasi waktu"
+          ],
+          "phase": "Fase 1: Penetapan Lingkup"
+        },
+        {
+          "title": "Desain & Arsitektur",
+          "description": "Merancang prototipe UI/UX interaktif, skema basis data, dan arsitektur API yang tangguh untuk konkurensi tinggi.",
+          "items": [
+            "Wireframe Figma beresolusi tinggi",
+            "Skema basis data & cetak biru API",
+            "Design system & pustaka komponen"
+          ],
+          "phase": "Fase 2: Desain UI/UX & Sistem"
+        },
+        {
+          "title": "Pengembangan & QA",
+          "description": "Pengodean modular iteratif lewat sprint mingguan, pipeline pengujian otomatis, dan tinjauan keamanan kode yang ketat.",
+          "items": [
+            "Kode bersih & arsitektur skalabel",
+            "Pengujian unit & integrasi otomatis",
+            "Uji penetrasi & optimasi kecepatan"
+          ],
+          "phase": "Fase 3: Pengodean & Siklus Sprint"
+        },
+        {
+          "title": "Peluncuran & Penskalaan",
+          "description": "Rilis produksi dengan alur CI/CD tanpa downtime, pelatihan pengguna, pencatatan log real-time, dan dukungan SLA berkelanjutan.",
+          "items": [
+            "Deploy cloud CI/CD otomatis",
+            "Pelatihan pengguna & buku panduan lengkap",
+            "Pemantauan uptime 24/7 & backup harian"
+          ],
+          "phase": "Fase 4: Peluncuran & Pemeliharaan"
+        }
+      ],
+      "cta": {
+        "title": "Siap merencanakan sistem digital Anda berikutnya?",
+        "description": "Jadwalkan konsultasi teknis gratis 30 menit dengan solutions architect utama kami."
+      }
+    },
+    "reviews": {
+      "eyebrow": "Testimoni Klien",
+      "titleBefore": "Dipercaya Para Pemimpin,",
+      "titleHighlight": "Dibuktikan oleh Hasil",
+      "ratingBasis": "Berdasarkan 120+ ulasan klien",
+      "ratingScale": "/5.0"
+    }
+  },
+  "footer": {
+    "tagline": "Solusi Digital Modern",
+    "navigation": "Navigasi footer",
+    "links": {
+      "home": "Beranda",
+      "services": "Layanan",
+      "workflow": "Alur Kerja",
+      "reviews": "Ulasan",
+      "contact": "Kontak"
+    },
+    "rights": "Hak cipta dilindungi.",
+    "legal": {
+      "privacy": "Kebijakan Privasi",
+      "terms": "Ketentuan Layanan",
+      "security": "Keamanan"
+    }
+  },
+  "pages": {
+    "about": {
+      "metaTitle": "Tentang Kami | Do It",
+      "metaDescription": "Kenali Do It, software house yang membantu instansi pemerintah dan perusahaan swasta membangun solusi digital yang aman dan skalabel.",
+      "eyebrow": "Tentang Kami",
+      "title": "Software House yang Berpusat pada Bisnis Anda",
+      "description": "Kami memadukan rekayasa perangkat lunak, otomasi proses, dan desain yang intuitif untuk membantu organisasi di seluruh Indonesia tumbuh lewat teknologi."
+    },
+    "services": {
+      "metaTitle": "Layanan Kami | Do It",
+      "metaDescription": "Aplikasi web custom, sistem ERP, aplikasi mobile, dan desain UI/UX dari Do It, dibangun untuk kinerja, keamanan, dan pertumbuhan.",
+      "eyebrow": "Layanan Utama Kami",
+      "title": "Solusi Digital untuk Perusahaan yang Berkembang",
+      "description": "Dari platform web custom hingga arsitektur ERP, aplikasi mobile, dan antarmuka yang berpusat pada pengguna."
+    },
+    "serviceDetail": {
+      "eyebrow": "Layanan",
+      "whatYouGet": "Yang Anda dapatkan",
+      "technologies": "Teknologi",
+      "ctaTitle": "Ingin membahas layanan ini?",
+      "ctaDescription": "Ceritakan proyek Anda dan kami akan membalas dengan konsultasi teknis.",
+      "otherServices": "Layanan lainnya",
+      "breadcrumbServices": "Layanan"
+    },
+    "contact": {
+      "metaTitle": "Hubungi Kami | Do It",
+      "metaDescription": "Jadwalkan konsultasi teknis gratis dengan Do It. Ceritakan proyek Anda dan kami akan segera menghubungi Anda.",
+      "eyebrow": "Kontak",
+      "title": "Mari Rencanakan Sistem Digital Anda Berikutnya",
+      "description": "Jadwalkan konsultasi teknis gratis. Isi beberapa detail dan tim kami akan menghubungi Anda.",
+      "infoTitle": "Hubungi kami langsung",
+      "email": "Email",
+      "phone": "Telepon",
+      "form": {
+        "title": "Kirim pesan kepada kami",
+        "name": "Nama lengkap",
+        "email": "Email",
+        "phone": "Telepon (opsional)",
+        "service": "Layanan yang diminati (opsional)",
+        "servicePlaceholder": "Pilih layanan",
+        "message": "Ceritakan proyek Anda",
+        "submit": "Kirim pesan",
+        "sending": "Mengirim...",
+        "successTitle": "Pesan terkirim",
+        "successBody": "Terima kasih. Tim kami akan segera menghubungi Anda.",
+        "errors": {
+          "required": "Kolom ini wajib diisi.",
+          "tooShort": "Terlalu pendek.",
+          "tooLong": "Terlalu panjang.",
+          "invalidEmail": "Masukkan alamat email yang valid.",
+          "invalidPhone": "Masukkan nomor telepon yang valid.",
+          "invalidService": "Pilih layanan yang valid.",
+          "form": "Periksa kolom yang ditandai.",
+          "rateLimited": "Terlalu banyak percobaan. Coba lagi beberapa menit lagi.",
+          "failed": "Pesan Anda belum bisa dikirim. Coba lagi nanti atau hubungi kami langsung."
+        }
+      }
+    }
+  }
+}
