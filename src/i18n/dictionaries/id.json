@@ -253,10 +253,13 @@
   "pages": {
     "about": {
       "metaTitle": "Tentang Kami | Do It",
-      "metaDescription": "Kenali Do It, software house yang membantu instansi pemerintah dan perusahaan swasta membangun solusi digital yang aman dan skalabel.",
+      "metaDescription": "Do It adalah software house yang membantu bisnis mewujudkan ide melalui website, aplikasi web, dan software khusus.",
       "eyebrow": "Tentang Kami",
-      "title": "Software House yang Berpusat pada Bisnis Anda",
-      "description": "Kami memadukan rekayasa perangkat lunak, otomasi proses, dan desain yang intuitif untuk membantu organisasi di seluruh Indonesia tumbuh lewat teknologi."
+      "title": "Mitra Teknologi untuk Pertumbuhan Bisnis Anda",
+      "description": "Kami berfokus memahami kebutuhan Anda, menetapkan ekspektasi yang jelas, dan menyerahkan pekerjaan yang memenuhi kebutuhan yang disepakati.",
+      "introEyebrow": "Siapa Kami",
+      "introTitle": "Software House yang Berpusat pada Bisnis Anda",
+      "introBody": "Do It adalah software house yang membantu bisnis mewujudkan ide melalui website, aplikasi web, dan software khusus yang disesuaikan dengan kebutuhan mereka."
     },
     "services": {
       "metaTitle": "Layanan Kami | Do It",

@@ -1,8 +1,7 @@
 import Image from 'next/image';
 import { ButtonLink } from '@/components/ui/button-link';
-// DISEMBUNYIKAN (telepon masih placeholder, 2026-10): impor untuk blok telepon di bawah.
-// import { PhoneIcon } from '@/components/ui/icons';
-// import { SITE } from '@/content/site';
+import { PhoneIcon } from '@/components/ui/icons';
+import { SITE } from '@/content/site';
 import { localizedPath, type Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/get-dictionary';
 
@@ -54,7 +53,6 @@ export function Hero({ locale, dict }: HeroProps) {
               {dict.common.freeConsultation}
             </ButtonLink>
 
-            {/* DISEMBUNYIKAN (telepon masih placeholder, 2026-10): nomor telepon di hero. Kunci kamus `callUs` dan data `SITE.phone` dipertahankan.
             <a href={SITE.phoneHref} className="flex items-center gap-3 pl-2">
               <span className="flex h-10 w-10 items-center justify-center rounded-full border border-emerald-700/50 bg-emerald-900/60 text-brand">
                 <PhoneIcon className="h-4 w-4" />
@@ -66,7 +64,6 @@ export function Hero({ locale, dict }: HeroProps) {
                 <span className="text-xs font-bold text-white">{SITE.phone}</span>
               </span>
             </a>
-            */}
           </div>
         </div>
       </div>

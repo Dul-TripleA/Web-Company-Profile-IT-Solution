@@ -8,7 +8,8 @@ export function organizationJsonLd() {
     '@type': 'Organization',
     name: SITE.legalName,
     url: SITE_URL,
-    // DISEMBUNYIKAN (email dan telepon masih placeholder, 2026-10): email: SITE.email, telephone: SITE.phone,
+    email: SITE.email,
+    // DISEMBUNYIKAN (nomor telepon masih dummy, 2026-10): telephone: SITE.phone,
   };
 }
 

@@ -253,10 +253,13 @@
   "pages": {
     "about": {
       "metaTitle": "About Us | Do It",
-      "metaDescription": "Learn about Do It, a software house helping government agencies and private enterprises build secure, scalable digital solutions.",
+      "metaDescription": "Do It is a software house that helps businesses bring their ideas to life through websites, web applications, and custom software.",
       "eyebrow": "About Us",
-      "title": "A Software House Built Around Your Business",
-      "description": "We combine software engineering, process automation, and intuitive design to help organizations across Indonesia grow through technology."
+      "title": "Your Technology Partner for Business Growth",
+      "description": "We focus on understanding your needs, setting clear expectations, and delivering work that meets the agreed requirements.",
+      "introEyebrow": "Who We Are",
+      "introTitle": "A Software House Built Around Your Business",
+      "introBody": "Do It is a software house that helps businesses bring their ideas to life through websites, web applications, and custom software tailored to their needs."
     },
     "services": {
       "metaTitle": "Our Services | Do It",

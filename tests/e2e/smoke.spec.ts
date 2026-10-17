@@ -203,25 +203,36 @@ test('Reviews dan tautan sosial disembunyikan; footer tetap ada', async ({ page 
   await expect(page.getByRole('contentinfo').getByRole('link', { name: 'Ulasan' })).toHaveCount(0);
 });
 
-test('email, telepon, dan tautan legal disembunyikan di semua halaman', async ({ page }) => {
+test('tautan legal disembunyikan; email asli dan telepon dummy tampil', async ({ page }) => {
   for (const path of ['/id', '/en', '/id/contact', '/id/about', '/id/services']) {
     await page.goto(path);
-    await expect(page.locator('a[href^="mailto:"]'), path).toHaveCount(0);
-    await expect(page.locator('a[href^="tel:"]'), path).toHaveCount(0);
     const text = (await page.locator('body').innerText()).toLowerCase();
-    for (const hidden of ['example@doit.com', '+62851', 'kebijakan privasi', 'privacy policy']) {
+    for (const hidden of ['example@doit.com', 'kebijakan privasi', 'privacy policy']) {
       expect(text, `${path} memuat "${hidden}"`).not.toContain(hidden);
     }
   }
+
+  // Email asli di top bar (semua halaman); telepon dummy di hero beranda.
   await page.goto('/id');
-  const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
-  expect(blocks.join('')).not.toContain('telephone');
+  await expect(page.locator('#top-bar a[href="mailto:andiazizp123@gmail.com"]')).toBeVisible();
+  await expect(page.getByRole('main').locator('a[href^="tel:"]')).toBeVisible();
+
+  // JSON-LD memuat email tetapi tidak memuat telepon dummy.
+  const blocks = (await page.locator('script[type="application/ld+json"]').allTextContents()).join(
+    '',
+  );
+  expect(blocks).toContain('andiazizp123@gmail.com');
+  expect(blocks).not.toContain('telephone');
 });
 
-test('halaman kontak hanya berisi form (satu kolom)', async ({ page }) => {
+test('halaman kontak memuat kartu kontak langsung dan form', async ({ page }) => {
   await page.goto('/id/contact');
+  await expect(page.getByText('Hubungi kami langsung')).toBeVisible();
+  await expect(
+    page.getByRole('main').locator('a[href="mailto:andiazizp123@gmail.com"]'),
+  ).toBeVisible();
+  await expect(page.getByRole('main').locator('a[href^="tel:"]')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Kirim pesan' })).toBeVisible();
-  await expect(page.getByText('Hubungi kami langsung')).toHaveCount(0);
 });
 
 test('logo di header dan footer termuat dan tidak rusak', async ({ page }) => {
@@ -238,4 +249,26 @@ test('logo di header dan footer termuat dan tidak rusak', async ({ page }) => {
       .toBe(true);
   }
   await expect(page.locator('#main-header img[alt="Do It"]')).toBeVisible();
+});
+
+test('halaman About: paragraf Do It, 3 layanan, proses kerja, dan ajakan konsultasi', async ({
+  page,
+}) => {
+  await page.goto('/id/about');
+  const main = page.getByRole('main');
+  await expect(page.locator('h1')).toHaveText('Mitra Teknologi untuk Pertumbuhan Bisnis Anda');
+  await expect(main).toContainText(
+    'Do It adalah software house yang membantu bisnis mewujudkan ide',
+  );
+  await expect(main.locator('#services h3')).toHaveCount(3);
+  await expect(main.getByText('Pahami Kebutuhan Anda')).toBeVisible();
+  await expect(main.getByRole('link', { name: 'Mulai Konsultasi Gratis' })).toHaveAttribute(
+    'href',
+    '/id/contact',
+  );
+  // Klaim lama (instansi pemerintah, arsitektur skalabel) tidak boleh muncul lagi.
+  const text = (await main.innerText()).toLowerCase();
+  for (const claim of ['instansi pemerintah', 'government agencies', 'skalabel', 'scalable']) {
+    expect(text, claim).not.toContain(claim);
+  }
 });

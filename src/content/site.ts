@@ -1,8 +1,8 @@
-// Data kontak masih dari template (placeholder). Ganti dengan data resmi sebelum rilis.
+// Email asli. Telepon masih dummy (nomor dari template); ganti dengan nomor resmi sebelum rilis.
 export const SITE = {
   name: 'Do It',
   legalName: 'Do It Solution',
-  email: 'example@doit.com',
+  email: 'andiazizp123@gmail.com',
   phone: '+62851 1053 0560',
   phoneHref: 'tel:+6285110530560',
   copyrightYear: 2026,
